@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">HoxtonPrayerTimeApp</string>
+    <string name="prayer_times_frag_title">Prayer Times</string>
+</resources>
