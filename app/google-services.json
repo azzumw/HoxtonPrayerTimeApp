@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1002460352065",
+    "project_id": "hoxtonprayertimeapp",
+    "storage_bucket": "hoxtonprayertimeapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002460352065:android:ec9cad3f647c501d3640c0",
+        "android_client_info": {
+          "package_name": "com.example.hoxtonprayertimeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002460352065-4iqg7vumhavp3u2lqtnbbm8svslrs0kj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hoxtonprayertimeapp",
+            "certificate_hash": "15d0c505ab430dbe850803cb5ee06178cd7af5ce"
+          }
+        },
+        {
+          "client_id": "1002460352065-6k5k30217c4roj0rlv5dtdgm910foau8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyNazeV40f7t6QlKqi3k_HFq_mN7hWqDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002460352065-6k5k30217c4roj0rlv5dtdgm910foau8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
