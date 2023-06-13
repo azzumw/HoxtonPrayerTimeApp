@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">HoxtonPrayerTimeApp</string>
+    <string name="app_name">Hoxton Prayer Time</string>
     <string name="prayer_times_frag_title">Prayer Times</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
