@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Hoxton Prayer Time</string>
     <string name="prayer_times_frag_title">Prayer Times</string>
+    <string name="next_prayer_title">Next Prayer</string>
+    <string name="dummy_time">04:30</string>
+    <string name="fajr_text">Fajr</string>
+    <string name="dhohar_text">Dhohar</string>
+    <string name="asr_text">Asr</string>
+    <string name="maghrib_text">Maghrib</string>
+    <string name="isha_text">Isha</string>
+    <string name="jummah_text">Jummah</string>
 </resources>
