@@ -9,4 +9,6 @@
     <string name="maghrib_text">Maghrib</string>
     <string name="isha_text">Isha</string>
     <string name="jummah_text">Jummah</string>
+    <string name="admin_menu_item_text">Admin</string>
+    <string name="settings_menu_item_text">Settings</string>
 </resources>
