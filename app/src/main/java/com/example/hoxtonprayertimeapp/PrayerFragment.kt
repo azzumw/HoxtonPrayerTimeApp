@@ -10,12 +10,19 @@ import com.example.hoxtonprayertimeapp.databinding.FragmentPrayerBinding
 
 class PrayerFragment : Fragment() {
 
+    private var _binding:FragmentPrayerBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding:FragmentPrayerBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_prayer, container, false)
+        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_prayer, container, false)
         return binding.root
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }
