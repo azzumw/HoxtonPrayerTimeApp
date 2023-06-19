@@ -37,7 +37,8 @@
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="@string/next_prayer_title" />
+                    tools:text="@string/next_prayer_title"
+                    android:text="@string/next_prayer_title"/>
 
                 <TextView
                     android:id="@+id/next_prayer_text"
