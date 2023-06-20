@@ -80,68 +80,88 @@
 
             <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
 
-                <LinearLayout style="@style/prayer_block_linear_layout_style">
+                <LinearLayout style="@style/prayer_block_linear_layout_style_vert">
 
                     <TextView
                         android:id="@+id/fajr_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        style="@style/prayer_blocks_text_styles_1"
                         android:text="@string/fajr_text"
                         tools:text="@string/fajr_text" />
 
                     <TextView
-                        android:id="@+id/fajr_time_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/fajr_start_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/fajr_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         tools:text="04:30" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
 
-                <LinearLayout style="@style/prayer_block_linear_layout_style">
+                <LinearLayout style="@style/prayer_block_linear_layout_style_vert">
 
                     <TextView
-                        android:id="@+id/dhohar_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/dhohar_label_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         android:text="@string/dhohar_text"
                         tools:text="@string/dhohar_text" />
 
                     <TextView
-                        android:id="@+id/dhohar_time_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/dhohar_start_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/dhohar_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         tools:text="04:30" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
 
-                <LinearLayout style="@style/prayer_block_linear_layout_style">
+                <LinearLayout style="@style/prayer_block_linear_layout_style_vert">
 
                     <TextView
-                        android:id="@+id/asr_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/asr_label_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         android:text="@string/asr_text"
                         tools:text="@string/asr_text" />
 
                     <TextView
-                        android:id="@+id/asr_time_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/asr_start_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/asr_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         tools:text="04:30" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
 
-                <LinearLayout style="@style/prayer_block_linear_layout_style">
+                <LinearLayout style="@style/prayer_block_linear_layout_style_vert">
 
                     <TextView
-                        android:id="@+id/maghrib_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/maghrib_label_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         android:text="@string/maghrib_text"
                         tools:text="@string/maghrib_text" />
 
                     <TextView
-                        android:id="@+id/maghrib_time_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/maghrib_start_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/maghrib_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         tools:text="04:30" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -149,34 +169,45 @@
 
             <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
 
-                <LinearLayout style="@style/prayer_block_linear_layout_style">
+                <LinearLayout style="@style/prayer_block_linear_layout_style_vert">
 
                     <TextView
-                        android:id="@+id/isha_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/isha_label_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         android:text="@string/isha_text"
                         tools:text="@string/isha_text" />
 
                     <TextView
-                        android:id="@+id/isha_time_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/isha_start_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/isha_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
+                        tools:text="04:30" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
 
-                <LinearLayout style="@style/prayer_block_linear_layout_style">
+                <LinearLayout style="@style/prayer_block_linear_layout_style_vert">
 
                     <TextView
-                        android:id="@+id/jummah_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/jummah_label_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         android:text="@string/jummah_text"
                         tools:text="@string/jummah_text" />
 
                     <TextView
-                        android:id="@+id/jummah_time_textview"
-                        style="@style/prayer_blocks_text_styles"
+                        android:id="@+id/jummah_start__time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/jummah_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles_1"
                         tools:text="04:30" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
