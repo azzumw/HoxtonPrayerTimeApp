@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        tools:context=".PrayerFragment">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/next_prayer_cardview"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:shadowRadius="@integer/material_motion_duration_medium_1"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/next_prayer_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="@dimen/next_prayer_title_textsize"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/next_prayer_title"
+                    android:text="@string/next_prayer_title"/>
+
+                <TextView
+                    android:id="@+id/next_prayer_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="@dimen/next_prayer_text_textsize"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/next_prayer_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="Fajr" />
+
+                <TextView
+                    android:id="@+id/next_prayer_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="@dimen/next_prayer_text_textsize"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/next_prayer_text"
+                    tools:text="@string/dummy_time" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:columnCount="1"
+            android:rowCount="7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/next_prayer_cardview">
+
+            <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
+
+                <LinearLayout style="@style/prayer_block_linear_layout_style">
+
+                    <TextView
+                        android:id="@+id/fajr_textview"
+                        style="@style/left_prayer_block_text_styles"
+                        android:text="@string/fajr_text"
+                        tools:text="@string/fajr_text" />
+
+                    <TextView
+                        android:id="@+id/fajr_start_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/fajr_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
+
+                <LinearLayout style="@style/prayer_block_linear_layout_style">
+
+                    <TextView
+                        android:id="@+id/dhohar_textview"
+                        style="@style/left_prayer_block_text_styles"
+                        android:layout_weight="2"
+                        android:text="@string/dhohar_text"
+                        tools:text="@string/dhohar_text" />
+
+                    <TextView
+                        android:id="@+id/dhohar_start_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/dhohar_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
+
+                <LinearLayout style="@style/prayer_block_linear_layout_style">
+
+                    <TextView
+                        android:id="@+id/asr_textview"
+                        style="@style/left_prayer_block_text_styles"
+                        android:layout_weight="2"
+                        android:text="@string/asr_text"
+                        tools:text="@string/asr_text" />
+
+                    <TextView
+                        android:id="@+id/asr_start_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/asr_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
+
+                <LinearLayout style="@style/prayer_block_linear_layout_style">
+
+                    <TextView
+                        android:id="@+id/maghrib_textview"
+                        style="@style/left_prayer_block_text_styles"
+                        android:text="@string/maghrib_text"
+                        tools:text="@string/maghrib_text" />
+
+                    <TextView
+                        android:id="@+id/maghrib_start_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/maghrib_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
+
+                <LinearLayout style="@style/prayer_block_linear_layout_style">
+
+                    <TextView
+                        android:id="@+id/isha_textview"
+                        style="@style/left_prayer_block_text_styles"
+                        android:text="@string/isha_text"
+                        tools:text="@string/isha_text" />
+
+                    <TextView
+                        android:id="@+id/isha_start_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/isha_jamaat_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">
+
+                <LinearLayout style="@style/prayer_block_linear_layout_style">
+
+                    <TextView
+                        android:id="@+id/jummah_textview"
+                        style="@style/left_prayer_block_text_styles"
+                        android:text="@string/jummah_text"
+                        tools:text="@string/jummah_text" />
+
+                    <TextView
+                        android:id="@+id/jummah_start_time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+
+                    <TextView
+                        android:id="@+id/jummah_jamat__time_textview"
+                        style="@style/prayer_blocks_text_styles"
+                        tools:text="04:30" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

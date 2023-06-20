@@ -2,5 +2,5 @@
 <resources>
     <dimen name="next_prayer_title_textsize">24sp</dimen>
     <dimen name="next_prayer_text_textsize">42sp</dimen>
-    <dimen name="card_radius">16dp</dimen>
+    <dimen name="card_radius">8dp</dimen>
 </resources>
