@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Hoxton Prayer Time</string>
     <string name="prayer_times_frag_title">Prayer Times</string>
-    <string name="next_prayer_title">Next Prayer</string>
-    <string name="dummy_time">04:30</string>
+    <string name="next_jamaat_text">Next Jamaat</string>
+    <string name="dummy_time">04:30am</string>
     <string name="fajr_text">Fajr</string>
     <string name="dhohar_text">Dhohar</string>
     <string name="asr_text">Asr</string>
@@ -11,4 +11,7 @@
     <string name="jummah_text">Jummah</string>
     <string name="admin_menu_item_text">Admin</string>
     <string name="settings_menu_item_text">Settings</string>
+    <string name="fajr_salaat_name">Fajr</string>
+    <string name="dummy_gregorian_date">Thu 13 July 23</string>
+    <string name="dummy_islamic_date">29 Dhul Hijjah 1444</string>
 </resources>
