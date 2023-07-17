@@ -6,6 +6,6 @@ import timber.log.Timber
 class PrayerApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.asTree())
+        Timber.plant(Timber.DebugTree())
     }
 }
