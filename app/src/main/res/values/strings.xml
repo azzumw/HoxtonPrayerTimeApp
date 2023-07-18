@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Hoxton Islah</string>
+
     <string name="prayer_times_frag_title">Prayer Times</string>
+
     <string name="next_jamaat_text">Next Jamaat</string>
 
     <string name="fajr_text">Fajr</string>

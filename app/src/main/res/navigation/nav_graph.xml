@@ -7,5 +7,5 @@
     <fragment
         android:id="@+id/prayerFragment"
         android:name="com.example.hoxtonprayertimeapp.PrayerFragment"
-        android:label="PrayerFragment" />
+        android:label="@string/app_name" />
 </navigation>
