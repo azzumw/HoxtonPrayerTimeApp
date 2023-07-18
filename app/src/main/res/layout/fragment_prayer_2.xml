@@ -20,7 +20,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginBottom="8dp"
-            android:shadowRadius="@integer/material_motion_duration_medium_2"
+            android:elevation="20dp"
             app:cardCornerRadius="@dimen/card_radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,25 +56,24 @@
                     android:id="@+id/next_prayer_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-light"
                     android:text="@string/next_jamaat_text"
                     android:textColor="@color/purple"
                     android:textSize="@dimen/next_prayer_label_textsize"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/gregory_today_date_tv"
+                    app:layout_constraintBottom_toTopOf="@id/salaat_label_and_time_container_layout"
                     tools:text="@string/next_jamaat_text" />
 
                 <LinearLayout
                     android:id="@+id/salaat_label_and_time_container_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/next_prayer_label">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
                     <TextView
                         android:id="@+id/next_prayer_text"
@@ -128,8 +127,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Today"
-                    android:text="Today"/>
+                    tools:text="@string/today_text"
+                    android:text="@string/today_text"/>
 
 
                 <LinearLayout
@@ -155,7 +154,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Begin"
+                        android:text="@string/begin_text"
                         android:textColor="@color/gray" />
 
                     <TextView
@@ -164,7 +163,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Jamaat"
+                        android:text="@string/jamaat_text"
                         android:textColor="@color/gray" />
 
                     <TextView
@@ -200,7 +199,7 @@
                             android:layout_marginStart="16dp"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:text="Fajr"
+                            android:text="@string/fajr_salaat_name"
                             android:textColor="@color/gray" />
 
                         <TextView
