@@ -21,6 +21,13 @@ class PrayerFragment : Fragment() {
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_prayer_2, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.gregoryTodayDateTv.text = getCurrentGregorianDate()
+
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
