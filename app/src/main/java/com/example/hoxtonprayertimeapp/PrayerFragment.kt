@@ -6,21 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.lang.IllegalArgumentException
 
 class PrayerFragment : Fragment() {
 
-    private lateinit var firestore: FirebaseFirestore
     private var _binding:FragmentPrayer2Binding? = null
     private val binding get() = _binding!!
 
-    companion object {
-        private const val EMULATOR_HOST = "10.0.2.2"
-        private const val EMULATOR_PORT = 8080
-    }
+    private val prayerViewModel:PrayerViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,9 +33,6 @@ class PrayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        firestore = Firebase.firestore
-        firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
 
         binding.gregoryTodayDateTv.text = getCurrentGregorianDate()
 
