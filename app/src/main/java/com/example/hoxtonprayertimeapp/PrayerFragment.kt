@@ -7,13 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.lang.IllegalArgumentException
 
 class PrayerFragment : Fragment() {
 
@@ -35,6 +29,7 @@ class PrayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.gregoryTodayDateTv.text = getCurrentGregorianDate()
+        binding.islamicDateTv.text = getCurrentIslamicDate()
 
     }
     override fun onDestroy() {
