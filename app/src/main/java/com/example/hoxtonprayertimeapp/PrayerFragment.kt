@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 
 class PrayerFragment : Fragment() {
@@ -14,7 +14,7 @@ class PrayerFragment : Fragment() {
     private var _binding:FragmentPrayer2Binding? = null
     private val binding get() = _binding!!
 
-    private val prayerViewModel:PrayerViewModel by viewModels()
+    private lateinit var prayerViewModel:PrayerViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +29,12 @@ class PrayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.gregoryTodayDateTv.text = getCurrentGregorianDate()
-        binding.islamicDateTv.text = getCurrentIslamicDate()
+//        binding.islamicDateTv.text = getCurrentIslamicDate()
+
+        val viewModelFactory = PrayerViewModelFactory()
+        prayerViewModel = ViewModelProvider(this, viewModelFactory)[PrayerViewModel::class.java]
+
+
 
     }
     override fun onDestroy() {

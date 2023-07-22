@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
+private const val DATE_PATTERN =  "ddMMyyyy"
 fun getCurrentGregorianDate(): String = SimpleDateFormat(
     GREGORIAN_DATE_FORMAT,
     Locale.getDefault()
@@ -46,4 +47,47 @@ private fun getIslamicMonth(month: Int): String {
         else -> "Unknown Month"
     }
 }
+
+fun getLastWeek(calender:java.util.Calendar): Int {
+//    val calendar = java.util.Calendar.getInstance(Locale.UK)
+    return calender.get(java.util.Calendar.WEEK_OF_YEAR)
+}
+
+fun getLastFridayDate():String{
+    val calendar  = java.util.Calendar.getInstance(Locale.getDefault())
+
+    val actualCurrentDay = calendar.get(java.util.Calendar.DAY_OF_WEEK)
+
+    var tempDay = actualCurrentDay
+
+    while(tempDay != java.util.Calendar.FRIDAY){
+        if(tempDay == 0){
+            tempDay = 7
+        }
+        tempDay--
+        calendar.set(java.util.Calendar.DAY_OF_WEEK,tempDay)
+    }
+
+    if(actualCurrentDay != java.util.Calendar.SATURDAY){
+        calendar.set(java.util.Calendar.WEEK_OF_YEAR,calendar.get(java.util.Calendar.WEEK_OF_YEAR) - 1)
+    }
+
+    val df = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
+    return df.format(calendar.time)
+
+}
+
+fun getTodayDate():String{
+    val calendar = java.util.Calendar.getInstance().time
+    val df = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
+    return df.format(calendar)
+}
+
+fun getFridayDate() :String = if(java.util.Calendar.getInstance(Locale.getDefault()).get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY){
+    getTodayDate()
+}else{
+    getLastFridayDate()
+}
+
+fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) = getLastWeek(calender).toString()
 
