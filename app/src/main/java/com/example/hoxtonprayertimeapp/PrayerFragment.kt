@@ -1,17 +1,13 @@
 package com.example.hoxtonprayertimeapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
-import com.example.hoxtonprayertimeapp.models.toTime
-import timber.log.Timber
 import java.util.Calendar
 import java.util.Locale
 
@@ -40,9 +36,9 @@ class PrayerFragment : Fragment() {
         val viewModelFactory = PrayerViewModelFactory()
         prayerViewModel = ViewModelProvider(this, viewModelFactory)[PrayerViewModel::class.java]
 
-        prayerViewModel.prayer.observe(viewLifecycleOwner, Observer {
+        prayerViewModel.prayer.observe(viewLifecycleOwner)  {
             if (it != null) {
-                if (Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY){
+                if (Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
                     binding.dhuhrTextview.text = getString(R.string.jummah_text)
                     binding.dhuhrBeginTimeTv.text = getString(R.string.pm,it.firstJummah)
                     binding.dhuhrJamaatTimeTv.text = getString(R.string.pm,it.secondJummah)
@@ -53,13 +49,12 @@ class PrayerFragment : Fragment() {
 
                 binding.apply {
                     fajrJamaatTimeTv.text = getString(R.string.am, it.fajar)
-//                    dhuhrJamaatTimeTv.text = getString(R.string.pm, it.dhuhr)
                     asrJamaatTimeTv.text = getString(R.string.pm, it.asr)
                     maghribJamaatTimeTv.text = getString(R.string.pm, it.maghrib)
                     ishaJamaatTimeTv.text = getString(R.string.pm, it.isha)
                 }
             }
-        })
+        }
     }
 
 
