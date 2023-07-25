@@ -83,7 +83,7 @@ fun getTodayDate():String{
     return df.format(calendar)
 }
 
-fun getFridayDate() :String = if(java.util.Calendar.getInstance(Locale.getDefault()).get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY){
+fun getFridayDate() :String = if(isFridayToday()){
     getTodayDate()
 }else{
     getLastFridayDate()
@@ -91,3 +91,4 @@ fun getFridayDate() :String = if(java.util.Calendar.getInstance(Locale.getDefaul
 
 fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) = getLastWeek(calender).toString()
 
+fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault()).get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY

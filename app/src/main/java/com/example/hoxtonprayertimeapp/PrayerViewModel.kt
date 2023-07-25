@@ -1,23 +1,18 @@
 package com.example.hoxtonprayertimeapp
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.models.Week
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.type.DateTime
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class PrayerViewModel :ViewModel() {
@@ -55,7 +50,7 @@ class PrayerViewModel :ViewModel() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
         val fajarTS = DateTime.getDefaultInstance()
         Timber.e(fajarTS.toString())
-        val week28 = Week(date,year,"04:00","01:30", "07:15","09:20","10:45","01:30","02:15")
+        val week28 = Week(date,year,"04:15","01:30", "07:00","09:05","10:30","01:30")
         val docRef = collectionPrayers.document(lastWeekNumber)
 
         docRef.set(week28).addOnCompleteListener {

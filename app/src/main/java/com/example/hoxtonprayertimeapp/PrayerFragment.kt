@@ -5,11 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
-import java.util.Calendar
-import java.util.Locale
 
 class PrayerFragment : Fragment() {
 
@@ -38,12 +37,22 @@ class PrayerFragment : Fragment() {
 
         prayerViewModel.prayer.observe(viewLifecycleOwner)  {
             if (it != null) {
-                if (Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
+                if (isFridayToday()){
+                    //if second jummah exists
+                    if(it.secondJummah != null){
+                        swapDhuhrWithJummahRow(true)
+                        binding.jummahJamaatOneTimeTv.text = getString(R.string.pm,it.firstJummah)
+                        binding.jummahJamaatTwoTimeTv.text = getString(R.string.pm,it.secondJummah)
+
+                    }else {
+                        swapDhuhrWithJummahRow(false)
+                        binding.dhuhrJamaatTimeTv.text = getString(R.string.pm,it.firstJummah)
+                    }
+
                     binding.dhuhrTextview.text = getString(R.string.jummah_text)
-                    binding.dhuhrBeginTimeTv.text = getString(R.string.pm,it.firstJummah)
-                    binding.dhuhrJamaatTimeTv.text = getString(R.string.pm,it.secondJummah)
+
                 }else{
-                    binding.dhuhrTextview.text = getString(R.string.dhohar_text)
+                    swapDhuhrWithJummahRow(false)
                     binding.dhuhrJamaatTimeTv.text = getString(R.string.pm,it.dhuhr)
                 }
 
@@ -58,6 +67,17 @@ class PrayerFragment : Fragment() {
     }
 
 
+    private fun swapDhuhrWithJummahRow(isFriday:Boolean){
+        if (isFriday){
+            binding.dhuhrJamaatTimeTv.visibility = TextView.GONE
+            binding.jummahJamaatsContainer.visibility = TextView.VISIBLE
+        }else{
+            binding.dhuhrTextview.text = getString(R.string.dhohar_text)
+            binding.dhuhrJamaatTimeTv.visibility = TextView.VISIBLE
+            binding.jummahJamaatsContainer.visibility = TextView.GONE
+        }
+
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
