@@ -40,19 +40,19 @@ class PrayerFragment : Fragment() {
                 if (isFridayToday()){
                     //if second jummah exists
                     if(it.secondJummah != null){
-                        swapDhuhrWithJummahRow(true)
+                        replaceDhuhrWithJummah(true)
                         binding.jummahJamaatOneTimeTv.text = getString(R.string.pm,it.firstJummah)
                         binding.jummahJamaatTwoTimeTv.text = getString(R.string.pm,it.secondJummah)
 
                     }else {
-                        swapDhuhrWithJummahRow(false)
+                        replaceDhuhrWithJummah(false)
                         binding.dhuhrJamaatTimeTv.text = getString(R.string.pm,it.firstJummah)
                     }
 
                     binding.dhuhrTextview.text = getString(R.string.jummah_text)
 
                 }else{
-                    swapDhuhrWithJummahRow(false)
+                    replaceDhuhrWithJummah(false)
                     binding.dhuhrJamaatTimeTv.text = getString(R.string.pm,it.dhuhr)
                 }
 
@@ -67,7 +67,7 @@ class PrayerFragment : Fragment() {
     }
 
 
-    private fun swapDhuhrWithJummahRow(isFriday:Boolean){
+    private fun replaceDhuhrWithJummah(isFriday:Boolean){
         if (isFriday){
             binding.dhuhrJamaatTimeTv.visibility = TextView.GONE
             binding.jummahJamaatsContainer.visibility = TextView.VISIBLE
