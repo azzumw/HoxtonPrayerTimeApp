@@ -1,4 +1,4 @@
-package com.example.hoxtonprayertimeapp
+package com.example.hoxtonprayertimeapp.utils
 
 import android.icu.util.Calendar
 import android.icu.util.IslamicCalendar

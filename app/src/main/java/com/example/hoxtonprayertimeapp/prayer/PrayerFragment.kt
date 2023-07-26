@@ -1,4 +1,4 @@
-package com.example.hoxtonprayertimeapp
+package com.example.hoxtonprayertimeapp.prayer
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.example.hoxtonprayertimeapp.R
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
+import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
+import com.example.hoxtonprayertimeapp.utils.isFridayToday
 
 class PrayerFragment : Fragment() {
 
@@ -62,6 +65,9 @@ class PrayerFragment : Fragment() {
                     maghribJamaatTimeTv.text = getString(R.string.pm, it.maghrib)
                     ishaJamaatTimeTv.text = getString(R.string.pm, it.isha)
                 }
+            }else{
+                //show no data error animation
+
             }
         }
     }

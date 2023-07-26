@@ -1,9 +1,11 @@
-package com.example.hoxtonprayertimeapp
+package com.example.hoxtonprayertimeapp.prayer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
+import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
