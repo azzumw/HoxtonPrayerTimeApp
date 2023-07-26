@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="12dp"
-        tools:context=".prayer.PrayerFragment">
+        tools:context=".ui.prayer.PrayerFragment">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/broadcast_prayer_cardview"

@@ -1,4 +1,4 @@
-package com.example.hoxtonprayertimeapp.prayer
+package com.example.hoxtonprayertimeapp.ui.prayer
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

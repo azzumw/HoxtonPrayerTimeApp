@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
-        tools:context=".prayer.PrayerFragment">
+        tools:context=".ui.prayer.PrayerFragment">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/next_prayer_cardview"

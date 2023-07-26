@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/prayerFragment"
-        android:name="com.example.hoxtonprayertimeapp.prayer.PrayerFragment"
+        android:name="com.example.hoxtonprayertimeapp.ui.prayer.PrayerFragment"
         android:label="@string/app_name" />
 </navigation>
