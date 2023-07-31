@@ -1,8 +1,8 @@
 package com.example.hoxtonprayertimeapp.models
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
@@ -11,6 +11,8 @@ import java.time.format.FormatStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.SimpleTimeZone
+import com.google.firebase.Timestamp
+import java.time.LocalTime
 
 data class Week(
     val fridayDate: String = "",
@@ -23,15 +25,3 @@ data class Week(
     val firstJummah: String = "",
     val secondJummah: String? = null,
 )
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun Week.toTime():String{
-    val s = "04:00"
-    val hours = s.substringBefore(":")
-    val mins = s.substringAfter(":")
-
-    val date = Timestamp.from(Instant.now())
-    val df = SimpleDateFormat("hh:mm a").format(date)
-
-    return df.toString()
-}

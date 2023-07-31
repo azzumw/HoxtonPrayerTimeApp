@@ -5,6 +5,7 @@ import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -48,11 +49,6 @@ private fun getIslamicMonth(month: Int): String {
     }
 }
 
-fun getLastWeek(calender:java.util.Calendar): Int {
-//    val calendar = java.util.Calendar.getInstance(Locale.UK)
-    return calender.get(java.util.Calendar.WEEK_OF_YEAR)
-}
-
 fun getLastFridayDate():String{
     val calendar  = java.util.Calendar.getInstance(Locale.getDefault())
 
@@ -61,13 +57,16 @@ fun getLastFridayDate():String{
     var tempDay = actualCurrentDay
 
     while(tempDay != java.util.Calendar.FRIDAY){
+
         if(tempDay == 0){
+            //set to saturday
             tempDay = 7
         }
         tempDay--
         calendar.set(java.util.Calendar.DAY_OF_WEEK,tempDay)
     }
 
+    //reduce the week by 1 to get the last friday date because we have moved to this weeks friday in future
     if(actualCurrentDay != java.util.Calendar.SATURDAY){
         calendar.set(java.util.Calendar.WEEK_OF_YEAR,calendar.get(java.util.Calendar.WEEK_OF_YEAR) - 1)
     }
@@ -78,9 +77,11 @@ fun getLastFridayDate():String{
 }
 
 fun getTodayDate():String{
-    val calendar = java.util.Calendar.getInstance().time
+    val date = Timestamp.now().toDate()
+
+//    val calendar = java.util.Calendar.getInstance().time
     val df = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
-    return df.format(calendar)
+    return df.format(date)
 }
 
 fun getFridayDate() :String = if(isFridayToday()){
@@ -88,6 +89,12 @@ fun getFridayDate() :String = if(isFridayToday()){
 }else{
     getLastFridayDate()
 }
+
+fun getLastWeek(calender:java.util.Calendar):Int {
+    calender.add(java.util.Calendar.WEEK_OF_YEAR,-1)
+    return calender.get(java.util.Calendar.WEEK_OF_YEAR)
+}
+
 
 fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) = getLastWeek(calender).toString()
 

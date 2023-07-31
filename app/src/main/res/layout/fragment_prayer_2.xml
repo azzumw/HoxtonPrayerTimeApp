@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.example.hoxtonprayertimeapp.ui.prayer.PrayerViewModel" />
     </data>
 
     <LinearLayout
@@ -13,6 +15,15 @@
         android:orientation="vertical"
         android:padding="12dp"
         tools:context=".ui.prayer.PrayerFragment">
+
+        <ImageView
+            android:id="@+id/no_internet_img"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            app:fireStoreApiStatus="@{viewModel.status}"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/no_internet"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/broadcast_prayer_cardview"
