@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
+import com.example.hoxtonprayertimeapp.models.fromStringToDateTime
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +16,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
@@ -68,11 +68,13 @@ class PrayerViewModel :ViewModel() {
 
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 //        val d = Timestamp.now().toDate().toString()
-        val time = Timestamp.now()
-        val df = SimpleDateFormat("hh:mm a", Locale.getDefault())
+//        val timeToDate = Timestamp.now().toDate()
+//        val time = Timestamp(timeToDate)
+
+
 //        val f = df.format(time)
 
-        val week = Week(date,year,"04:30","01:30", "07:00","09:00","10:30","01:30", secondJummah = "02:15")
+        val week = Week(date,year,fromStringToDateTime(),"01:30", "07:00","09:00","10:30","01:30", secondJummah = "02:15")
         val docRef = collectionPrayers.document(lastWeekNumber)
 
         docRef.set(week).addOnCompleteListener {
