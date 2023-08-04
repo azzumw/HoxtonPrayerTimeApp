@@ -8,7 +8,6 @@ import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWee
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
 import com.example.hoxtonprayertimeapp.models.fromStringToDateTime
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration

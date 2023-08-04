@@ -1,6 +1,5 @@
 package com.example.hoxtonprayertimeapp.models
 
-import android.util.Log
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Calendar
