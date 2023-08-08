@@ -12,11 +12,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.example.hoxtonprayertimeapp.R
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
-import com.example.hoxtonprayertimeapp.models.fromStringToDateTime
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.isFridayToday
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PrayerFragment : Fragment() {
 
@@ -44,7 +41,6 @@ class PrayerFragment : Fragment() {
 
         binding.gregoryTodayDateTv.text = getCurrentGregorianDate()
 
-
 //        val viewModelFactory = PrayerViewModelFactory()
 //        prayerViewModel = ViewModelProvider(this, viewModelFactory)[PrayerViewModel::class.java]
 
@@ -64,32 +60,38 @@ class PrayerFragment : Fragment() {
                     //if second jummah exists
                     if (it.secondJummah != null) {
                         replaceDhuhrWithJummah(true)
-                        binding.jummahJamaatOneTimeTv.text = getString(R.string.pm, it.firstJummah)
-                        binding.jummahJamaatTwoTimeTv.text = getString(R.string.pm, it.secondJummah)
+                        binding.jummahJamaatOneTimeTv.text =  it.firstJummah
+                        binding.jummahJamaatTwoTimeTv.text =  it.secondJummah
 
                     } else {
                         replaceDhuhrWithJummah(false)
-                        binding.dhuhrJamaatTimeTv.text = getString(R.string.pm, it.firstJummah)
+                        binding.dhuhrJamaatTimeTv.text = it.firstJummah
                     }
 
                     binding.dhuhrTextview.text = getString(R.string.jummah_text)
 
                 } else {
                     replaceDhuhrWithJummah(false)
-                    binding.dhuhrJamaatTimeTv.text = getString(R.string.pm, it.dhuhr)
+                    binding.dhuhrJamaatTimeTv.text =  it.dhuhr
                 }
 
                 binding.apply {
 
                     fajrJamaatTimeTv.text = it.fajar
-                    fromStringToDateTime()
-                    asrJamaatTimeTv.text = getString(R.string.pm, it.asr)
-                    maghribJamaatTimeTv.text = getString(R.string.pm, it.maghrib)
-                    ishaJamaatTimeTv.text = getString(R.string.pm, it.isha)
+                    asrJamaatTimeTv.text =  it.asr
+                    maghribJamaatTimeTv.text =  it.maghrib
+                    ishaJamaatTimeTv.text =  it.isha
                 }
             } else {
                 //show no data error animation
 
+            }
+
+            prayerViewModel.nextJamaat.observe(viewLifecycleOwner){
+                if (it!= null){
+                    binding.nextPrayerText.text = it.substringBefore(' ')
+                    binding.nextPrayerTime.text = it.substringAfter(' ')
+                }
             }
         }
     }
