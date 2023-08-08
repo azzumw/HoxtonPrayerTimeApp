@@ -26,7 +26,7 @@ fun convert(time: Timestamp?): String {
     } else "00:00"
 }
 
-fun fromStringToDateTime(time:String): String {
+fun fromStringToDateTime(time: String): String {
 
     val formatter = SimpleDateFormat("hh:mm a")
     val date = formatter.parse(time)

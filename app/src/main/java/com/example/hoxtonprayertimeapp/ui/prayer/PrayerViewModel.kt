@@ -64,6 +64,13 @@ class PrayerViewModel : ViewModel() {
 
     }
 
+    private fun initialiseFireStoreEmulator() {
+        firestore = Firebase.firestore
+        firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
+        Timber.e("ViewModel initialised ${firestore.app}")
+
+    }
+
     private fun workoutNextJamaat() {
         val currentTime = Calendar.getInstance().time
 
@@ -71,8 +78,6 @@ class PrayerViewModel : ViewModel() {
         //and display the first instance, else show Good Night message.
         val remainingTodayPrayersMap = nextPrayersMap.filterValues {
             currentTime.before(it)
-        }.also {
-            Timber.e(it.keys.toString())
         }
 
         val sd = SimpleDateFormat("hh:mm a").format(remainingTodayPrayersMap.toList()[0].second)
@@ -80,15 +85,6 @@ class PrayerViewModel : ViewModel() {
         _nextJamaat.value = if (currentTime.before(remainingTodayPrayersMap.toList()[0].second)) {
             "${remainingTodayPrayersMap.toList()[0].first} $sd"
         } else "Good Night"
-
-
-    }
-
-    private fun initialiseFireStoreEmulator() {
-        firestore = Firebase.firestore
-        firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
-        Timber.e("ViewModel initialised ${firestore.app}")
-
     }
 
     private fun writePrayerTimesForThisWeek(date: String, year: Int) {

@@ -60,8 +60,8 @@ class PrayerFragment : Fragment() {
                     //if second jummah exists
                     if (it.secondJummah != null) {
                         replaceDhuhrWithJummah(true)
-                        binding.jummahJamaatOneTimeTv.text =  it.firstJummah
-                        binding.jummahJamaatTwoTimeTv.text =  it.secondJummah
+                        binding.jummahJamaatOneTimeTv.text = it.firstJummah
+                        binding.jummahJamaatTwoTimeTv.text = it.secondJummah
 
                     } else {
                         replaceDhuhrWithJummah(false)
@@ -72,23 +72,23 @@ class PrayerFragment : Fragment() {
 
                 } else {
                     replaceDhuhrWithJummah(false)
-                    binding.dhuhrJamaatTimeTv.text =  it.dhuhr
+                    binding.dhuhrJamaatTimeTv.text = it.dhuhr
                 }
 
                 binding.apply {
 
                     fajrJamaatTimeTv.text = it.fajar
-                    asrJamaatTimeTv.text =  it.asr
-                    maghribJamaatTimeTv.text =  it.maghrib
-                    ishaJamaatTimeTv.text =  it.isha
+                    asrJamaatTimeTv.text = it.asr
+                    maghribJamaatTimeTv.text = it.maghrib
+                    ishaJamaatTimeTv.text = it.isha
                 }
             } else {
                 //show no data error animation
 
             }
 
-            prayerViewModel.nextJamaat.observe(viewLifecycleOwner){
-                if (it!= null){
+            prayerViewModel.nextJamaat.observe(viewLifecycleOwner) {
+                if (it != null) {
                     binding.nextPrayerText.text = it.substringBefore(' ')
                     binding.nextPrayerTime.text = it.substringAfter(' ')
                 }
