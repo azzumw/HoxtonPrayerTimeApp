@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
-import com.example.hoxtonprayertimeapp.models.fromStringToDateTime
-import com.example.hoxtonprayertimeapp.models.fromStringToDateTimeObj
+import com.example.hoxtonprayertimeapp.utils.formatTimeToString
+import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -16,7 +16,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -51,8 +50,6 @@ class PrayerViewModel : ViewModel() {
 
     init {
 
-        Timber.e(calendar.get(Calendar.WEEK_OF_YEAR).toString())
-
         initialiseFireStoreEmulator()
 
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
@@ -61,26 +58,23 @@ class PrayerViewModel : ViewModel() {
 
         listenForPrayers()
 
-
     }
 
     private fun initialiseFireStoreEmulator() {
         firestore = Firebase.firestore
         firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
         Timber.e("ViewModel initialised ${firestore.app}")
-
     }
 
     private fun workoutNextJamaat() {
         val currentTime = Calendar.getInstance().time
-
         //only add those prayers whose time is after the current time
         //and display the first instance, else show Good Night message.
         val remainingTodayPrayersMap = nextPrayersMap.filterValues {
             currentTime.before(it)
         }
 
-        val sd = SimpleDateFormat("hh:mm a").format(remainingTodayPrayersMap.toList()[0].second)
+        val sd = formatTimeToString(remainingTodayPrayersMap.toList()[0].second)
 
         _nextJamaat.value = if (currentTime.before(remainingTodayPrayersMap.toList()[0].second)) {
             "${remainingTodayPrayersMap.toList()[0].first} $sd"
@@ -92,13 +86,14 @@ class PrayerViewModel : ViewModel() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 
         val week = Week(
-            date, year, fajar = fromStringToDateTime("04:30 am"),
-            dhuhr = fromStringToDateTime("01:30 pm"),
-            asr = fromStringToDateTime("06:45 pm"),
-            maghrib = fromStringToDateTime("08:56 pm"),
-            isha = fromStringToDateTime("10:15 pm"),
-            firstJummah = fromStringToDateTime("02:15 pm"),
-            secondJummah = fromStringToDateTime("02:15 pm")
+            date,
+            fajar = "04:30 am",
+            dhuhr = "01:30 pm",
+            asr = "06:45 pm",
+            maghrib = "08:56 pm",
+            isha = "10:15 pm",
+            firstJummah = "02:15 pm",
+            secondJummah ="02:15 pm"
         )
         val docRef = collectionPrayers.document(lastWeekNumber)
 
@@ -111,7 +106,6 @@ class PrayerViewModel : ViewModel() {
 
     private fun listenForPrayers() {
         //listen to last friday, it today is friday listen to today.
-
         _status.value = FireStoreStatus.LOADING
 
         val queryLastFriday =
@@ -130,13 +124,13 @@ class PrayerViewModel : ViewModel() {
             _prayer.value = prayerObject
             _status.value = FireStoreStatus.DONE
 
-            nextPrayersMap["Fajar"] = fromStringToDateTimeObj(prayer.value?.fajar)
-            nextPrayersMap["Dhuhr"] = fromStringToDateTimeObj(prayer.value?.dhuhr)
-            nextPrayersMap["Asr"] = fromStringToDateTimeObj(prayer.value?.asr)
-            nextPrayersMap["Maghrib"] = fromStringToDateTimeObj(prayer.value?.maghrib)
-            nextPrayersMap["Isha"] = fromStringToDateTimeObj(prayer.value?.isha)
-            nextPrayersMap["FirstJummah"] = fromStringToDateTimeObj(prayer.value?.firstJummah)
-            nextPrayersMap["SecondJummah"] = fromStringToDateTimeObj(prayer.value?.secondJummah)
+            nextPrayersMap[FAJR_KEY] = fromStringToDateTimeObj(prayer.value?.fajar)
+            nextPrayersMap[DHOHAR_KEY] = fromStringToDateTimeObj(prayer.value?.dhuhr)
+            nextPrayersMap[ASR_KEY] = fromStringToDateTimeObj(prayer.value?.asr)
+            nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(prayer.value?.maghrib)
+            nextPrayersMap[ISHA_KEY] = fromStringToDateTimeObj(prayer.value?.isha)
+            nextPrayersMap[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(prayer.value?.firstJummah)
+            nextPrayersMap[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(prayer.value?.secondJummah)
 //            for (doc in value!!) {
 //                //convert to Prayer object
 //                val prayerObj = doc.toObject(Week::class.java)
@@ -161,6 +155,15 @@ class PrayerViewModel : ViewModel() {
         private const val COLLECTIONS_PRAYERS = "Prayers"
 
         private const val FRIDAY_DAY_KEY = "fridayDate"
+
+        const val FAJR_KEY = "Fajr"
+        const val DHOHAR_KEY = "Dhohar"
+        const val ASR_KEY = "Asr"
+        const val MAGHRIB_KEY = "Maghrib"
+        const val ISHA_KEY = "Isha"
+        const val FIRST_JUMMAH_KEY = "FirstJummah"
+        const val SECOND_JUMMAH_KEY = "SecondJummah"
+
     }
 }
 

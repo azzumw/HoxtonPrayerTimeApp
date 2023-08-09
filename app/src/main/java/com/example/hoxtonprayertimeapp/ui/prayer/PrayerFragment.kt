@@ -87,11 +87,15 @@ class PrayerFragment : Fragment() {
 
             }
 
-            prayerViewModel.nextJamaat.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    binding.nextPrayerText.text = it.substringBefore(' ')
-                    binding.nextPrayerTime.text = it.substringAfter(' ')
-                }
+            displayNextPrayer()
+        }
+    }
+
+    private fun displayNextPrayer() {
+        prayerViewModel.nextJamaat.observe(viewLifecycleOwner) {
+            if (it != null) {
+                binding.nextPrayerText.text = it.substringBefore(' ')
+                binding.nextPrayerTime.text = it.substringAfter(' ')
             }
         }
     }

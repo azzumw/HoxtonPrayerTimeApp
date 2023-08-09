@@ -4,9 +4,11 @@ import android.icu.util.Calendar
 import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
@@ -99,3 +101,29 @@ fun getLastWeek(calender:java.util.Calendar):Int {
 fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) = getLastWeek(calender).toString()
 
 fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault()).get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
+
+fun formatTimeToString(time: Date?): String? {
+    val formatter = SimpleDateFormat("hh:mm a")
+    if (time != null){
+        val formattedTime = formatter.format(time)
+        Log.e("formatStringTime",formattedTime)
+        return formattedTime
+    }
+//    val date = formatter.parse(time)
+   return null;
+}
+
+fun fromStringToDateTimeObj(timeStr: String?): Date? {
+
+     return timeStr?.let {
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        val formatter2 = SimpleDateFormat("dd/MM/yyyy hh:mm a")
+
+        val today = java.util.Calendar.getInstance().time
+
+        val fDate = formatter.format(today)
+        val dateString = "$fDate $timeStr"
+        Log.e("fromStringToDateObj: ",dateString)
+        formatter2.parse(dateString)
+    }
+}
