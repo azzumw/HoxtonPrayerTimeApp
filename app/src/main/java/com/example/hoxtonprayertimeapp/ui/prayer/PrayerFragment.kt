@@ -93,10 +93,12 @@ class PrayerFragment : Fragment() {
 
     private fun displayNextPrayer() {
         prayerViewModel.nextJamaat.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.nextPrayerText.text = it.substringBefore(' ')
-                binding.nextPrayerTime.text = it.substringAfter(' ')
-            }
+            if (it == "Good Night") {
+                binding.nextPrayerLabel.visibility = View.GONE
+            } else binding.nextPrayerLabel.visibility = View.VISIBLE
+
+            binding.nextPrayerText.text = it.substringBefore(' ')
+            binding.nextPrayerTime.text = it.substringAfter(' ')
         }
     }
 

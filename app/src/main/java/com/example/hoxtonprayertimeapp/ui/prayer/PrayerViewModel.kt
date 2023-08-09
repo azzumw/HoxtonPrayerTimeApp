@@ -35,7 +35,7 @@ class PrayerViewModel : ViewModel() {
 
     private val collectionPrayers: CollectionReference
 
-    private lateinit var listernereRegisteration: ListenerRegistration
+    private lateinit var listernerRegisteration: ListenerRegistration
 
     private val calendar = Calendar.getInstance(Locale.getDefault())
 
@@ -68,17 +68,16 @@ class PrayerViewModel : ViewModel() {
 
     private fun workoutNextJamaat() {
         val currentTime = Calendar.getInstance().time
-        //only add those prayers whose time is after the current time
+        //filter prayers whose time is after the current time
         //and display the first instance, else show Good Night message.
-        val remainingTodayPrayersMap = nextPrayersMap.filterValues {
+        nextPrayersMap.filterValues {
             currentTime.before(it)
+        }.also {
+            if (it.isNotEmpty() && currentTime.before(it.toList().first().second)) {
+                val sd = formatTimeToString(it.toList().first().second)
+                _nextJamaat.value = "${it.toList().first().first} $sd"
+            } else _nextJamaat.value = "Good Night"
         }
-
-        val sd = formatTimeToString(remainingTodayPrayersMap.toList()[0].second)
-
-        _nextJamaat.value = if (currentTime.before(remainingTodayPrayersMap.toList()[0].second)) {
-            "${remainingTodayPrayersMap.toList()[0].first} $sd"
-        } else "Good Night"
     }
 
     private fun writePrayerTimesForThisWeek(date: String, year: Int) {
@@ -93,7 +92,7 @@ class PrayerViewModel : ViewModel() {
             maghrib = "08:56 pm",
             isha = "10:15 pm",
             firstJummah = "02:15 pm",
-            secondJummah ="02:15 pm"
+            secondJummah = "02:15 pm"
         )
         val docRef = collectionPrayers.document(lastWeekNumber)
 
@@ -111,7 +110,7 @@ class PrayerViewModel : ViewModel() {
         val queryLastFriday =
             firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, date)
 
-        listernereRegisteration = queryLastFriday.addSnapshotListener { value, error ->
+        listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
             if (error != null) {
                 Timber.e("Listen failed. $error")
 
@@ -145,7 +144,7 @@ class PrayerViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         firestore.clearPersistence()
-        listernereRegisteration.remove()
+        listernerRegisteration.remove()
     }
 
     companion object {
