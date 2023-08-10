@@ -66,10 +66,15 @@ class PrayerViewModel : ViewModel() {
         Timber.e("ViewModel initialised ${firestore.app}")
     }
 
+    /**
+    This method filters out those prayers whose time is before the current time,
+    leaving only those prayers in the list whose time is after the current time.
+    If the list is empty i.e. all prayers have been filtered out, then a Good Night
+    message is displayed. At midnight, this cycle repeats.
+    */
     private fun workoutNextJamaat() {
         val currentTime = Calendar.getInstance().time
-        //filter prayers where time is after the current time
-        //and display the first instance, else show Good Night message.
+
         nextPrayersMap.filterValues {
             currentTime.before(it)
         }.also {
