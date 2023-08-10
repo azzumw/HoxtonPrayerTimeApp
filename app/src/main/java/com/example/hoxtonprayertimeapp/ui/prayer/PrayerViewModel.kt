@@ -54,7 +54,7 @@ class PrayerViewModel : ViewModel() {
 
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
 
-        writePrayerTimesForThisWeek(date, calendar[Calendar.YEAR])
+        writePrayerTimesForThisWeek()
 
         listenForPrayers()
 
@@ -68,7 +68,7 @@ class PrayerViewModel : ViewModel() {
 
     private fun workoutNextJamaat() {
         val currentTime = Calendar.getInstance().time
-        //filter prayers whose time is after the current time
+        //filter prayers where time is after the current time
         //and display the first instance, else show Good Night message.
         nextPrayersMap.filterValues {
             currentTime.before(it)
@@ -80,7 +80,7 @@ class PrayerViewModel : ViewModel() {
         }
     }
 
-    private fun writePrayerTimesForThisWeek(date: String, year: Int) {
+    private fun writePrayerTimesForThisWeek() {
 
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 
@@ -119,8 +119,8 @@ class PrayerViewModel : ViewModel() {
                 return@addSnapshotListener
             }
 
-            val prayerObject = value!!.documents[0].toObject(Week::class.java)
-            _prayer.value = prayerObject
+            _prayer.value = value!!.documents[0].toObject(Week::class.java)
+
             _status.value = FireStoreStatus.DONE
 
             nextPrayersMap[FAJR_KEY] = fromStringToDateTimeObj(prayer.value?.fajar)
