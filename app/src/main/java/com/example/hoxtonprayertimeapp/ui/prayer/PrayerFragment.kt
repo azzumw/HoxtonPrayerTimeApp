@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.example.hoxtonprayertimeapp.R
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
-import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.isFridayToday
 
 class PrayerFragment : Fragment() {
@@ -110,7 +109,6 @@ class PrayerFragment : Fragment() {
             binding.dhuhrJamaatTimeTv.visibility = TextView.VISIBLE
             binding.jummahJamaatsContainer.visibility = TextView.GONE
         }
-
     }
 
     override fun onDestroy() {
