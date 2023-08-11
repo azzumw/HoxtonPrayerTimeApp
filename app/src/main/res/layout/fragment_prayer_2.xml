@@ -48,7 +48,7 @@
                     style="@style/date_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dummy_gregorian_date"
+                    android:text="@{viewModel.gregoryTodaysDate}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@string/dummy_gregorian_date" />

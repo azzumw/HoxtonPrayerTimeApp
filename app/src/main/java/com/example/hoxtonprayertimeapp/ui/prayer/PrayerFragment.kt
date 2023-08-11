@@ -39,8 +39,6 @@ class PrayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.gregoryTodayDateTv.text = getCurrentGregorianDate()
-
 //        val viewModelFactory = PrayerViewModelFactory()
 //        prayerViewModel = ViewModelProvider(this, viewModelFactory)[PrayerViewModel::class.java]
 
