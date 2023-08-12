@@ -71,7 +71,7 @@ class PrayerViewModel : ViewModel() {
     }
 
     /**
-    This method filters out those prayers whose time is before the current time,
+    This method weeds out those prayers whose time is before the current time,
     leaving only those prayers in the list whose time is after the current time.
     If the list is empty i.e. all prayers have been filtered out, then a Good Night
     message is displayed. At midnight, this cycle repeats.
