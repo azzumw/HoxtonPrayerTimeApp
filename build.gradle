@@ -4,6 +4,7 @@ buildscript {
         version_navigation = '1.0.0'
         version_moshi = "1.13.0"
         version_retrofit = "2.9.0"
+        version_navigation = "2.9.0"
     }
     repositories {
         google()  // Google's Maven repository
