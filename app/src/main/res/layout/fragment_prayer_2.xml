@@ -218,7 +218,8 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_time"
+                            tools:text="@string/dummy_time"
+                            android:text="@{@string/am(viewModel.londonPrayerBeginningTimes.fajr)}"
                             android:textSize="18sp"
                             android:textColor="@color/gray"
                             android:gravity="center" />
@@ -278,7 +279,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/dummy_time"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.dhuhr)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -368,7 +369,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/dummy_time"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.asr)}"
+                            tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
 
@@ -424,7 +426,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/dummy_time"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.magrib)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -482,7 +484,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/dummy_time"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.isha)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />

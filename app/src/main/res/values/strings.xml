@@ -23,7 +23,7 @@
     <string name="begin_text">Begin</string>
     <string name="jamaat_text">Jamaat</string>
 
-    <string name="am">%sam</string>
-    <string name="pm">%spm</string>
+    <string name="am">%s am</string>
+    <string name="pm">%s pm</string>
 
 </resources>
