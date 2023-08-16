@@ -3,9 +3,7 @@ package com.example.hoxtonprayertimeapp.utils
 import android.icu.util.Calendar
 import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -18,8 +16,8 @@ fun getCurrentGregorianDate(): String = SimpleDateFormat(
     Locale.getDefault()
 ).format(java.util.Calendar.getInstance().time) //or use getDateInstance()
 
-@RequiresApi(Build.VERSION_CODES.N)
-fun getCurrentIslamicDate(): String {
+
+fun getCurrentIslamicDate() : String{
     val locale = ULocale("@calendar=islamic-umalqura")
     val islamic = Calendar.getInstance(locale) as IslamicCalendar
 
@@ -110,7 +108,7 @@ fun formatTimeToString(time: Date?): String? {
         return formattedTime
     }
 //    val date = formatter.parse(time)
-   return null;
+   return null
 }
 
 fun fromStringToDateTimeObj(timeStr: String?): Date? {

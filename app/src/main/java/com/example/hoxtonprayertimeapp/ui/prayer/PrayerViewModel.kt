@@ -10,6 +10,7 @@ import com.example.hoxtonprayertimeapp.models.Week
 import com.example.hoxtonprayertimeapp.utils.formatTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
+import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -33,6 +34,10 @@ class PrayerViewModel : ViewModel() {
 
     private val _gregoryTodaysDate =  MutableLiveData(getCurrentGregorianDate())
     val gregoryTodaysDate : LiveData<String> get() = _gregoryTodaysDate
+
+    private val _islamicTodaysDate = MutableLiveData(getCurrentIslamicDate())
+    val islamicTodaysDate: LiveData<String> get() = _islamicTodaysDate
+
     val nextJamaat: LiveData<String> get() = _nextJamaat
 
     private lateinit var firestore: FirebaseFirestore

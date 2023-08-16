@@ -58,7 +58,7 @@
                     style="@style/date_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dummy_islamic_date"
+                    android:text="@{viewModel.islamicTodaysDate}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@string/dummy_islamic_date" />
