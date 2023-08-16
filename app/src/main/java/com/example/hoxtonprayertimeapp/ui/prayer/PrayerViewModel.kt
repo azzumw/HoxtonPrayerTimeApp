@@ -4,9 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
+import com.example.hoxtonprayertimeapp.network.KEY
+import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
+import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.formatTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
@@ -16,7 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.util.Calendar
 import java.util.Date
@@ -53,6 +59,9 @@ class PrayerViewModel : ViewModel() {
     private val _prayer = MutableLiveData<Week?>()
     val prayer: LiveData<Week?> get() = _prayer
 
+    private val _londonPrayerBeginningTimes = MutableLiveData<LondonPrayersBeginningTimes>()
+    val londonPrayerBeginningTimes : LiveData<LondonPrayersBeginningTimes> get() = _londonPrayerBeginningTimes
+
     private val _status = MutableLiveData<FireStoreStatus>()
     val status: LiveData<FireStoreStatus>
         get() = _status
@@ -67,12 +76,26 @@ class PrayerViewModel : ViewModel() {
 
         listenForPrayers()
 
+        getLondonPrayerBeginningTimesFromApi()
+
     }
 
     private fun initialiseFireStoreEmulator() {
         firestore = Firebase.firestore
         firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
         Timber.e("ViewModel initialised ${firestore.app}")
+    }
+
+    private fun getLondonPrayerBeginningTimesFromApi(){
+        viewModelScope.launch {
+            try {
+                val apiResult = PrayersApi.retrofitService.getTodaysTimes("json", KEY)
+                _londonPrayerBeginningTimes.value = apiResult
+                Timber.i(londonPrayerBeginningTimes.value?.fajr.toString())
+            }catch (e:Exception){
+                Timber.e(e.message)
+            }
+        }
     }
 
     /**

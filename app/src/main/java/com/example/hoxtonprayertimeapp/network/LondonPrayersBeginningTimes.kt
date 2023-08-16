@@ -1,6 +1,6 @@
 package com.example.hoxtonprayertimeapp.network
 
-data class Prayers(
+data class LondonPrayersBeginningTimes(
     val date:String,
     val fajr:String,
     val sunrise:String,
