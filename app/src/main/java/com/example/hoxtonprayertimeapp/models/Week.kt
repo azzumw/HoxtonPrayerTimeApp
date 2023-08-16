@@ -10,16 +10,3 @@ data class Week(
     val firstJummah: String? = null,
     val secondJummah: String? = null,
 )
-
-
-//fun convert(time: Timestamp?): String {
-//    return if (time != null) {
-//        val toDate = time.toDate().time
-//        SimpleDateFormat("hh:mm a").format(toDate)
-//    } else "00:00"
-//}
-
-//val time = Timestamp.now().toDate()
-//val df = SimpleDateFormat("hh:mm a", Locale.getDefault())
-//val f = df.format(time)
-//Timber.e("time: $f")

@@ -78,8 +78,6 @@ fun getLastFridayDate():String{
 
 fun getTodayDate():String{
     val date = Timestamp.now().toDate()
-
-//    val calendar = java.util.Calendar.getInstance().time
     val df = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
     return df.format(date)
 }

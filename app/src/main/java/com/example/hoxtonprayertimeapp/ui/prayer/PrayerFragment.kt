@@ -50,7 +50,7 @@ class PrayerFragment : Fragment() {
             }
         }
 
-        prayerViewModel.prayer.observe(viewLifecycleOwner) {
+        prayerViewModel.week.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (isFridayToday()) {
                     //if second jummah exists

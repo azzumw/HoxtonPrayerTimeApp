@@ -48,7 +48,7 @@
                     style="@style/date_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.gregoryTodaysDate}"
+                    android:text="@{viewModel.gregoryTodayDate}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@string/dummy_gregorian_date" />
@@ -58,7 +58,7 @@
                     style="@style/date_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.islamicTodaysDate}"
+                    android:text="@{viewModel.islamicTodayDate}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="@string/dummy_islamic_date" />

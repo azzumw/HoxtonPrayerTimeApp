@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Query
 
-
+const val QUERY_FORMAT_JSON = "json"
 const val KEY = "f149aaef-856d-421a-8e1c-0b2f80c11174"
 private const val BASE_URL = "https://www.londonprayertimes.com/api/"
 
@@ -22,7 +22,7 @@ val retrofit = Retrofit.Builder()
 
 interface PrayersApiService{
     @GET("times")
-    suspend fun getTodaysTimes(@Query("format") format:String,@Query("key") key:String):LondonPrayersBeginningTimes
+    suspend fun getTodaysPrayerBeginningTimes(@Query("format") format:String = QUERY_FORMAT_JSON, @Query("key") key:String = KEY):LondonPrayersBeginningTimes
 }
 
 object PrayersApi{

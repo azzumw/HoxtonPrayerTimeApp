@@ -9,3 +9,7 @@ data class LondonPrayersBeginningTimes(
     val magrib:String,
     val isha:String
 )
+
+fun LondonPrayersBeginningTimes.getMaghribJamaatTime(){
+
+}
