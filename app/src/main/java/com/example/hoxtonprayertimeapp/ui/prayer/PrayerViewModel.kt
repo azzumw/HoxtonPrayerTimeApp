@@ -74,7 +74,7 @@ class PrayerViewModel : ViewModel() {
 
         listenForPrayers()
 
-        getLondonPrayerBeginningTimesFromApi()
+        getBeginningTimesFromLondonPrayerTimesApi()
 
     }
 
@@ -84,7 +84,7 @@ class PrayerViewModel : ViewModel() {
         Timber.e("ViewModel initialised ${firestore.app}")
     }
 
-    private fun getLondonPrayerBeginningTimesFromApi() {
+    private fun getBeginningTimesFromLondonPrayerTimesApi() {
         viewModelScope.launch {
             try {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes()
