@@ -74,6 +74,10 @@ dependencies {
     implementation('androidx.navigation:navigation-fragment-ktx:2.4.2')
     implementation('androidx.navigation:navigation-ui-ktx:2.4.2')
 
+    //Moshi
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
     //unitTest
     testImplementation 'junit:junit:4.13.2'
 
