@@ -91,11 +91,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="@string/fajr_salaat_name"
+                        android:text="@string/maghrib_text"
                         android:textColor="@color/purple"
                         android:textSize="@dimen/next_prayer_text_textsize"
                         android:textStyle="bold"
-                        tools:text="Fajr" />
+                        tools:text="Maghrib" />
 
                     <TextView
                         android:id="@+id/next_prayer_time"
