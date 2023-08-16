@@ -124,11 +124,11 @@ class PrayerViewModel : ViewModel() {
 
         val week = Week(
             date,
-            fajar = "04:30 am",
+            fajar = "04:45 am",
             dhuhr = "01:30 pm",
             asr = "06:30 pm",
             maghrib = "08:27 pm",
-            isha = "10:15 pm",
+            isha = "10:00 pm",
             firstJummah = "01:30 pm",
             secondJummah = "02:15 pm"
         )
