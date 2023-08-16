@@ -52,22 +52,15 @@ class PrayerFragment : Fragment() {
 
         prayerViewModel.week.observe(viewLifecycleOwner) {
             if (it != null) {
-                if (isFridayToday()) {
-                    //if second jummah exists
+                if (replaceDhuhrWithJummah(isFridayToday())) {
                     if (it.secondJummah != null) {
-                        replaceDhuhrWithJummah(true)
                         binding.jummahJamaatOneTimeTv.text = it.firstJummah
                         binding.jummahJamaatTwoTimeTv.text = it.secondJummah
 
                     } else {
-                        replaceDhuhrWithJummah(false)
                         binding.dhuhrJamaatTimeTv.text = it.firstJummah
                     }
-
-                    binding.dhuhrTextview.text = getString(R.string.jummah_text)
-
                 } else {
-                    replaceDhuhrWithJummah(false)
                     binding.dhuhrJamaatTimeTv.text = it.dhuhr
                 }
 
@@ -99,14 +92,17 @@ class PrayerFragment : Fragment() {
     }
 
 
-    private fun replaceDhuhrWithJummah(isFriday: Boolean) {
-        if (isFriday) {
+    private fun replaceDhuhrWithJummah(isFriday: Boolean):Boolean {
+        return if (isFriday) {
             binding.dhuhrJamaatTimeTv.visibility = TextView.GONE
             binding.jummahJamaatsContainer.visibility = TextView.VISIBLE
+            binding.dhuhrTextview.text = getString(R.string.jummah_text)
+            true
         } else {
             binding.dhuhrTextview.text = getString(R.string.dhohar_text)
             binding.dhuhrJamaatTimeTv.visibility = TextView.VISIBLE
             binding.jummahJamaatsContainer.visibility = TextView.GONE
+            false
         }
     }
 
