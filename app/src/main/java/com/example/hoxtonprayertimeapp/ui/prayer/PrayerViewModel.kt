@@ -10,10 +10,12 @@ import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
+import com.example.hoxtonprayertimeapp.network.getMaghribJamaatTime
 import com.example.hoxtonprayertimeapp.utils.formatTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
+import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -64,7 +66,13 @@ class PrayerViewModel : ViewModel() {
     val status: LiveData<FireStoreStatus>
         get() = _status
 
+    private val _maghribFromApi = MutableLiveData<String>()
+    val maghribFromApi :LiveData<String> get() = _maghribFromApi
+
     init {
+        getTodayDate("yyyy-mm-dd")
+
+        getBeginningTimesFromLondonPrayerTimesApi()
 
         initialiseFireStoreEmulator()
 
@@ -73,9 +81,6 @@ class PrayerViewModel : ViewModel() {
         writePrayerTimesForThisWeek()
 
         listenForPrayers()
-
-        getBeginningTimesFromLondonPrayerTimesApi()
-
     }
 
     private fun initialiseFireStoreEmulator() {
@@ -84,12 +89,27 @@ class PrayerViewModel : ViewModel() {
         Timber.e("ViewModel initialised ${firestore.app}")
     }
 
+
+
     private fun getBeginningTimesFromLondonPrayerTimesApi() {
         viewModelScope.launch {
             try {
-                val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes()
+                val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(date = getTodayDate(LONDON_PRAYER_API_DATE_PATTERN))
                 _londonPrayerBeginningTimes.value = apiResult
-                Timber.i(londonPrayerBeginningTimes.value?.fajr.toString())
+                _maghribFromApi.value = londonPrayerBeginningTimes.value?.getMaghribJamaatTime()
+
+                nextPrayersMap.also {
+                    it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
+                    it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
+                    it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
+                    it[MAGHRIB_KEY] = fromStringToDateTimeObj(maghribFromApi.value)
+                    it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
+                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
+                    it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
+                }
+
+                workoutNextJamaat()
+
             } catch (e: Exception) {
                 Timber.e(e.message)
             }
@@ -111,7 +131,7 @@ class PrayerViewModel : ViewModel() {
         }.also {
             //when not empty, currentTime is before the prayer time of the first prayer element
             if (it.isNotEmpty() && currentTime.before(it.toList().first().second)) {
-                //format the time in hh:mm a
+                //format the time in hh:mma
                 val formattedNextJamaatTime = formatTimeToString(it.toList().first().second)
                 _nextJamaat.value = "${it.toList().first().first} $formattedNextJamaatTime"
             } else _nextJamaat.value = "Good Night"
@@ -119,15 +139,14 @@ class PrayerViewModel : ViewModel() {
     }
 
     private fun writePrayerTimesForThisWeek() {
-
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 
         val week = Week(
             date,
-            fajar = "04:45 am",
+            fajar = "05:00 am",
             dhuhr = "01:30 pm",
             asr = "06:30 pm",
-            maghrib = "08:27 pm",
+            maghrib =  "08:25 pm",
             isha = "10:00 pm",
             firstJummah = "01:30 pm",
             secondJummah = "02:15 pm"
@@ -158,24 +177,7 @@ class PrayerViewModel : ViewModel() {
             }
 
             _week.value = value!!.documents[0].toObject(Week::class.java)
-
             _status.value = FireStoreStatus.DONE
-
-            nextPrayersMap[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
-            nextPrayersMap[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
-            nextPrayersMap[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
-            nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(week.value?.maghrib)
-            nextPrayersMap[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
-            nextPrayersMap[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
-            nextPrayersMap[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
-//            for (doc in value!!) {
-//                //convert to Prayer object
-//                val prayerObj = doc.toObject(Week::class.java)
-//                pMap += doc.id to prayerObj
-//            }
-
-            Timber.e("nextPrayerMap: ${nextPrayersMap.keys}")
-            workoutNextJamaat()
         }
     }
 
@@ -200,7 +202,7 @@ class PrayerViewModel : ViewModel() {
         const val ISHA_KEY = "Isha"
         const val FIRST_JUMMAH_KEY = "FirstJummah"
         const val SECOND_JUMMAH_KEY = "SecondJummah"
-
+        const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
     }
 }
 

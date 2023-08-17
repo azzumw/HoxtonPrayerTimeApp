@@ -22,7 +22,7 @@ val retrofit = Retrofit.Builder()
 
 interface PrayersApiService{
     @GET("times")
-    suspend fun getTodaysPrayerBeginningTimes(@Query("format") format:String = QUERY_FORMAT_JSON, @Query("key") key:String = KEY):LondonPrayersBeginningTimes
+    suspend fun getTodaysPrayerBeginningTimes(@Query("format") format:String = QUERY_FORMAT_JSON, @Query("key") key:String = KEY,@Query("date") date:String):LondonPrayersBeginningTimes
 }
 
 object PrayersApi{

@@ -5,6 +5,7 @@ import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
 import android.util.Log
 import com.google.firebase.Timestamp
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -76,9 +77,10 @@ fun getLastFridayDate():String{
 
 }
 
-fun getTodayDate():String{
+fun getTodayDate(pattern:String= DATE_PATTERN):String{
     val date = Timestamp.now().toDate()
-    val df = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
+    val df = SimpleDateFormat(pattern, Locale.getDefault())
+    Timber.i(df.format(date))
     return df.format(date)
 }
 
@@ -99,7 +101,7 @@ fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) = getLast
 fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault()).get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
 
 fun formatTimeToString(time: Date?): String? {
-    val formatter = SimpleDateFormat("hh:mma")
+    val formatter = SimpleDateFormat("hh:mm a")
     if (time != null){
         val formattedTime = formatter.format(time)
         Log.e("formatStringTime",formattedTime)
