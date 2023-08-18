@@ -14,18 +14,22 @@ data class LondonPrayersBeginningTimes(
     val asr: String,
     val magrib: String,
     val isha: String
-)
+){
+    val magribJamaat:String = getMaghribJamaatTime()
 
-fun LondonPrayersBeginningTimes.getMaghribJamaatTime(): String {
-    val tempMaghrib = "$magrib pm"
+    private fun getMaghribJamaatTime(): String {
+        val tempMaghrib = "$magrib pm"
 
-    val formattedDate = fromStringToDateTimeObj(tempMaghrib)
+        val formattedDate = fromStringToDateTimeObj(tempMaghrib)
 
-    val maghribJamaatTime = Calendar.getInstance().apply {
-        time = formattedDate!!
-        add(Calendar.MINUTE, TWO_MINS)
-    }.time
+        val maghribJamaatTime = Calendar.getInstance().apply {
+            time = formattedDate!!
+            add(Calendar.MINUTE, TWO_MINS)
+        }.time
 
-    return SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
+        return SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
 
+    }
 }
+
+

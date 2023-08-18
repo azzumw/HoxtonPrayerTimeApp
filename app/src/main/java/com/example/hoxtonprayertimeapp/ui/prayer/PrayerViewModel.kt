@@ -10,7 +10,6 @@ import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
-import com.example.hoxtonprayertimeapp.network.getMaghribJamaatTime
 import com.example.hoxtonprayertimeapp.utils.formatTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
@@ -98,7 +97,7 @@ class PrayerViewModel : ViewModel() {
                 )
                 _londonPrayerBeginningTimes.value = apiResult
 
-                _maghribFromApi.value = londonPrayerBeginningTimes.value?.getMaghribJamaatTime()
+                _maghribFromApi.value = londonPrayerBeginningTimes.value?.magribJamaat
 
                 nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(maghribFromApi.value)
 
