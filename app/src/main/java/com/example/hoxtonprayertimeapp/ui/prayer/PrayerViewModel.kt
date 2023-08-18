@@ -16,6 +16,7 @@ import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
+import com.example.hoxtonprayertimeapp.utils.isFridayToday
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -127,7 +128,7 @@ class PrayerViewModel : ViewModel() {
                 //format the time in hh:mma
                 val formattedNextJamaatTime = formatTimeToString(it.toList().first().second)
                 _nextJamaat.value = "${it.toList().first().first} $formattedNextJamaatTime"
-            } else _nextJamaat.value = "Good Night"
+            } else _nextJamaat.value = GOOD_NIGHT_MSG
         }
     }
 
@@ -173,12 +174,18 @@ class PrayerViewModel : ViewModel() {
             _status.value = FireStoreStatus.DONE
 
             nextPrayersMap.also {
+                if (isFridayToday()) {
+                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
+                    if(week.value?.secondJummah!= null){
+                        it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
+                    }
+                } else {
+                    it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
+                }
                 it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
-                it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
                 it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
                 it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
-                it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
-                it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
+
             }
 
             workoutNextJamaat()
@@ -199,13 +206,15 @@ class PrayerViewModel : ViewModel() {
 
         private const val FRIDAY_DAY_KEY = "fridayDate"
 
+        private const val GOOD_NIGHT_MSG = "Good Night"
+
         const val FAJR_KEY = "Fajr"
         const val DHOHAR_KEY = "Dhohar"
         const val ASR_KEY = "Asr"
         const val MAGHRIB_KEY = "Maghrib"
         const val ISHA_KEY = "Isha"
-        const val FIRST_JUMMAH_KEY = "FirstJummah"
-        const val SECOND_JUMMAH_KEY = "SecondJummah"
+        const val FIRST_JUMMAH_KEY = "Jummah-1"
+        const val SECOND_JUMMAH_KEY = "Jummah-2"
         const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
     }
 }

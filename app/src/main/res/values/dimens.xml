@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="next_prayer_label_textsize">16sp</dimen>
-    <dimen name="next_prayer_text_textsize">40sp</dimen>
+    <dimen name="next_prayer_text_textsize">35sp</dimen>
     <dimen name="card_radius">10dp</dimen>
 </resources>
