@@ -1,9 +1,5 @@
 package com.example.hoxtonprayertimeapp.ui.prayer
 
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.SuperscriptSpan
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
