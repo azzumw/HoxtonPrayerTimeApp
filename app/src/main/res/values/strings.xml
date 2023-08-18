@@ -3,7 +3,7 @@
 
     <string name="prayer_times_frag_title">Prayer Times</string>
 
-    <string name="next_jamaat_text">Next Jamaat</string>
+    <string name="next_jamaat_text">Next Jamaah</string>
 
     <string name="fajr_text">Fajr</string>
     <string name="dhohar_text">Dhohar</string>
@@ -11,7 +11,7 @@
     <string name="maghrib_text">Maghrib</string>
     <string name="broadcast_next_prayer_text">Maghrib 08:30 pm</string>
     <string name="isha_text">Isha</string>
-    <string name="jummah_text">Jummah</string>
+    <string name="jummah_text">Jumuah</string>
 
     <string name="admin_menu_item_text">Admin</string>
     <string name="settings_menu_item_text">Settings</string>
@@ -22,7 +22,7 @@
     <string name="dummy_islamic_date">29 Dhul Hijjah 1444</string>
     <string name="today_text">Today</string>
     <string name="begin_text">Begin</string>
-    <string name="jamaat_text">Jamaat</string>
+    <string name="jamaat_text">Jamaah</string>
 
     <string name="am">%s am</string>
     <string name="pm">%s pm</string>

@@ -124,21 +124,15 @@ class PrayerViewModel : ViewModel() {
         val currentTime = Calendar.getInstance().time
 
         //filter prayers with time after the current time
-        nextPrayersMap.toList().sortedBy {
-            it.second
-        }.toMap().filterValues {
+        val nj = nextPrayersMap.filterValues {
             currentTime.before(it)
-        }.also {
+        }.toList().sortedBy {
+            it.second
+        }.firstOrNull()
 
-            Timber.i("${it.keys}")
-            //when not empty, currentTime is before the prayer time of the first prayer element
-            if (it.isNotEmpty() && currentTime.before(it.toList().first().second)) {
-                //format the time in hh:mma
-                val formattedNextJamaatTime = formatTimeToString(it.toList().first().second)
-                _nextJamaat.value = "${it.toList().first().first} $formattedNextJamaatTime "
-
-            } else _nextJamaat.value = GOOD_NIGHT_MSG
-        }
+        _nextJamaat.value = if(nj != null){
+             "${nj.first} ${formatTimeToString(nj.second)}"
+        }else GOOD_NIGHT_MSG
     }
 
     private fun writePrayerTimesToFirestoreForThisWeek() {
@@ -223,8 +217,8 @@ class PrayerViewModel : ViewModel() {
         const val ASR_KEY = "Asr"
         const val MAGHRIB_KEY = "Maghrib"
         const val ISHA_KEY = "Isha"
-        const val FIRST_JUMMAH_KEY = "1st Jummah"
-        const val SECOND_JUMMAH_KEY = "2nd Jummah"
+        const val FIRST_JUMMAH_KEY = "1st Jumuah"
+        const val SECOND_JUMMAH_KEY = "2nd Jumuah"
         const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
     }
 }
