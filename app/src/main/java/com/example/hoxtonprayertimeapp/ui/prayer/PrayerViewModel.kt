@@ -55,7 +55,7 @@ class PrayerViewModel : ViewModel() {
 
     private val calendar = Calendar.getInstance(Locale.getDefault())
 
-    private val date = getFridayDate()
+    private val fridayDate = getFridayDate()
 
     private val _week = MutableLiveData<Week?>()
     val week: LiveData<Week?> get() = _week
@@ -136,7 +136,7 @@ class PrayerViewModel : ViewModel() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 
         val week = Week(
-            date,
+            fridayDate,
             fajar = "05:00 am",
             dhuhr = "01:30 pm",
             asr = "06:30 pm",
@@ -158,7 +158,7 @@ class PrayerViewModel : ViewModel() {
         _status.value = FireStoreStatus.LOADING
 
         val queryLastFriday =
-            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, date)
+            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, fridayDate)
 
         listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
             if (error != null) {
