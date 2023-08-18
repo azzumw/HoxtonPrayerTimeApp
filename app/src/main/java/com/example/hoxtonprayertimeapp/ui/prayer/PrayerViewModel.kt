@@ -104,7 +104,7 @@ class PrayerViewModel : ViewModel() {
 
                 nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(maghribFromApi.value)
 
-                workoutNextJamaat()
+                workoutNextJamaah()
 
                Timber.i("${nextPrayersMap.values}")
 
@@ -119,7 +119,7 @@ class PrayerViewModel : ViewModel() {
     If the list is empty i.e. all prayers have been filtered out, then a Good Night
     message is displayed. At midnight, this cycle repeats.
      */
-    private fun workoutNextJamaat() {
+    private fun workoutNextJamaah() {
         //get the current time
         val currentTime = Calendar.getInstance().time
 
@@ -192,7 +192,7 @@ class PrayerViewModel : ViewModel() {
                 it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
             }
 
-            workoutNextJamaat()
+            workoutNextJamaah()
         }
     }
 
