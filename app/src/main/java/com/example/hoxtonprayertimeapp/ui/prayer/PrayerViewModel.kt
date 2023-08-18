@@ -78,9 +78,9 @@ class PrayerViewModel : ViewModel() {
 
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
 
-        writePrayerTimesForThisWeek()
+        writePrayerTimesToFirestoreForThisWeek()
 
-        listenForPrayers()
+        listenForPrayersFromFirestore()
     }
 
     private fun initialiseFireStoreEmulator() {
@@ -132,7 +132,7 @@ class PrayerViewModel : ViewModel() {
         }
     }
 
-    private fun writePrayerTimesForThisWeek() {
+    private fun writePrayerTimesToFirestoreForThisWeek() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 
         val week = Week(
@@ -153,7 +153,7 @@ class PrayerViewModel : ViewModel() {
         }
     }
 
-    private fun listenForPrayers() {
+    private fun listenForPrayersFromFirestore() {
         //listen to last friday, it today is friday listen to today.
         _status.value = FireStoreStatus.LOADING
 
