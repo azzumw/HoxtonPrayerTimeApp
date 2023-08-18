@@ -99,13 +99,13 @@ class PrayerViewModel : ViewModel() {
                 _maghribFromApi.value = londonPrayerBeginningTimes.value?.getMaghribJamaatTime()
 
                 nextPrayersMap.also {
-                    it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
-                    it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
-                    it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
+//                    it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
+//                    it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
+//                    it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
                     it[MAGHRIB_KEY] = fromStringToDateTimeObj(maghribFromApi.value)
-                    it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
-                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
-                    it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
+//                    it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
+//                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
+//                    it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
                 }
 
                 workoutNextJamaat()
@@ -178,6 +178,17 @@ class PrayerViewModel : ViewModel() {
 
             _week.value = value!!.documents[0].toObject(Week::class.java)
             _status.value = FireStoreStatus.DONE
+
+            nextPrayersMap.also {
+                it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
+                it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
+                it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
+                it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
+                it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
+                it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
+            }
+
+            workoutNextJamaat()
         }
     }
 
