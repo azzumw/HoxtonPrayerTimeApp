@@ -12,11 +12,13 @@ fun bindStatus(statusImageView: ImageView, status: FireStoreStatus?) {
             statusImageView.visibility = View.VISIBLE
             statusImageView.setImageResource(R.drawable.loading_animation)
         }
+
         FireStoreStatus.ERROR -> {
             statusImageView.visibility = View.VISIBLE
             statusImageView.setImageResource(R.drawable.no_internet)
         }
-        FireStoreStatus.DONE -> {
+
+        else -> {
             statusImageView.visibility = View.GONE
         }
     }

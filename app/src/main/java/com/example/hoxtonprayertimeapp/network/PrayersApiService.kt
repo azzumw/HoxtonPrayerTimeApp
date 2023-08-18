@@ -20,13 +20,17 @@ val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
-interface PrayersApiService{
+interface PrayersApiService {
     @GET("times")
-    suspend fun getTodaysPrayerBeginningTimes(@Query("format") format:String = QUERY_FORMAT_JSON, @Query("key") key:String = KEY,@Query("date") date:String):LondonPrayersBeginningTimes
+    suspend fun getTodaysPrayerBeginningTimes(
+        @Query("format") format: String = QUERY_FORMAT_JSON,
+        @Query("key") key: String = KEY,
+        @Query("date") date: String
+    ): LondonPrayersBeginningTimes
 }
 
-object PrayersApi{
-    val retrofitService : PrayersApiService by lazy {
+object PrayersApi {
+    val retrofitService: PrayersApiService by lazy {
         retrofit.create(PrayersApiService::class.java)
     }
 }

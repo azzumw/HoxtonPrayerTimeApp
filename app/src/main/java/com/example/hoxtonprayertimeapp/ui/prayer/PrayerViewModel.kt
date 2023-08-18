@@ -174,7 +174,7 @@ class PrayerViewModel : ViewModel() {
             nextPrayersMap.also {
                 if (isFridayToday()) {
                     it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
-                    if(week.value?.secondJummah!= null){
+                    if (week.value?.secondJummah != null) {
                         it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
                     }
                 } else {

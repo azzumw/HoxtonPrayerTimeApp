@@ -14,8 +14,8 @@ data class LondonPrayersBeginningTimes(
     val asr: String,
     val magrib: String,
     val isha: String
-){
-    val magribJamaat:String = getMaghribJamaatTime()
+) {
+    val magribJamaat: String = getMaghribJamaatTime()
 
     private fun getMaghribJamaatTime(): String {
         val tempMaghrib = "$magrib pm"
@@ -28,7 +28,6 @@ data class LondonPrayersBeginningTimes(
         }.time
 
         return SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
-
     }
 }
 

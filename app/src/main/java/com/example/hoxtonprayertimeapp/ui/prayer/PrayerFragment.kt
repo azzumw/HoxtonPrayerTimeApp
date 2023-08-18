@@ -89,7 +89,7 @@ class PrayerFragment : Fragment() {
     }
 
 
-    private fun replaceDhuhrWithJummah(isFriday: Boolean):Boolean {
+    private fun replaceDhuhrWithJummah(isFriday: Boolean): Boolean {
         return if (isFriday) {
             binding.dhuhrJamaatTimeTv.visibility = TextView.GONE
             binding.jummahJamaatsContainer.visibility = TextView.VISIBLE

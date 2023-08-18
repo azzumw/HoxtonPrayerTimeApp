@@ -13,7 +13,7 @@ import com.example.hoxtonprayertimeapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var navController:NavController
+    private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
 
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController,drawerLayout)
+        return NavigationUI.navigateUp(navController, drawerLayout)
     }
 
 }
