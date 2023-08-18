@@ -5,7 +5,6 @@ import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
 import android.util.Log
 import com.google.firebase.Timestamp
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -43,7 +42,7 @@ private fun getIslamicMonth(month: Int): String {
         IslamicCalendar.RAJAB -> "Rajab"
         IslamicCalendar.SHABAN -> "Shabaan"
         IslamicCalendar.RAMADAN -> "Ramdaan"
-        IslamicCalendar.SHAWWAL -> "Shawwal"
+        IslamicCalendar.SHAWWAL -> "Shawwaal"
         IslamicCalendar.DHU_AL_QIDAH -> "Dhu al Qidah"
         IslamicCalendar.DHU_AL_HIJJAH -> "Dhi al Hijjah"
         else -> "Unknown Month"
@@ -80,7 +79,6 @@ fun getLastFridayDate():String{
 fun getTodayDate(pattern:String= DATE_PATTERN):String{
     val date = Timestamp.now().toDate()
     val df = SimpleDateFormat(pattern, Locale.getDefault())
-    Timber.i(df.format(date))
     return df.format(date)
 }
 
@@ -108,7 +106,6 @@ fun formatTimeToString(time: Date?): String? {
 
         return  formattedTime.lowercase()
     }
-//    val date = formatter.parse(time)
    return null
 }
 

@@ -67,10 +67,9 @@ class PrayerViewModel : ViewModel() {
         get() = _status
 
     private val _maghribFromApi = MutableLiveData<String>()
-    val maghribFromApi :LiveData<String> get() = _maghribFromApi
+    val maghribFromApi: LiveData<String> get() = _maghribFromApi
 
     init {
-        getTodayDate("yyyy-mm-dd")
 
         getBeginningTimesFromLondonPrayerTimesApi()
 
@@ -90,23 +89,17 @@ class PrayerViewModel : ViewModel() {
     }
 
 
-
     private fun getBeginningTimesFromLondonPrayerTimesApi() {
         viewModelScope.launch {
             try {
-                val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(date = getTodayDate(LONDON_PRAYER_API_DATE_PATTERN))
+                val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
+                    date = getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
+                )
                 _londonPrayerBeginningTimes.value = apiResult
+
                 _maghribFromApi.value = londonPrayerBeginningTimes.value?.getMaghribJamaatTime()
 
-                nextPrayersMap.also {
-//                    it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
-//                    it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
-//                    it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
-                    it[MAGHRIB_KEY] = fromStringToDateTimeObj(maghribFromApi.value)
-//                    it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
-//                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
-//                    it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
-                }
+                nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(maghribFromApi.value)
 
                 workoutNextJamaat()
 
@@ -146,7 +139,7 @@ class PrayerViewModel : ViewModel() {
             fajar = "05:00 am",
             dhuhr = "01:30 pm",
             asr = "06:30 pm",
-            maghrib =  "08:25 pm",
+            maghrib = "08:25 pm",
             isha = "10:00 pm",
             firstJummah = "01:30 pm",
             secondJummah = "02:15 pm"
