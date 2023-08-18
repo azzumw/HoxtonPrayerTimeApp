@@ -72,19 +72,6 @@ class PrayerFragment : Fragment() {
                 //show no data error animation
 
             }
-
-            displayNextPrayer()
-        }
-    }
-
-    private fun displayNextPrayer() {
-        prayerViewModel.nextJamaat.observe(viewLifecycleOwner) {
-            if (it == "Good Night") {
-                binding.nextPrayerLabel.visibility = View.GONE
-            } else binding.nextPrayerLabel.visibility = View.VISIBLE
-
-            binding.nextPrayerText.text = it.substringBefore(' ')
-            binding.nextPrayerTime.text = it.substringAfter(' ')
         }
     }
 

@@ -9,6 +9,7 @@
     <string name="dhohar_text">Dhohar</string>
     <string name="asr_text">Asr</string>
     <string name="maghrib_text">Maghrib</string>
+    <string name="broadcast_next_prayer_text">Maghrib 08:30 pm</string>
     <string name="isha_text">Isha</string>
     <string name="jummah_text">Jummah</string>
 

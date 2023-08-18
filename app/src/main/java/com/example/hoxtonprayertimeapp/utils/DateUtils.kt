@@ -99,7 +99,7 @@ fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) = getLast
 fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault()).get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
 
 fun formatTimeToString(time: Date?): String? {
-    val formatter = SimpleDateFormat("hh:mm a")
+    val formatter = SimpleDateFormat("hh:mma")
     if (time != null){
         val formattedTime = formatter.format(time)
         Log.e("formatStringTime",formattedTime)

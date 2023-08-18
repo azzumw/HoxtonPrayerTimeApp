@@ -2,6 +2,7 @@ package com.example.hoxtonprayertimeapp.ui.prayer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -39,6 +40,10 @@ class PrayerViewModel : ViewModel() {
 
     private val _nextJamaat = MutableLiveData<String>()
     val nextJamaat: LiveData<String> get() = _nextJamaat
+
+    val nextJamaatLabelVisibility:LiveData<Boolean> = Transformations.map(nextJamaat){
+         it != GOOD_NIGHT_MSG
+    }
 
     private val _gregoryTodayDate = MutableLiveData(getCurrentGregorianDate())
     val gregoryTodayDate: LiveData<String> get() = _gregoryTodayDate
@@ -211,8 +216,8 @@ class PrayerViewModel : ViewModel() {
         const val ASR_KEY = "Asr"
         const val MAGHRIB_KEY = "Maghrib"
         const val ISHA_KEY = "Isha"
-        const val FIRST_JUMMAH_KEY = "Jummah-1"
-        const val SECOND_JUMMAH_KEY = "Jummah-2"
+        const val FIRST_JUMMAH_KEY = "1st Jummah"
+        const val SECOND_JUMMAH_KEY = "2nd Jummah"
         const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
     }
 }

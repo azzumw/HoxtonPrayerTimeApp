@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.example.hoxtonprayertimeapp.ui.prayer.PrayerViewModel" />
@@ -69,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:text="@string/next_jamaat_text"
+                    android:visibility="@{viewModel.nextJamaatLabelVisibility? View.VISIBLE:View.GONE}"
                     android:textColor="@color/purple"
                     android:textSize="@dimen/next_prayer_label_textsize"
                     android:textStyle="bold"
@@ -91,23 +93,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="@string/maghrib_text"
                         android:textColor="@color/purple"
                         android:textSize="@dimen/next_prayer_text_textsize"
                         android:textStyle="bold"
-                        tools:text="Maghrib" />
-
-                    <TextView
-                        android:id="@+id/next_prayer_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:fontFamily="sans-serif-light"
-                        android:text="@string/dummy_time"
-                        android:textColor="@color/purple"
-                        android:textSize="@dimen/next_prayer_text_textsize"
-                        android:textStyle="bold"
-                        tools:text="@string/dummy_time" />
+                        tools:text="@string/broadcast_next_prayer_text"
+                        android:text="@{viewModel.nextJamaat}"/>
 
                 </LinearLayout>
 
