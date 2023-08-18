@@ -17,7 +17,7 @@ data class LondonPrayersBeginningTimes(
 )
 
 fun LondonPrayersBeginningTimes.getMaghribJamaatTime(): String {
-    val tempMaghrib = "$magrib PM"
+    val tempMaghrib = "$magrib pm"
 
     val formattedDate = fromStringToDateTimeObj(tempMaghrib)
 
