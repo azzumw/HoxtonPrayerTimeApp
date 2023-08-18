@@ -106,6 +106,8 @@ class PrayerViewModel : ViewModel() {
 
                 workoutNextJamaat()
 
+               Timber.i("${nextPrayersMap.values}")
+
             } catch (e: Exception) {
                 Timber.e(e.message)
             }
@@ -122,9 +124,13 @@ class PrayerViewModel : ViewModel() {
         val currentTime = Calendar.getInstance().time
 
         //filter prayers with time after the current time
-        nextPrayersMap.filterValues {
+        nextPrayersMap.toList().sortedBy {
+            it.second
+        }.toMap().filterValues {
             currentTime.before(it)
         }.also {
+
+            Timber.i("${it.keys}")
             //when not empty, currentTime is before the prayer time of the first prayer element
             if (it.isNotEmpty() && currentTime.before(it.toList().first().second)) {
                 //format the time in hh:mma
@@ -176,6 +182,9 @@ class PrayerViewModel : ViewModel() {
             _status.value = FireStoreStatus.DONE
 
             nextPrayersMap.also {
+
+                it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
+
                 if (isFridayToday()) {
                     it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
                     if (week.value?.secondJummah != null) {
@@ -184,10 +193,9 @@ class PrayerViewModel : ViewModel() {
                 } else {
                     it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
                 }
-                it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
+
                 it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
                 it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
-
             }
 
             workoutNextJamaat()
