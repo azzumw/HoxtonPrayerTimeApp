@@ -140,7 +140,6 @@ class PrayerViewModel : ViewModel() {
             fajar = "05:00 am",
             dhuhr = "01:30 pm",
             asr = "06:30 pm",
-            maghrib = "08:25 pm",
             isha = "10:00 pm",
             firstJummah = "01:30 pm",
             secondJummah = "02:15 pm"

@@ -5,7 +5,6 @@ data class Week(
     val fajar: String? = null,
     val dhuhr: String? = null,
     val asr: String? = null,
-    val maghrib: String? = null,
     val isha: String? = null,
     val firstJummah: String? = null,
     val secondJummah: String? = null,
