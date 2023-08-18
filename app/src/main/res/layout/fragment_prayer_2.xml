@@ -93,11 +93,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
+                        android:text="@{viewModel.nextJamaat}"
                         android:textColor="@color/purple"
                         android:textSize="@dimen/next_prayer_text_textsize"
                         android:textStyle="bold"
-                        tools:text="@string/broadcast_next_prayer_text"
-                        android:text="@{viewModel.nextJamaat}"/>
+                        tools:text="@string/broadcast_next_prayer_text" />
 
                 </LinearLayout>
 

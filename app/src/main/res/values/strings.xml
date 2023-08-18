@@ -27,4 +27,7 @@
     <string name="am">%s am</string>
     <string name="pm">%s pm</string>
 
+    <string name="first">1<sup>st</sup></string>
+    <string name="second">2<sup>nd</sup></string>
+
 </resources>

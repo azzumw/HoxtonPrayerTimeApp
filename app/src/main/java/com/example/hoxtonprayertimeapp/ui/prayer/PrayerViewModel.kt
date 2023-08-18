@@ -1,20 +1,24 @@
 package com.example.hoxtonprayertimeapp.ui.prayer
 
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.SuperscriptSpan
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
-import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.models.Week
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
+import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.formatTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
+import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import com.example.hoxtonprayertimeapp.utils.isFridayToday
 import com.google.firebase.firestore.CollectionReference
@@ -24,8 +28,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -41,8 +43,8 @@ class PrayerViewModel : ViewModel() {
     private val _nextJamaat = MutableLiveData<String>()
     val nextJamaat: LiveData<String> get() = _nextJamaat
 
-    val nextJamaatLabelVisibility:LiveData<Boolean> = Transformations.map(nextJamaat){
-         it != GOOD_NIGHT_MSG
+    val nextJamaatLabelVisibility: LiveData<Boolean> = Transformations.map(nextJamaat) {
+        it != GOOD_NIGHT_MSG
     }
 
     private val _gregoryTodayDate = MutableLiveData(getCurrentGregorianDate())
@@ -131,7 +133,8 @@ class PrayerViewModel : ViewModel() {
             if (it.isNotEmpty() && currentTime.before(it.toList().first().second)) {
                 //format the time in hh:mma
                 val formattedNextJamaatTime = formatTimeToString(it.toList().first().second)
-                _nextJamaat.value = "${it.toList().first().first} $formattedNextJamaatTime"
+                _nextJamaat.value = "${it.toList().first().first} $formattedNextJamaatTime "
+
             } else _nextJamaat.value = GOOD_NIGHT_MSG
         }
     }
