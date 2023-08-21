@@ -6,6 +6,7 @@ import java.util.Calendar
 
 private const val TWO_MINS = 2
 
+
 data class LondonPrayersBeginningTimes(
     val date: String,
     val fajr: String,
