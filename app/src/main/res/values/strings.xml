@@ -27,7 +27,7 @@
     <string name="am">%s am</string>
     <string name="pm">%s pm</string>
 
-    <string name="first">1<sup>st</sup></string>
-    <string name="second">2<sup>nd</sup></string>
+    <string name="first_jumuah">1<sup>1&#x02E2;&#x1D57;</sup></string>
+    <string name="second_jumuah">2<sup>2&#x207F;&#x1D48;</sup></string>
 
 </resources>

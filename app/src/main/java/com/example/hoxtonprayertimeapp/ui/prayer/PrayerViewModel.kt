@@ -1,5 +1,6 @@
 package com.example.hoxtonprayertimeapp.ui.prayer
 
+import android.text.Html
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -27,6 +28,7 @@ import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.text.Typography.bullet
 
 enum class FireStoreStatus {
     LOADING, ERROR, DONE
@@ -131,7 +133,17 @@ class PrayerViewModel : ViewModel() {
         }.firstOrNull()
 
         _nextJamaat.value = if(nj != null){
-             "${nj.first} ${formatTimeToString(nj.second)}"
+            when(nj.first){
+                FIRST_JUMMAH_KEY -> {
+                    "${Html.fromHtml(FIRST_SUPERSCRIPT,Html.FROM_HTML_MODE_LEGACY)} ${nj.first} ${formatTimeToString(nj.second)}"
+                }
+                SECOND_JUMMAH_KEY ->{
+                    "${Html.fromHtml(SECOND_SUPERSCRIPT,Html.FROM_HTML_MODE_LEGACY)} ${nj.first} ${formatTimeToString(nj.second)}"
+                }
+                else -> "${nj.first} ${formatTimeToString(nj.second)}"
+
+            }
+
         }else GOOD_NIGHT_MSG
     }
 
@@ -220,6 +232,8 @@ class PrayerViewModel : ViewModel() {
         const val FIRST_JUMMAH_KEY = "1st Jumuah"
         const val SECOND_JUMMAH_KEY = "2nd Jumuah"
         const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
+        const val FIRST_SUPERSCRIPT = "1&#x02E2;&#x1D57;"
+        const val SECOND_SUPERSCRIPT = "2&#x207F;&#x1D48;"
     }
 }
 
