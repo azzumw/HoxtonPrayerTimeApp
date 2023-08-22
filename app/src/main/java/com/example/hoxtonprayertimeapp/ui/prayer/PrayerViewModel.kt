@@ -1,12 +1,15 @@
 package com.example.hoxtonprayertimeapp.ui.prayer
 
 import android.text.Html
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.example.hoxtonprayertimeapp.database.PrayerDao
 import com.example.hoxtonprayertimeapp.models.Week
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
@@ -33,14 +36,14 @@ enum class FireStoreStatus {
     LOADING, ERROR, DONE
 }
 
-class PrayerViewModel : ViewModel() {
+class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
 
     private val nextPrayersMap = mutableMapOf<String, Date?>()
 
     private val _nextJamaat = MutableLiveData<String>()
     val nextJamaat: LiveData<String> get() = _nextJamaat
 
-    val nextJamaatLabelVisibility: LiveData<Boolean> = Transformations.map(nextJamaat) {
+    val nextJamaatLabelVisibility: LiveData<Boolean> = nextJamaat.map() {
         it != GOOD_NIGHT_MSG
     }
 
@@ -63,15 +66,26 @@ class PrayerViewModel : ViewModel() {
     private val _week = MutableLiveData<Week?>()
     val week: LiveData<Week?> get() = _week
 
-    private val _londonPrayerBeginningTimes = MutableLiveData<LondonPrayersBeginningTimes>()
-    val londonPrayerBeginningTimes: LiveData<LondonPrayersBeginningTimes> get() = _londonPrayerBeginningTimes
+//    private val _londonPrayerBeginningTimes = MutableLiveData<LondonPrayersBeginningTimes>()
+//    val londonPrayerBeginningTimes: LiveData<LondonPrayersBeginningTimes> get() = _londonPrayerBeginningTimes
+
+    val londonPrayerBeginningTimes: LiveData<LondonPrayersBeginningTimes?>  = prayerDao.getTodayPrayers(
+        getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
+    ).asLiveData()
+
+    val magrib: LiveData<String?> = londonPrayerBeginningTimes.map {
+        nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(it?.getMaghribJamaatTime())
+        it?.magribJamaat
+    }
 
     private val _status = MutableLiveData<FireStoreStatus>()
     val status: LiveData<FireStoreStatus>
         get() = _status
 
-    private val _maghribFromApi = MutableLiveData<String>()
-    val maghribFromApi: LiveData<String> get() = _maghribFromApi
+//    private val _maghribFromApi = MutableLiveData<String>()
+//    val maghribFromApi: LiveData<String> get() = _maghribFromApi
+
+
 
     init {
 
@@ -84,6 +98,7 @@ class PrayerViewModel : ViewModel() {
         writePrayerTimesToFirestoreForThisWeek()
 
         listenForPrayersFromFirestore()
+
     }
 
     private fun initialiseFireStoreEmulator() {
@@ -99,11 +114,13 @@ class PrayerViewModel : ViewModel() {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
                     date = getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
                 )
-                _londonPrayerBeginningTimes.value = apiResult
+//                _londonPrayerBeginningTimes.value = apiResult
 
-                _maghribFromApi.value = londonPrayerBeginningTimes.value?.magribJamaat
+                prayerDao.insertPrayer(apiResult)
 
-                nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(maghribFromApi.value)
+//                _maghribFromApi.value = londonPrayerBeginningTimes.value?.getMaghribJamaatTime()
+
+//                nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(magrib.value)
 
                 workoutNextJamaah()
 
@@ -123,6 +140,8 @@ class PrayerViewModel : ViewModel() {
     private fun workoutNextJamaah() {
         //get the current time
         val currentTime = Calendar.getInstance().time
+
+//        nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(magrib.value)
 
         //filter prayers with time after the current time
         val nj = nextPrayersMap.filterValues {
@@ -144,27 +163,6 @@ class PrayerViewModel : ViewModel() {
             }
 
         }else GOOD_NIGHT_MSG
-    }
-
-    private fun writePrayerTimesToFirestoreForThisWeek() {
-        val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
-
-        val week = Week(
-            fridayDate,
-            fajar = "05:00 am",
-            dhuhr = "01:30 pm",
-            asr = "06:30 pm",
-            isha = "09:45 pm",
-            firstJummah = "01:30 pm",
-            secondJummah = "02:15 pm"
-        )
-        val docRef = collectionPrayers.document(lastWeekNumber)
-
-        docRef.set(week).addOnCompleteListener {
-            if (it.isSuccessful) {
-                Timber.e("Data Saved")
-            } else Timber.e(it.exception.toString())
-        }
     }
 
     private fun listenForPrayersFromFirestore() {
@@ -207,6 +205,26 @@ class PrayerViewModel : ViewModel() {
         }
     }
 
+    private fun writePrayerTimesToFirestoreForThisWeek() {
+        val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
+
+        val week = Week(
+            fridayDate,
+            fajar = "05:00 am",
+            dhuhr = "01:30 pm",
+            asr = "06:30 pm",
+            isha = "09:45 pm",
+            firstJummah = "01:30 pm",
+            secondJummah = "02:15 pm"
+        )
+        val docRef = collectionPrayers.document(lastWeekNumber)
+
+        docRef.set(week).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Timber.e("Data Saved")
+            } else Timber.e(it.exception.toString())
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         firestore.clearPersistence()
@@ -236,10 +254,10 @@ class PrayerViewModel : ViewModel() {
     }
 }
 
-class PrayerViewModelFactory : ViewModelProvider.Factory {
+class PrayerViewModelFactory(private val dao:PrayerDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PrayerViewModel::class.java)) {
-            return PrayerViewModel() as T
+            return PrayerViewModel(dao) as T
         } else throw IllegalArgumentException("ViewModel not recognised")
     }
 }

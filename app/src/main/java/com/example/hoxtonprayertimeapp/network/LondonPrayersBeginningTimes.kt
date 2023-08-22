@@ -1,7 +1,8 @@
 package com.example.hoxtonprayertimeapp.network
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import java.text.SimpleDateFormat
@@ -20,10 +21,11 @@ data class LondonPrayersBeginningTimes(
     val magrib: String,
     val isha: String
 ) {
-    @Ignore
-    val magribJamaat: String = getMaghribJamaatTime()
 
-    private fun getMaghribJamaatTime(): String {
+
+    var magribJamaat: String? = null
+
+    fun getMaghribJamaatTime(): String? {
         val tempMaghrib = "$magrib pm"
 
         val formattedDate = fromStringToDateTimeObj(tempMaghrib)
@@ -33,7 +35,24 @@ data class LondonPrayersBeginningTimes(
             add(Calendar.MINUTE, TWO_MINS)
         }.time
 
-        return SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
+        magribJamaat = SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
+        return magribJamaat
+    }
+
+    fun getMaghribJamaatTimeAsLiveData(): LiveData<String?> {
+        val tempMaghrib = "$magrib pm"
+
+        val formattedDate = fromStringToDateTimeObj(tempMaghrib)
+
+        val maghribJamaatTime = Calendar.getInstance().apply {
+            time = formattedDate!!
+            add(Calendar.MINUTE, TWO_MINS)
+        }.time
+
+//        magribJamaat = SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
+        val ld = MutableLiveData<String>(magribJamaat)
+        ld.value = magribJamaat
+        return ld
     }
 }
 

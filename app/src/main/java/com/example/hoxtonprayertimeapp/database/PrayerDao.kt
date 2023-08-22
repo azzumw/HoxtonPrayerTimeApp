@@ -16,6 +16,9 @@ interface PrayerDao {
     @Query("select * from london_prayers_beginning_times where date =:today")
     fun getTodayPrayers(today:String): Flow<LondonPrayersBeginningTimes>
 
+//    @Query()
+//    fun updateMagribJamaah(magribJamaah:String)
+
     @Query("delete from london_prayers_beginning_times")
     fun clear()
 }

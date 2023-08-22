@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.hoxtonprayertimeapp.R
+import com.example.hoxtonprayertimeapp.database.PrayerBeginningTimesDatabase
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import com.example.hoxtonprayertimeapp.utils.isFridayToday
 
@@ -17,7 +19,8 @@ class PrayerFragment : Fragment() {
     private var _binding: FragmentPrayer2Binding? = null
     private val binding get() = _binding!!
 
-    private val prayerViewModel: PrayerViewModel by viewModels()
+    //    private val prayerViewModel: PrayerViewModel by viewModels()
+    private lateinit var prayerViewModel: PrayerViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +28,11 @@ class PrayerFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_prayer_2, container, false)
+
+        val database  = PrayerBeginningTimesDatabase.getDatabase(requireContext())
+        val viewModelFactory = PrayerViewModelFactory(database.prayerDao)
+
+        prayerViewModel = ViewModelProvider(this, viewModelFactory)[PrayerViewModel::class.java]
 
         binding.viewModel = prayerViewModel
         binding.lifecycleOwner = this
@@ -34,9 +42,6 @@ class PrayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        val viewModelFactory = PrayerViewModelFactory()
-//        prayerViewModel = ViewModelProvider(this, viewModelFactory)[PrayerViewModel::class.java]
 
         prayerViewModel.status.observe(viewLifecycleOwner) {
             if (it == FireStoreStatus.DONE) {

@@ -427,7 +427,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.maghribFromApi}"
+                            android:text="@{viewModel.magrib}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
