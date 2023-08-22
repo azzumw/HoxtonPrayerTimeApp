@@ -84,8 +84,11 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 
     //Room
+    implementation("androidx.room:room-ktx:$version_room")
     implementation("androidx.room:room-runtime:$version_room")
-    annotationProcessor("androidx.room:room-compiler:$version_room")
+    kapt("androidx.room:room-compiler:$version_room")
+    //Room Test
+    implementation("androidx.room:room-testing:$version_room")
 
     //unitTest
     testImplementation 'junit:junit:4.13.2'

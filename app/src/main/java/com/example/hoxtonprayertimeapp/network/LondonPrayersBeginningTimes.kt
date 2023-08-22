@@ -1,7 +1,7 @@
 package com.example.hoxtonprayertimeapp.network
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
 import java.text.SimpleDateFormat
@@ -21,7 +21,7 @@ data class LondonPrayersBeginningTimes(
     val magrib: String,
     val isha: String
 ) {
-    @ColumnInfo(name = "maghrib_jamaah")
+    @Ignore
     val magribJamaat: String = getMaghribJamaatTime()
 
     private fun getMaghribJamaatTime(): String {
