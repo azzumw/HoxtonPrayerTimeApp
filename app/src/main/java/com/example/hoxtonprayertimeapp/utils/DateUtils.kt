@@ -10,14 +10,14 @@ import java.util.Date
 import java.util.Locale
 
 private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
-private const val DATE_PATTERN =  "ddMMyyyy"
+private const val DATE_PATTERN = "ddMMyyyy"
 fun getCurrentGregorianDate(): String = SimpleDateFormat(
     GREGORIAN_DATE_FORMAT,
     Locale.getDefault()
 ).format(java.util.Calendar.getInstance().time) //or use getDateInstance()
 
 
-fun getCurrentIslamicDate() : String{
+fun getCurrentIslamicDate(): String {
     val locale = ULocale("@calendar=islamic-umalqura")
     val islamic = Calendar.getInstance(locale) as IslamicCalendar
 
@@ -49,26 +49,29 @@ private fun getIslamicMonth(month: Int): String {
     }
 }
 
-fun getLastFridayDate():String{
-    val calendar  = java.util.Calendar.getInstance(Locale.getDefault())
+fun getLastFridayDate(): String {
+    val calendar = java.util.Calendar.getInstance(Locale.getDefault())
 
     val actualCurrentDay = calendar.get(java.util.Calendar.DAY_OF_WEEK)
 
     var tempDay = actualCurrentDay
 
-    while(tempDay != java.util.Calendar.FRIDAY){
+    while (tempDay != java.util.Calendar.FRIDAY) {
 
-        if(tempDay == 0){
+        if (tempDay == 0) {
             //set to saturday
             tempDay = 7
         }
         tempDay--
-        calendar.set(java.util.Calendar.DAY_OF_WEEK,tempDay)
+        calendar.set(java.util.Calendar.DAY_OF_WEEK, tempDay)
     }
 
     //reduce the week by 1 to get the last friday date because we have moved to this weeks friday in future
-    if(actualCurrentDay != java.util.Calendar.SATURDAY){
-        calendar.set(java.util.Calendar.WEEK_OF_YEAR,calendar.get(java.util.Calendar.WEEK_OF_YEAR) - 1)
+    if (actualCurrentDay != java.util.Calendar.SATURDAY) {
+        calendar.set(
+            java.util.Calendar.WEEK_OF_YEAR,
+            calendar.get(java.util.Calendar.WEEK_OF_YEAR) - 1
+        )
     }
 
     val df = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
@@ -76,42 +79,44 @@ fun getLastFridayDate():String{
 
 }
 
-fun getTodayDate(pattern:String= DATE_PATTERN):String{
+fun getTodayDate(pattern: String = DATE_PATTERN): String {
     val date = Timestamp.now().toDate()
     val df = SimpleDateFormat(pattern, Locale.getDefault())
     return df.format(date)
 }
 
-fun getFridayDate() :String = if(isFridayToday()){
+fun getFridayDate(): String = if (isFridayToday()) {
     getTodayDate()
-}else{
+} else {
     getLastFridayDate()
 }
 
-fun getLastWeek(calender:java.util.Calendar):Int {
-    calender.add(java.util.Calendar.WEEK_OF_YEAR,-1)
+fun getLastWeek(calender: java.util.Calendar): Int {
+    calender.add(java.util.Calendar.WEEK_OF_YEAR, -1)
     return calender.get(java.util.Calendar.WEEK_OF_YEAR)
 }
 
 
-fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) = getLastWeek(calender).toString()
+fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) =
+    getLastWeek(calender).toString()
 
-fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault()).get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
+fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault())
+    .get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
 
 fun formatTimeToString(time: Date?): String? {
     val formatter = SimpleDateFormat("hh:mma")
-    if (time != null){
+    if (time != null) {
         val formattedTime = formatter.format(time)
-        Log.e("formatStringTime",formattedTime)
+        Log.e("formatStringTime", formattedTime)
 
-        return  formattedTime.lowercase()
+        return formattedTime.lowercase()
     }
-   return null
+    return null
 }
 
 fun fromStringToDateTimeObj(timeStr: String?): Date? {
 
-     return timeStr?.let {
+    return timeStr?.let {
         val formatter = SimpleDateFormat("dd/MM/yyyy")
         val formatter2 = SimpleDateFormat("dd/MM/yyyy hh:mm a")
 
@@ -119,7 +124,7 @@ fun fromStringToDateTimeObj(timeStr: String?): Date? {
 
         val fDate = formatter.format(today)
         val dateString = "$fDate $timeStr"
-        Log.e("fromStringToDateObj: ",dateString)
+        Log.e("fromStringToDateObj: ", dateString)
         formatter2.parse(dateString)
     }
 }

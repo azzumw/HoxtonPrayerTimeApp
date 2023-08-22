@@ -28,7 +28,6 @@ import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlin.text.Typography.bullet
 
 enum class FireStoreStatus {
     LOADING, ERROR, DONE

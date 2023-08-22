@@ -1,5 +1,4 @@
 package com.example.hoxtonprayertimeapp.models
-
 data class Week(
     val fridayDate: String? = null,
     val fajar: String? = null,

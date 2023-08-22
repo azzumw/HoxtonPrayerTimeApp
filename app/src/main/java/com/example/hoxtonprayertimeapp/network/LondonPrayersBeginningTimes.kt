@@ -9,7 +9,6 @@ import java.util.Calendar
 
 private const val TWO_MINS = 2
 
-
 @Entity(tableName = "london_prayers_beginning_times")
 data class LondonPrayersBeginningTimes(
     @PrimaryKey
