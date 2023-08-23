@@ -128,21 +128,21 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         Timber.i(nextPrayersMap.keys.toString())
         //filter prayers with time after the current time
-        val nj = nextPrayersMap.filterValues {
-            currentTime.before(it)
+        val tempPairNextJammah = nextPrayersMap.filterValues {
+            currentTime.before(it) || currentTime.compareTo(it) == 0
         }.toList().sortedBy {
             it.second
         }.firstOrNull()
 
-        _nextJamaat.value = if (nj != null) {
-            when (nj.first) {
+        _nextJamaat.value = if (tempPairNextJammah != null) {
+            when (tempPairNextJammah.first) {
                 FIRST_JUMMAH_KEY -> {
                     "${
                         Html.fromHtml(
                             FIRST_SUPERSCRIPT,
                             Html.FROM_HTML_MODE_LEGACY
                         )
-                    } ${nj.first.substringAfter(" ")} ${formatTimeToString(nj.second)}"
+                    } ${tempPairNextJammah.first.substringAfter(" ")} ${formatTimeToString(tempPairNextJammah.second)}"
                 }
 
                 SECOND_JUMMAH_KEY -> {
@@ -151,10 +151,10 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                             SECOND_SUPERSCRIPT,
                             Html.FROM_HTML_MODE_LEGACY
                         )
-                    } ${nj.first.substringAfter(" ")} ${formatTimeToString(nj.second)}"
+                    } ${tempPairNextJammah.first.substringAfter(" ")} ${formatTimeToString(tempPairNextJammah.second)}"
                 }
 
-                else -> "${nj.first} ${formatTimeToString(nj.second)}"
+                else -> "${tempPairNextJammah.first} ${formatTimeToString(tempPairNextJammah.second)}"
 
             }
 
