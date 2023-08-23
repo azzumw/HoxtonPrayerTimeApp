@@ -238,6 +238,8 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         private const val GOOD_NIGHT_MSG = "Good Night"
 
+        const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
+
         const val FAJR_KEY = "Fajr"
         const val DHOHAR_KEY = "Dhohar"
         const val ASR_KEY = "Asr"
@@ -245,7 +247,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         const val ISHA_KEY = "Isha"
         const val FIRST_JUMMAH_KEY = "1st Jumuah"
         const val SECOND_JUMMAH_KEY = "2nd Jumuah"
-        const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
+
         const val FIRST_SUPERSCRIPT = "1&#x02E2;&#x1D57;"
         const val SECOND_SUPERSCRIPT = "2&#x207F;&#x1D48;"
     }
