@@ -1,7 +1,6 @@
 package com.example.hoxtonprayertimeapp.ui.prayer
 
 import android.text.Html
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +35,7 @@ enum class FireStoreStatus {
     LOADING, ERROR, DONE
 }
 
-class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
+class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
     private val nextPrayersMap = mutableMapOf<String, Date?>()
 
@@ -53,12 +52,6 @@ class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
     private val _islamicTodayDate = MutableLiveData(getCurrentIslamicDate())
     val islamicTodayDate: LiveData<String> get() = _islamicTodayDate
 
-    private lateinit var firestore: FirebaseFirestore
-
-    private val collectionPrayers: CollectionReference
-
-    private lateinit var listernerRegisteration: ListenerRegistration
-
     private val calendar = Calendar.getInstance(Locale.getDefault())
 
     private val fridayDate = getFridayDate()
@@ -66,26 +59,28 @@ class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
     private val _week = MutableLiveData<Week?>()
     val week: LiveData<Week?> get() = _week
 
-//    private val _londonPrayerBeginningTimes = MutableLiveData<LondonPrayersBeginningTimes>()
-//    val londonPrayerBeginningTimes: LiveData<LondonPrayersBeginningTimes> get() = _londonPrayerBeginningTimes
+    val londonPrayerBeginningTimes: LiveData<LondonPrayersBeginningTimes?> =
+        prayerDao.getTodayPrayers(
+            getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
+        ).asLiveData()
 
-    val londonPrayerBeginningTimes: LiveData<LondonPrayersBeginningTimes?>  = prayerDao.getTodayPrayers(
-        getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
-    ).asLiveData()
-
-    val magrib: LiveData<String?> = londonPrayerBeginningTimes.map {
-        nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(it?.getMaghribJamaatTime())
-        it?.magribJamaat
+    val maghribJamaahTime: LiveData<String?> = londonPrayerBeginningTimes.map {
+        if (it != null) {
+            nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(it.getMaghribJamaatTime())
+            workoutNextJamaah()
+            it.magribJamaat
+        } else null
     }
 
     private val _status = MutableLiveData<FireStoreStatus>()
     val status: LiveData<FireStoreStatus>
         get() = _status
 
-//    private val _maghribFromApi = MutableLiveData<String>()
-//    val maghribFromApi: LiveData<String> get() = _maghribFromApi
+    private lateinit var firestore: FirebaseFirestore
 
+    private val collectionPrayers: CollectionReference
 
+    private lateinit var listernerRegisteration: ListenerRegistration
 
     init {
 
@@ -114,17 +109,7 @@ class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
                     date = getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
                 )
-//                _londonPrayerBeginningTimes.value = apiResult
-
                 prayerDao.insertPrayer(apiResult)
-
-//                _maghribFromApi.value = londonPrayerBeginningTimes.value?.getMaghribJamaatTime()
-
-//                nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(magrib.value)
-
-                workoutNextJamaah()
-
-               Timber.i("${nextPrayersMap.values}")
 
             } catch (e: Exception) {
                 Timber.e(e.message)
@@ -141,8 +126,7 @@ class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
         //get the current time
         val currentTime = Calendar.getInstance().time
 
-//        nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(magrib.value)
-
+        Timber.i(nextPrayersMap.keys.toString())
         //filter prayers with time after the current time
         val nj = nextPrayersMap.filterValues {
             currentTime.before(it)
@@ -150,19 +134,31 @@ class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
             it.second
         }.firstOrNull()
 
-        _nextJamaat.value = if(nj != null){
-            when(nj.first){
+        _nextJamaat.value = if (nj != null) {
+            when (nj.first) {
                 FIRST_JUMMAH_KEY -> {
-                    "${Html.fromHtml(FIRST_SUPERSCRIPT,Html.FROM_HTML_MODE_LEGACY)} ${nj.first} ${formatTimeToString(nj.second)}"
+                    "${
+                        Html.fromHtml(
+                            FIRST_SUPERSCRIPT,
+                            Html.FROM_HTML_MODE_LEGACY
+                        )
+                    } ${nj.first.substringAfter(" ")} ${formatTimeToString(nj.second)}"
                 }
-                SECOND_JUMMAH_KEY ->{
-                    "${Html.fromHtml(SECOND_SUPERSCRIPT,Html.FROM_HTML_MODE_LEGACY)} ${nj.first} ${formatTimeToString(nj.second)}"
+
+                SECOND_JUMMAH_KEY -> {
+                    "${
+                        Html.fromHtml(
+                            SECOND_SUPERSCRIPT,
+                            Html.FROM_HTML_MODE_LEGACY
+                        )
+                    } ${nj.first.substringAfter(" ")} ${formatTimeToString(nj.second)}"
                 }
+
                 else -> "${nj.first} ${formatTimeToString(nj.second)}"
 
             }
 
-        }else GOOD_NIGHT_MSG
+        } else GOOD_NIGHT_MSG
     }
 
     private fun listenForPrayersFromFirestore() {
@@ -225,6 +221,7 @@ class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
             } else Timber.e(it.exception.toString())
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         firestore.clearPersistence()
@@ -254,7 +251,7 @@ class PrayerViewModel(private val prayerDao:PrayerDao) : ViewModel() {
     }
 }
 
-class PrayerViewModelFactory(private val dao:PrayerDao) : ViewModelProvider.Factory {
+class PrayerViewModelFactory(private val dao: PrayerDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PrayerViewModel::class.java)) {
             return PrayerViewModel(dao) as T
