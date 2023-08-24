@@ -54,22 +54,44 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
     private val calendar = Calendar.getInstance(Locale.getDefault())
 
-    private val fridayDate = getFridayDate()
-
     private val _week = MutableLiveData<Week?>()
     val week: LiveData<Week?> get() = _week
 
-    val londonPrayerBeginningTimes: LiveData<LondonPrayersBeginningTimes?> =
+    val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         prayerDao.getTodayPrayers(
             getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
         ).asLiveData()
 
-    val maghribJamaahTime: LiveData<String?> = londonPrayerBeginningTimes.map {
+    val maghribJamaahTime: LiveData<String?> = londonPrayerBeginningTimesFromDB.map {
         if (it != null) {
             nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(it.getMaghribJamaatTime())
             workoutNextJamaah()
             it.magribJamaat
         } else null
+    }
+
+    val fajrBackground: LiveData<Boolean> = nextJamaat.map {
+        it.substringBefore(" ") == FAJR_KEY
+    }
+
+    val dhoharBackground: LiveData<Boolean> = nextJamaat.map {
+       when{
+           it.contains(DHOHAR_KEY) -> true
+           it.contains(JUMUAH_TEXT) -> true
+           else -> false
+       }
+    }
+
+    val asrBackground: LiveData<Boolean> = nextJamaat.map {
+        it.substringBefore(" ") == ASR_KEY
+    }
+
+    val maghribBackground: LiveData<Boolean> = nextJamaat.map {
+        it.substringBefore(" ") == MAGHRIB_KEY
+    }
+
+    val ishaBackground: LiveData<Boolean> = nextJamaat.map {
+        it.substringBefore(" ") == ISHA_KEY
     }
 
     private val _status = MutableLiveData<FireStoreStatus>()
@@ -81,6 +103,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     private val collectionPrayers: CollectionReference
 
     private lateinit var listernerRegisteration: ListenerRegistration
+
 
     init {
 
@@ -95,6 +118,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         listenForPrayersFromFirestore()
 
     }
+
 
     private fun initialiseFireStoreEmulator() {
         firestore = Firebase.firestore
@@ -129,7 +153,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         Timber.i(nextPrayersMap.keys.toString())
         //filter prayers with time after the current time
         val tempPairNextJammah = nextPrayersMap.filterValues {
-            currentTime.before(it) || currentTime.compareTo(it) == 0
+            currentTime.before(it)
         }.toList().sortedBy {
             it.second
         }.firstOrNull()
@@ -142,7 +166,11 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                             FIRST_SUPERSCRIPT,
                             Html.FROM_HTML_MODE_LEGACY
                         )
-                    } ${tempPairNextJammah.first.substringAfter(" ")} ${formatTimeToString(tempPairNextJammah.second)}"
+                    } ${tempPairNextJammah.first.substringAfter(" ")} ${
+                        formatTimeToString(
+                            tempPairNextJammah.second
+                        )
+                    }"
                 }
 
                 SECOND_JUMMAH_KEY -> {
@@ -151,7 +179,11 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                             SECOND_SUPERSCRIPT,
                             Html.FROM_HTML_MODE_LEGACY
                         )
-                    } ${tempPairNextJammah.first.substringAfter(" ")} ${formatTimeToString(tempPairNextJammah.second)}"
+                    } ${tempPairNextJammah.first.substringAfter(" ")} ${
+                        formatTimeToString(
+                            tempPairNextJammah.second
+                        )
+                    }"
                 }
 
                 else -> "${tempPairNextJammah.first} ${formatTimeToString(tempPairNextJammah.second)}"
@@ -166,7 +198,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         _status.value = FireStoreStatus.LOADING
 
         val queryLastFriday =
-            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, fridayDate)
+            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getFridayDate())
 
         listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
             if (error != null) {
@@ -205,7 +237,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 
         val week = Week(
-            fridayDate,
+            getFridayDate(),
             fajar = "05:00 am",
             dhuhr = "01:30 pm",
             asr = "06:30 pm",
@@ -245,6 +277,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         const val ASR_KEY = "Asr"
         const val MAGHRIB_KEY = "Maghrib"
         const val ISHA_KEY = "Isha"
+        const val JUMUAH_TEXT = "Jumuah"
         const val FIRST_JUMMAH_KEY = "1st Jumuah"
         const val SECOND_JUMMAH_KEY = "2nd Jumuah"
 

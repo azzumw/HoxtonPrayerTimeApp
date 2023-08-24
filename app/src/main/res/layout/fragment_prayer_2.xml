@@ -188,7 +188,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.fajrBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -209,7 +210,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             tools:text="@string/dummy_time"
-                            android:text="@{@string/am(viewModel.londonPrayerBeginningTimes.fajr)}"
+                            android:text="@{@string/am(viewModel.londonPrayerBeginningTimesFromDB.fajr)}"
                             android:textSize="18sp"
                             android:textColor="@color/gray"
                             android:gravity="center" />
@@ -248,7 +249,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.dhoharBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -269,7 +271,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.dhuhr)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.dhuhr)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -337,7 +339,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.asrBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -359,7 +362,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.asr)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.asr)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -394,7 +397,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.maghribBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -416,7 +420,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.magrib)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.magrib)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -452,7 +456,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.ishaBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -474,7 +479,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.isha)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.isha)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
