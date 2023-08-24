@@ -103,6 +103,9 @@ fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) =
 fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault())
     .get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
 
+/*
+* This is the String representation, converts back to String for Next Prayer
+* */
 fun formatTimeToString(time: Date?): String? {
     val formatter = SimpleDateFormat("hh:mma")
     if (time != null) {
@@ -114,6 +117,11 @@ fun formatTimeToString(time: Date?): String? {
     return null
 }
 
+/*Because the prayer jamaat times from the firestore
+* are read in string, hence we need to convert them to
+* today's Date objects (to avoid it being set to 1 Jan 1970) ,
+* for Next Prayer feature to work.
+* */
 fun fromStringToDateTimeObj(timeStr: String?): Date? {
 
     return timeStr?.let {

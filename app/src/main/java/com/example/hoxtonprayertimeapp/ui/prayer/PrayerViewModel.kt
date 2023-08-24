@@ -62,13 +62,13 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
             getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
         ).asLiveData()
 
-    val maghribJamaahTime: LiveData<String?> = londonPrayerBeginningTimesFromDB.map {
-        if (it != null) {
-            nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(it.getMaghribJamaatTime())
-            workoutNextJamaah()
-            it.magribJamaat
-        } else null
-    }
+//    val maghribJamaahTime: LiveData<String?> = londonPrayerBeginningTimesFromDB.map {
+//        if (it != null) {
+//            nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(it.getMaghribJamaatTime())
+//            workoutNextJamaah()
+//            it.magribJamaat
+//        } else null
+//    }
 
     private val _status = MutableLiveData<FireStoreStatus>()
     val status: LiveData<FireStoreStatus>
@@ -86,11 +86,11 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     }
 
     val dhoharBackground: LiveData<Boolean> = nextJamaat.map {
-       when{
-           it.contains(DHOHAR_KEY) -> true
-           it.contains(JUMUAH_TEXT) -> true
-           else -> false
-       }
+        when {
+            it.contains(DHOHAR_KEY) -> true
+            it.contains(JUMUAH_TEXT) -> true
+            else -> false
+        }
     }
 
     val asrBackground: LiveData<Boolean> = nextJamaat.map {
@@ -136,8 +136,16 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 )
                 prayerDao.insertPrayer(apiResult)
 
+                val mjt = apiResult.getMaghribJamaahTime()!!
+
+                prayerDao.updateMaghribJamaah(mjt, getTodayDate(LONDON_PRAYER_API_DATE_PATTERN))
+
+                nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(mjt)
+                workoutNextJamaah()
+
+
             } catch (e: Exception) {
-                Timber.e(e.message)
+                Timber.e("Network exception ${e.message}")
             }
         }
     }
@@ -210,7 +218,8 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 return@addSnapshotListener
             }
 
-            _fireStoreWeekModel.value = value!!.documents[0].toObject(FireStoreWeekModel::class.java)
+            _fireStoreWeekModel.value =
+                value!!.documents[0].toObject(FireStoreWeekModel::class.java)
             _status.value = FireStoreStatus.DONE
 
             nextPrayersMap.also {
@@ -218,9 +227,11 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 it[FAJR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.fajar)
 
                 if (isFridayToday()) {
-                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.firstJummah)
+                    it[FIRST_JUMMAH_KEY] =
+                        fromStringToDateTimeObj(fireStoreWeekModel.value?.firstJummah)
                     if (fireStoreWeekModel.value?.secondJummah != null) {
-                        it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.secondJummah)
+                        it[SECOND_JUMMAH_KEY] =
+                            fromStringToDateTimeObj(fireStoreWeekModel.value?.secondJummah)
                     }
                 } else {
                     it[DHOHAR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.dhuhr)
