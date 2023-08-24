@@ -9,7 +9,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.hoxtonprayertimeapp.database.PrayerDao
-import com.example.hoxtonprayertimeapp.models.Week
+import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
@@ -54,8 +54,8 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
     private val calendar = Calendar.getInstance(Locale.getDefault())
 
-    private val _week = MutableLiveData<Week?>()
-    val week: LiveData<Week?> get() = _week
+    private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
+    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> get() = _fireStoreWeekModel
 
     val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         prayerDao.getTodayPrayers(
@@ -70,6 +70,17 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         } else null
     }
 
+    private val _status = MutableLiveData<FireStoreStatus>()
+    val status: LiveData<FireStoreStatus>
+        get() = _status
+
+    private lateinit var firestore: FirebaseFirestore
+
+    private val collectionPrayers: CollectionReference
+
+    private lateinit var listernerRegisteration: ListenerRegistration
+
+    //To highlight next prayer background view
     val fajrBackground: LiveData<Boolean> = nextJamaat.map {
         it.substringBefore(" ") == FAJR_KEY
     }
@@ -93,16 +104,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     val ishaBackground: LiveData<Boolean> = nextJamaat.map {
         it.substringBefore(" ") == ISHA_KEY
     }
-
-    private val _status = MutableLiveData<FireStoreStatus>()
-    val status: LiveData<FireStoreStatus>
-        get() = _status
-
-    private lateinit var firestore: FirebaseFirestore
-
-    private val collectionPrayers: CollectionReference
-
-    private lateinit var listernerRegisteration: ListenerRegistration
 
 
     init {
@@ -209,24 +210,24 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 return@addSnapshotListener
             }
 
-            _week.value = value!!.documents[0].toObject(Week::class.java)
+            _fireStoreWeekModel.value = value!!.documents[0].toObject(FireStoreWeekModel::class.java)
             _status.value = FireStoreStatus.DONE
 
             nextPrayersMap.also {
 
-                it[FAJR_KEY] = fromStringToDateTimeObj(week.value?.fajar)
+                it[FAJR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.fajar)
 
                 if (isFridayToday()) {
-                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.firstJummah)
-                    if (week.value?.secondJummah != null) {
-                        it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(week.value?.secondJummah)
+                    it[FIRST_JUMMAH_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.firstJummah)
+                    if (fireStoreWeekModel.value?.secondJummah != null) {
+                        it[SECOND_JUMMAH_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.secondJummah)
                     }
                 } else {
-                    it[DHOHAR_KEY] = fromStringToDateTimeObj(week.value?.dhuhr)
+                    it[DHOHAR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.dhuhr)
                 }
 
-                it[ASR_KEY] = fromStringToDateTimeObj(week.value?.asr)
-                it[ISHA_KEY] = fromStringToDateTimeObj(week.value?.isha)
+                it[ASR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.asr)
+                it[ISHA_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.isha)
             }
 
             workoutNextJamaah()
@@ -236,7 +237,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     private fun writePrayerTimesToFirestoreForThisWeek() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
 
-        val week = Week(
+        val fireStoreWeekModel = FireStoreWeekModel(
             getFridayDate(),
             fajar = "05:00 am",
             dhuhr = "01:30 pm",
@@ -247,7 +248,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         )
         val docRef = collectionPrayers.document(lastWeekNumber)
 
-        docRef.set(week).addOnCompleteListener {
+        docRef.set(fireStoreWeekModel).addOnCompleteListener {
             if (it.isSuccessful) {
                 Timber.e("Data Saved")
             } else Timber.e(it.exception.toString())
