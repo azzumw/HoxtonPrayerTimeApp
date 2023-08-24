@@ -49,7 +49,6 @@
                     style="@style/date_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto"
                     android:text="@{viewModel.gregoryTodayDate}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -69,14 +68,13 @@
                     android:id="@+id/next_prayer_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
                     android:text="@string/next_jamaat_text"
-                    android:visibility="@{viewModel.nextJamaatLabelVisibility? View.VISIBLE:View.GONE}"
                     android:textColor="@color/purple"
                     android:textSize="@dimen/next_prayer_label_textsize"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="@{viewModel.nextJamaatLabelVisibility? View.VISIBLE:View.GONE}"
                     app:layout_constraintBottom_toTopOf="@id/salaat_label_and_time_container_layout"
+                    app:layout_constraintStart_toStartOf="parent"
                     tools:text="@string/next_jamaat_text" />
 
                 <LinearLayout
