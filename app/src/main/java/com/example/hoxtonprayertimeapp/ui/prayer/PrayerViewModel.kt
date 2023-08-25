@@ -3,9 +3,9 @@ package com.example.hoxtonprayertimeapp.ui.prayer
 import android.text.Html
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.hoxtonprayertimeapp.models.Week
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
@@ -41,7 +41,7 @@ class PrayerViewModel : ViewModel() {
     private val _nextJamaat = MutableLiveData<String>()
     val nextJamaat: LiveData<String> get() = _nextJamaat
 
-    val nextJamaatLabelVisibility: LiveData<Boolean> = Transformations.map(nextJamaat) {
+    val nextJamaatLabelVisibility: LiveData<Boolean> = nextJamaat.map{
         it != GOOD_NIGHT_MSG
     }
 
