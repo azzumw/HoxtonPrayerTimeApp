@@ -84,6 +84,13 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 
+    // Koin for Android
+    implementation "io.insert-koin:koin-android:$version_koin"
+    // Jetpack WorkManager
+    implementation "io.insert-koin:koin-androidx-workmanager:$version_koin"
+    // Navigation Graph
+    implementation "io.insert-koin:koin-androidx-navigation:$version_koin"
+
     //unitTest
     testImplementation 'junit:junit:4.13.2'
 
