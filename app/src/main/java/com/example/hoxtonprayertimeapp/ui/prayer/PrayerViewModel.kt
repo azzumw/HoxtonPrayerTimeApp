@@ -298,10 +298,10 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     }
 }
 
-class PrayerViewModelFactory(private val dao: PrayerDao) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PrayerViewModel::class.java)) {
-            return PrayerViewModel(dao) as T
-        } else throw IllegalArgumentException("ViewModel not recognised")
-    }
-}
+//class PrayerViewModelFactory(private val dao: PrayerDao) : ViewModelProvider.Factory {
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(PrayerViewModel::class.java)) {
+//            return PrayerViewModel(dao) as T
+//        } else throw IllegalArgumentException("ViewModel not recognised")
+//    }
+//}
