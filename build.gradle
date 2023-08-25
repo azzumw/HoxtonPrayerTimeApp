@@ -6,6 +6,7 @@ buildscript {
         version_retrofit = "2.9.0"
         version_navigation = "2.4.2"
         version_room = "2.5.2"
+        version_koin = "3.4.0"
     }
     repositories {
         google()  // Google's Maven repository

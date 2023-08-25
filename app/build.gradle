@@ -97,6 +97,13 @@ dependencies {
     //Room Test
     implementation("androidx.room:room-testing:$version_room")
 
+    // Koin for Android
+    implementation "io.insert-koin:koin-android:$version_koin"
+    // Jetpack WorkManager
+    implementation "io.insert-koin:koin-androidx-workmanager:$version_koin"
+    // Navigation Graph
+    implementation "io.insert-koin:koin-androidx-navigation:$version_koin"
+
     //unitTest
     testImplementation 'junit:junit:4.13.2'
 
