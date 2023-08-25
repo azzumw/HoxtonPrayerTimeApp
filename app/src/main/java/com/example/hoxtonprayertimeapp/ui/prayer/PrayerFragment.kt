@@ -8,16 +8,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import com.example.hoxtonprayertimeapp.R
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import com.example.hoxtonprayertimeapp.utils.isFridayToday
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PrayerFragment : Fragment() {
 
     private var _binding: FragmentPrayer2Binding? = null
     private val binding get() = _binding!!
 
-    private val prayerViewModel: PrayerViewModel by viewModels()
+    private val prayerViewModel: PrayerViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

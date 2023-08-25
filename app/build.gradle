@@ -90,6 +90,8 @@ dependencies {
     implementation "io.insert-koin:koin-androidx-workmanager:$version_koin"
     // Navigation Graph
     implementation "io.insert-koin:koin-androidx-navigation:$version_koin"
+    // Koin for Tests
+    testImplementation "io.insert-koin:koin-test-junit4:$version_koin"
 
     //unitTest
     testImplementation 'junit:junit:4.13.2'
