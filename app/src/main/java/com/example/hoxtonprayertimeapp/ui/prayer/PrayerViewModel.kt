@@ -250,10 +250,10 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getFridayDate(),
-            fajar = "05:00 am",
+            fajar = "05:15 am",
             dhuhr = "01:30 pm",
-            asr = "06:30 pm",
-            isha = "09:45 pm",
+            asr = "06:15 pm",
+            isha = "09:30 pm",
             firstJummah = "01:30 pm",
             secondJummah = "02:15 pm"
         )
