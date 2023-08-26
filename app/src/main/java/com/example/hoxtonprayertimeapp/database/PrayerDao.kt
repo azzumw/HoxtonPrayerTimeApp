@@ -19,7 +19,7 @@ interface PrayerDao {
     @Query("update london_prayers_beginning_times set magribJamaat = :magribJamaahTime where date = :todayDate ")
     suspend fun updateMaghribJamaah(magribJamaahTime:String,todayDate:String)
     @Query("delete from london_prayers_beginning_times where date = :yesterday")
-    fun deleteYesterdayPrayers(yesterday:String)
+    suspend fun deleteYesterdayPrayers(yesterday:String)
     @Query("delete from london_prayers_beginning_times")
     fun clear()
 }

@@ -85,6 +85,16 @@ fun getTodayDate(pattern: String = DATE_PATTERN): String {
     return df.format(date)
 }
 
+fun getYesterDayDate(calender: java.util.Calendar,pattern: String = DATE_PATTERN): String {
+//    val calender = Calendar.getInstance()
+    calender.add(java.util.Calendar.DAY_OF_WEEK,-1)
+    val yesterday = calender.time
+
+    val df = SimpleDateFormat(pattern)
+
+    return df.format(yesterday)
+}
+
 fun getFridayDate(): String = if (isFridayToday()) {
     getTodayDate()
 } else {

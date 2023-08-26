@@ -19,6 +19,7 @@ import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
+import com.example.hoxtonprayertimeapp.utils.getYesterDayDate
 import com.example.hoxtonprayertimeapp.utils.isFridayToday
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -118,6 +119,8 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         listenForPrayersFromFirestore()
 
+        getYesterDayDate(Calendar.getInstance(), LONDON_PRAYER_API_DATE_PATTERN)
+
     }
 
 
@@ -134,6 +137,10 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
                     date = getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
                 )
+
+                prayerDao.deleteYesterdayPrayers(getYesterDayDate(Calendar.getInstance(),
+                    LONDON_PRAYER_API_DATE_PATTERN))
+
                 prayerDao.insertPrayer(apiResult)
 
                 val mjt = apiResult.getMaghribJamaahTime()!!
