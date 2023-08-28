@@ -156,6 +156,30 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         }
     }
 
+    private fun listenForPrayersFromFirestore() {
+        //listen to last friday, if today is friday listen to today.
+        _status.value = FireStoreStatus.LOADING
+
+        val queryLastFriday =
+            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getFridayDate())
+
+        listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
+            if (error != null) {
+                Timber.e("Listen failed. $error")
+
+                _status.value = FireStoreStatus.ERROR
+
+                return@addSnapshotListener
+            }
+
+            _fireStoreWeekModel.value =
+                value!!.documents[0].toObject(FireStoreWeekModel::class.java)
+            _status.value = FireStoreStatus.DONE
+
+            workoutNextJamaah()
+        }
+    }
+
     /**
     This method weeds out those prayer times before the current time,
     If the list is empty i.e. all prayers have been filtered out, then a Good Night
@@ -232,30 +256,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         }.toList().sortedBy {
             it.second
-        }
-    }
-
-    private fun listenForPrayersFromFirestore() {
-        //listen to last friday, if today is friday listen to today.
-        _status.value = FireStoreStatus.LOADING
-
-        val queryLastFriday =
-            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getFridayDate())
-
-        listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
-            if (error != null) {
-                Timber.e("Listen failed. $error")
-
-                _status.value = FireStoreStatus.ERROR
-
-                return@addSnapshotListener
-            }
-
-            _fireStoreWeekModel.value =
-                value!!.documents[0].toObject(FireStoreWeekModel::class.java)
-            _status.value = FireStoreStatus.DONE
-
-            workoutNextJamaah()
         }
     }
 

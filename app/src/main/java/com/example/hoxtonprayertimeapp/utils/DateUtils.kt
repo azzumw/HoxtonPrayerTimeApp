@@ -85,8 +85,7 @@ fun getTodayDate(pattern: String = DATE_PATTERN): String {
     return df.format(date)
 }
 
-fun getYesterdayDate(calender: java.util.Calendar, pattern: String = DATE_PATTERN): String {
-//    val calender = Calendar.getInstance()
+fun getYesterdayDate( calender: java.util.Calendar, pattern: String = DATE_PATTERN): String {
     calender.add(java.util.Calendar.DAY_OF_WEEK,-1)
     val yesterday = calender.time
 
@@ -142,7 +141,7 @@ fun fromStringToDateTimeObj(timeStr: String?): Date? {
 
         val fDate = formatter.format(today)
         val dateString = "$fDate $timeStr"
-        Log.e("fromStringToDateObj: ", dateString)
+//        Log.e("fromStringToDateObj: ", dateString)
         formatter2.parse(dateString)
     }
 }

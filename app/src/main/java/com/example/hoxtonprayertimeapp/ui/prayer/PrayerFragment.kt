@@ -92,3 +92,6 @@ class PrayerFragment : Fragment() {
         _binding = null
     }
 }
+
+// check network connectivity:
+//https://stackoverflow.com/questions/17880287/android-programmatically-check-internet-connection-and-display-dialog-if-notco/17880697#17880697

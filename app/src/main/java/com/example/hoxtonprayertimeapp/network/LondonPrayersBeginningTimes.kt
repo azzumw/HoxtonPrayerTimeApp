@@ -23,21 +23,6 @@ data class LondonPrayersBeginningTimes(
 
     var magribJamaat: String? = null
 
-//    fun getMaghribJamaatTime(): String? {
-//        val tempMaghrib = "$magrib pm"
-//
-//        val formattedDate = fromStringToDateTimeObj(tempMaghrib)
-//
-//        val maghribJamaatTime = Calendar.getInstance().apply {
-//            time = formattedDate!!
-//            add(Calendar.MINUTE, TWO_MINS)
-//        }.time
-//
-//        magribJamaat =   SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
-//        return magribJamaat
-//    }
-
-
     /*
     * Use below for database approach.*/
     fun getMaghribJamaahTime(): String? {
