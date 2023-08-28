@@ -62,14 +62,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
             getTodayDate()
         ).asLiveData()
 
-//    val maghribJamaahTime: LiveData<String?> = londonPrayerBeginningTimesFromDB.map {
-//        if (it != null) {
-//            nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(it.getMaghribJamaatTime())
-//            workoutNextJamaah()
-//            it.magribJamaat
-//        } else null
-//    }
-
     private val _status = MutableLiveData<FireStoreStatus>()
     val status: LiveData<FireStoreStatus>
         get() = _status
