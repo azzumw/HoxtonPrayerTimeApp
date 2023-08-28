@@ -1,14 +1,11 @@
 package com.example.hoxtonprayertimeapp
 
 import androidx.test.filters.SmallTest
-import androidx.test.runner.AndroidJUnit4
-import com.example.hoxtonprayertimeapp.utils.getYesterDayDate
+import com.example.hoxtonprayertimeapp.utils.getYesterdayDate
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
 import java.util.Calendar
 
 /**
@@ -29,7 +26,7 @@ class ExampleUnitTest {
         val mockedCalender = mock<Calendar>()
         mockedCalender.set(2023,8,26)
 
-        val yesterday = getYesterDayDate(mockedCalender)
+        val yesterday = getYesterdayDate(mockedCalender)
         assertEquals(yesterday,"25082023")
     }
 }

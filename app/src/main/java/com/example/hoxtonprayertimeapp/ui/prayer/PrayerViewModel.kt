@@ -4,7 +4,6 @@ import android.text.Html
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
@@ -19,8 +18,8 @@ import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
-import com.example.hoxtonprayertimeapp.utils.getYesterDayDate
-import com.example.hoxtonprayertimeapp.utils.isFridayToday
+import com.example.hoxtonprayertimeapp.utils.getYesterdayDate
+import com.example.hoxtonprayertimeapp.utils.isTodayFriday
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -60,7 +59,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
     val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         prayerDao.getTodayPrayers(
-            getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
+            getTodayDate()
         ).asLiveData()
 
 //    val maghribJamaahTime: LiveData<String?> = londonPrayerBeginningTimesFromDB.map {
@@ -82,27 +81,27 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     private lateinit var listernerRegisteration: ListenerRegistration
 
     //To highlight next prayer background view
-    val fajrBackground: LiveData<Boolean> = nextJamaat.map {
+    val fajrListItemBackground: LiveData<Boolean> = nextJamaat.map {
         it.substringBefore(" ") == FAJR_KEY
     }
 
-    val dhoharBackground: LiveData<Boolean> = nextJamaat.map {
+    val dhuhrListItemBackground: LiveData<Boolean> = nextJamaat.map {
         when {
-            it.contains(DHOHAR_KEY) -> true
+            it.contains(DHUHR_KEY) -> true
             it.contains(JUMUAH_TEXT) -> true
             else -> false
         }
     }
 
-    val asrBackground: LiveData<Boolean> = nextJamaat.map {
+    val asrListItemBackground: LiveData<Boolean> = nextJamaat.map {
         it.substringBefore(" ") == ASR_KEY
     }
 
-    val maghribBackground: LiveData<Boolean> = nextJamaat.map {
+    val maghribListItemBackground: LiveData<Boolean> = nextJamaat.map {
         it.substringBefore(" ") == MAGHRIB_KEY
     }
 
-    val ishaBackground: LiveData<Boolean> = nextJamaat.map {
+    val ishaListItemBackground: LiveData<Boolean> = nextJamaat.map {
         it.substringBefore(" ") == ISHA_KEY
     }
 
@@ -119,8 +118,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         listenForPrayersFromFirestore()
 
-        getYesterDayDate(Calendar.getInstance(), LONDON_PRAYER_API_DATE_PATTERN)
-
     }
 
 
@@ -135,20 +132,22 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         viewModelScope.launch {
             try {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
-                    date = getTodayDate(LONDON_PRAYER_API_DATE_PATTERN)
+                    date = getTodayDate()
                 )
 
-                prayerDao.deleteYesterdayPrayers(getYesterDayDate(Calendar.getInstance(),
-                    LONDON_PRAYER_API_DATE_PATTERN))
+                prayerDao.deleteYesterdayPrayers(
+                    getYesterdayDate(
+                        Calendar.getInstance()
+                    )
+                )
 
                 prayerDao.insertPrayer(apiResult)
 
                 val mjt = apiResult.getMaghribJamaahTime()!!
 
-                prayerDao.updateMaghribJamaah(mjt, getTodayDate(LONDON_PRAYER_API_DATE_PATTERN))
+                prayerDao.updateMaghribJamaah(mjt, getTodayDate())
 
-                nextPrayersMap[MAGHRIB_KEY] = fromStringToDateTimeObj(mjt)
-                workoutNextJamaah()
+                workoutNextJamaah(mjt)
 
 
             } catch (e: Exception) {
@@ -162,17 +161,15 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     If the list is empty i.e. all prayers have been filtered out, then a Good Night
     message is displayed. At midnight, this cycle repeats.
      */
-    private fun workoutNextJamaah() {
+    private fun workoutNextJamaah(prayerTime: String? = null) {
         //get the current time
         val currentTime = Calendar.getInstance().time
 
         Timber.i(nextPrayersMap.keys.toString())
-        //filter prayers with time after the current time
-        val tempPairNextJammah = nextPrayersMap.filterValues {
-            currentTime.before(it)
-        }.toList().sortedBy {
-            it.second
-        }.firstOrNull()
+
+        val tempPairNextJammah = addPrayersToMapForTheNextPrayer(prayerTime).firstOrNull {
+            currentTime.before(it.second)
+        }
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
             when (tempPairNextJammah.first) {
@@ -209,8 +206,37 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         } else GOOD_NIGHT_MSG
     }
 
+    private fun addPrayersToMapForTheNextPrayer(prayerTime: String?): List<Pair<String, Date?>> {
+        return nextPrayersMap.also {
+
+            it[FAJR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.fajar)
+
+            if (isTodayFriday()) {
+                it[FIRST_JUMMAH_KEY] =
+                    fromStringToDateTimeObj(fireStoreWeekModel.value?.firstJummah)
+                if (fireStoreWeekModel.value?.secondJummah != null) {
+                    it[SECOND_JUMMAH_KEY] =
+                        fromStringToDateTimeObj(fireStoreWeekModel.value?.secondJummah)
+                }
+            } else {
+                it[DHUHR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.dhuhr)
+            }
+
+            it[ASR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.asr)
+
+            prayerTime?.let { mjt ->
+                it[MAGHRIB_KEY] = fromStringToDateTimeObj(mjt)
+            }
+
+            it[ISHA_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.isha)
+
+        }.toList().sortedBy {
+            it.second
+        }
+    }
+
     private fun listenForPrayersFromFirestore() {
-        //listen to last friday, it today is friday listen to today.
+        //listen to last friday, if today is friday listen to today.
         _status.value = FireStoreStatus.LOADING
 
         val queryLastFriday =
@@ -228,25 +254,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
             _fireStoreWeekModel.value =
                 value!!.documents[0].toObject(FireStoreWeekModel::class.java)
             _status.value = FireStoreStatus.DONE
-
-            nextPrayersMap.also {
-
-                it[FAJR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.fajar)
-
-                if (isFridayToday()) {
-                    it[FIRST_JUMMAH_KEY] =
-                        fromStringToDateTimeObj(fireStoreWeekModel.value?.firstJummah)
-                    if (fireStoreWeekModel.value?.secondJummah != null) {
-                        it[SECOND_JUMMAH_KEY] =
-                            fromStringToDateTimeObj(fireStoreWeekModel.value?.secondJummah)
-                    }
-                } else {
-                    it[DHOHAR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.dhuhr)
-                }
-
-                it[ASR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.asr)
-                it[ISHA_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.isha)
-            }
 
             workoutNextJamaah()
         }
@@ -289,10 +296,8 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         private const val GOOD_NIGHT_MSG = "Good Night"
 
-        const val LONDON_PRAYER_API_DATE_PATTERN = "yyyy-MM-dd"
-
         const val FAJR_KEY = "Fajr"
-        const val DHOHAR_KEY = "Dhohar"
+        const val DHUHR_KEY = "Dhohar"
         const val ASR_KEY = "Asr"
         const val MAGHRIB_KEY = "Maghrib"
         const val ISHA_KEY = "Isha"

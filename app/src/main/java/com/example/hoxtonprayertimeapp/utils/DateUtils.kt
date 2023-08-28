@@ -10,7 +10,7 @@ import java.util.Date
 import java.util.Locale
 
 private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
-private const val DATE_PATTERN = "ddMMyyyy"
+const val DATE_PATTERN = "yyyy-MM-dd"
 fun getCurrentGregorianDate(): String = SimpleDateFormat(
     GREGORIAN_DATE_FORMAT,
     Locale.getDefault()
@@ -85,7 +85,7 @@ fun getTodayDate(pattern: String = DATE_PATTERN): String {
     return df.format(date)
 }
 
-fun getYesterDayDate(calender: java.util.Calendar,pattern: String = DATE_PATTERN): String {
+fun getYesterdayDate(calender: java.util.Calendar, pattern: String = DATE_PATTERN): String {
 //    val calender = Calendar.getInstance()
     calender.add(java.util.Calendar.DAY_OF_WEEK,-1)
     val yesterday = calender.time
@@ -95,7 +95,7 @@ fun getYesterDayDate(calender: java.util.Calendar,pattern: String = DATE_PATTERN
     return df.format(yesterday)
 }
 
-fun getFridayDate(): String = if (isFridayToday()) {
+fun getFridayDate(): String = if (isTodayFriday()) {
     getTodayDate()
 } else {
     getLastFridayDate()
@@ -110,7 +110,7 @@ fun getLastWeek(calender: java.util.Calendar): Int {
 fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) =
     getLastWeek(calender).toString()
 
-fun isFridayToday() = java.util.Calendar.getInstance(Locale.getDefault())
+fun isTodayFriday() = java.util.Calendar.getInstance(Locale.getDefault())
     .get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
 
 /*

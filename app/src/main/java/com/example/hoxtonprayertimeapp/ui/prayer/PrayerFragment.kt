@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.example.hoxtonprayertimeapp.R
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
-import com.example.hoxtonprayertimeapp.utils.isFridayToday
+import com.example.hoxtonprayertimeapp.utils.isTodayFriday
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PrayerFragment : Fragment() {
@@ -47,7 +47,7 @@ class PrayerFragment : Fragment() {
 
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             if (it != null) {
-                if (replaceDhuhrWithJummah(isFridayToday())) {
+                if (replaceDhuhrWithJummah(isTodayFriday())) {
                     if (it.secondJummah != null) {
                         binding.jummahJamaatOneTimeTv.text = it.firstJummah
                         binding.jummahJamaatTwoTimeTv.text = it.secondJummah

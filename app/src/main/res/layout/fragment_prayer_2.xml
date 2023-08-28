@@ -188,7 +188,7 @@
                         android:layout_height="60dp"
                         android:alpha="0.8"
                         tools:background="@color/purple"
-                        android:background="@{viewModel.fajrBackground.booleanValue() ? @color/teal_300 : @color/purple}"
+                        android:background="@{viewModel.fajrListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -249,7 +249,7 @@
                         android:layout_height="60dp"
                         android:alpha="0.8"
                         tools:background="@color/purple"
-                        android:background="@{viewModel.dhoharBackground.booleanValue() ? @color/teal_300 : @color/purple}"
+                        android:background="@{viewModel.dhuhrListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -339,7 +339,7 @@
                         android:layout_height="60dp"
                         android:alpha="0.8"
                         tools:background="@color/purple"
-                        android:background="@{viewModel.asrBackground.booleanValue() ? @color/teal_300 : @color/purple}"
+                        android:background="@{viewModel.asrListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -397,7 +397,7 @@
                         android:layout_height="60dp"
                         android:alpha="0.8"
                         tools:background="@color/purple"
-                        android:background="@{viewModel.maghribBackground.booleanValue() ? @color/teal_300 : @color/purple}"
+                        android:background="@{viewModel.maghribListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -456,7 +456,7 @@
                         android:layout_height="60dp"
                         android:alpha="0.8"
                         tools:background="@color/purple"
-                        android:background="@{viewModel.ishaBackground.booleanValue() ? @color/teal_300 : @color/purple}"
+                        android:background="@{viewModel.ishaListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
