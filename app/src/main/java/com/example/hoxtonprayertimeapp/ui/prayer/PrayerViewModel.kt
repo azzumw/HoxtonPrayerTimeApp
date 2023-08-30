@@ -37,7 +37,7 @@ import java.util.Date
 import java.util.Locale
 
 enum class ApiStatus {
-    LOADING, ERROR, DONE
+    LOADING, ERROR, DONE, S_ERROR
 }
 
 class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
@@ -120,7 +120,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
             apiStatusLiveMerger.addSource(londonApiStatus) { status ->
                 count++
                 if (londonDataDB == null) {
-
                     if (status == ApiStatus.ERROR) {
                         apiStatusLiveMerger.value = ApiStatus.ERROR
 
@@ -130,20 +129,20 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 } else {
                     when (status) {
                         ApiStatus.LOADING -> {
-                            apiStatusLiveMerger.postValue(ApiStatus.LOADING)
+                            apiStatusLiveMerger.value = (ApiStatus.LOADING)
                         }
                         ApiStatus.ERROR -> {
-                            apiStatusLiveMerger.postValue(ApiStatus.ERROR)
+                            apiStatusLiveMerger.value = ApiStatus.S_ERROR
                         }
                         else -> {
-                            apiStatusLiveMerger.postValue(ApiStatus.DONE)
+                            apiStatusLiveMerger.value = (ApiStatus.DONE)
                         }
                     }
                 }
                 apiStatusLiveMerger.removeSource(londonApiStatus)
             }
 
-            if (count > 5) {
+            if (count > 4) {
                 apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
             }
         }

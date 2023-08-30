@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.example.hoxtonprayertimeapp.ui.prayer.ApiStatus
+import com.google.android.material.snackbar.Snackbar
 
 @BindingAdapter("fireStoreApiStatus")
 fun bindStatus(statusImageView: ImageView, status: ApiStatus?) {
@@ -16,6 +17,11 @@ fun bindStatus(statusImageView: ImageView, status: ApiStatus?) {
         ApiStatus.ERROR -> {
             statusImageView.visibility = View.VISIBLE
             statusImageView.setImageResource(R.drawable.no_internet)
+        }
+
+        ApiStatus.S_ERROR -> {
+            statusImageView.visibility = View.GONE
+            Snackbar.make(statusImageView.rootView,"Network unavailable!",Snackbar.LENGTH_SHORT).show()
         }
 
         else -> {

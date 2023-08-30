@@ -10,9 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.hoxtonprayertimeapp.R
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.time.Duration
 
 class PrayerFragment : Fragment() {
 
@@ -38,20 +36,14 @@ class PrayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner){
-            if(it== ApiStatus.DONE){
+            if(it== ApiStatus.DONE || it ==ApiStatus.S_ERROR){
                 binding.broadcastPrayerCardview.visibility = View.VISIBLE
                 binding.prayerTimetableCardview.visibility = View.VISIBLE
+
             }else{
 
                 binding.prayerTimetableCardview.visibility = View.GONE
                 binding.broadcastPrayerCardview.visibility = View.GONE
-            }
-
-        }
-
-        prayerViewModel.londonApiStatus.observe(viewLifecycleOwner){
-            if(it == ApiStatus.ERROR){
-                Snackbar.make(view,"No network!",Snackbar.LENGTH_SHORT).show()
             }
         }
 
