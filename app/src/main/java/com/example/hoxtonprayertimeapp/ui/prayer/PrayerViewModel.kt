@@ -128,10 +128,16 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                         apiStatusLiveMerger.value = ApiStatus.LOADING
                     }
                 } else {
-                    if (status == ApiStatus.LOADING) {
-                        apiStatusLiveMerger.postValue(ApiStatus.LOADING)
-                    } else {
-                        apiStatusLiveMerger.postValue(ApiStatus.DONE)
+                    when (status) {
+                        ApiStatus.LOADING -> {
+                            apiStatusLiveMerger.postValue(ApiStatus.LOADING)
+                        }
+                        ApiStatus.ERROR -> {
+                            apiStatusLiveMerger.postValue(ApiStatus.ERROR)
+                        }
+                        else -> {
+                            apiStatusLiveMerger.postValue(ApiStatus.DONE)
+                        }
                     }
                 }
                 apiStatusLiveMerger.removeSource(londonApiStatus)

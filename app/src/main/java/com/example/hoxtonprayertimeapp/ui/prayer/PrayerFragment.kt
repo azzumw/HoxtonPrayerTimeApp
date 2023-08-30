@@ -55,27 +55,6 @@ class PrayerFragment : Fragment() {
             }
         }
 
-//        prayerViewModel.londonApiStatus.observe(viewLifecycleOwner){
-//            if(it== ApiStatus.DONE){
-//                binding.broadcastPrayerCardview.visibility = View.VISIBLE
-//                binding.prayerTimetableCardview.visibility = View.VISIBLE
-//            }else{
-//
-//                binding.prayerTimetableCardview.visibility = View.GONE
-//                binding.broadcastPrayerCardview.visibility = View.GONE
-//            }
-//        }
-
-//        prayerViewModel.fireStoreApiStatus.observe(viewLifecycleOwner) {
-//            if (it == ApiStatus.DONE) {
-//                binding.broadcastPrayerCardview.visibility = View.VISIBLE
-//                binding.prayerTimetableCardview.visibility = View.VISIBLE
-//            } else {
-//                binding.prayerTimetableCardview.visibility = View.GONE
-//                binding.broadcastPrayerCardview.visibility = View.GONE
-//            }
-//        }
-
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (replaceDhuhrWithJummah(isTodayFriday())) {
