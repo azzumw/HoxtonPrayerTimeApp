@@ -117,34 +117,23 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         var count = 1;
 
         apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) { londonDataDB ->
-            Log.e("londonDB", londonDataDB.toString())
             apiStatusLiveMerger.addSource(londonApiStatus) { status ->
-                Log.e("Status", status.name)
                 count++
                 if (londonDataDB == null) {
-                    Log.e("londonDB", londonDataDB.toString())
-                    Log.e("Status", status.name)
+
                     if (status == ApiStatus.ERROR) {
                         apiStatusLiveMerger.value = ApiStatus.ERROR
-                        Log.e("londonDB", londonDataDB.toString())
-                        Log.e("Status", status.name)
+
                     } else {
                         apiStatusLiveMerger.value = ApiStatus.LOADING
 //                       apiStatusLiveMerger.value = ApiStatus.DONE
-                        Log.e("londonDB", londonDataDB.toString())
-                        Log.e("Status", status.name)
-                    }
 
+                    }
                 } else {
                     apiStatusLiveMerger.value = ApiStatus.DONE
-                    Log.e("londonDB", londonDataDB.toString())
-                    Log.e("Status", status.name)
+
                 }
-
                     apiStatusLiveMerger.removeSource(londonApiStatus)
-                    Log.e("Rem londonDB", londonDataDB.toString())
-                    Log.e("Rem Status", status.name)
-
             }
 
             if (count>5){
