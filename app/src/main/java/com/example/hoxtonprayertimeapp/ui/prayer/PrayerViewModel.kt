@@ -151,7 +151,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
                 Log.e("lp londonDB", londonDataDB.toString())
             }
-
         }
 
 
