@@ -123,22 +123,29 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
                     if (status == ApiStatus.ERROR) {
                         apiStatusLiveMerger.value = ApiStatus.ERROR
+                        Log.e("londonDB", londonDataDB.toString())
+                        Log.e("lp status", status.toString())
 
                     } else {
                         apiStatusLiveMerger.value = ApiStatus.LOADING
-//                       apiStatusLiveMerger.value = ApiStatus.DONE
+                        Log.e("londonDB", londonDataDB.toString())
+                        Log.e("lp status", status.toString())
 
                     }
                 } else {
-                    apiStatusLiveMerger.value = ApiStatus.DONE
-
+                    if(status == ApiStatus.LOADING){
+                        apiStatusLiveMerger.postValue(ApiStatus.DONE)
+                    }else {
+                        apiStatusLiveMerger.postValue(ApiStatus.DONE)
+                        Log.e("londonDB", londonDataDB.toString())
+                        Log.e("lp status", status.toString())
+                    }
                 }
                     apiStatusLiveMerger.removeSource(londonApiStatus)
             }
 
             if (count>5){
                 apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
-                Log.e("lp londonDB", londonDataDB.toString())
             }
         }
 
