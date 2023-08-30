@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center_vertical"
         android:padding="12dp"
         tools:context=".ui.prayer.PrayerFragment">
 
@@ -21,9 +22,9 @@
             android:id="@+id/no_internet_img"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:contentDescription="No internet"
+            app:fireStoreApiStatus="@{viewModel.apiStatusLiveMerger}"
             android:visibility="gone"
-            app:fireStoreApiStatus="@{viewModel.status}"
-            android:layout_gravity="center_vertical"
             android:src="@drawable/no_internet"/>
 
         <com.google.android.material.card.MaterialCardView

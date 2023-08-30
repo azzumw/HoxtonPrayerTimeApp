@@ -1,7 +1,9 @@
 package com.example.hoxtonprayertimeapp.ui.prayer
 
 import android.text.Html
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -26,12 +28,15 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import org.checkerframework.checker.units.qual.A
+import org.checkerframework.checker.units.qual.s
+import org.koin.android.ext.koin.ERROR_MSG
 import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-enum class FireStoreStatus {
+enum class ApiStatus {
     LOADING, ERROR, DONE
 }
 
@@ -62,9 +67,16 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
             getTodayDate()
         ).asLiveData()
 
-    private val _status = MutableLiveData<FireStoreStatus>()
-    val status: LiveData<FireStoreStatus>
-        get() = _status
+
+    private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
+    val fireStoreApiStatus: LiveData<ApiStatus>
+        get() = _fireStoreApiStatus
+
+    private val _londonApiStatus = MutableLiveData<ApiStatus>()
+    val londonApiStatus: LiveData<ApiStatus>
+        get() = _londonApiStatus
+
+    val apiStatusLiveMerger = MediatorLiveData<ApiStatus>()
 
     private lateinit var firestore: FirebaseFirestore
 
@@ -99,10 +111,47 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
 
     init {
-
         getBeginningTimesFromLondonPrayerTimesApi()
 
         initialiseFireStoreEmulator()
+        var count = 1;
+
+        apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) { londonDataDB ->
+            Log.e("londonDB", londonDataDB.toString())
+            apiStatusLiveMerger.addSource(londonApiStatus) { status ->
+                Log.e("Status", status.name)
+                count++
+                if (londonDataDB == null) {
+                    Log.e("londonDB", londonDataDB.toString())
+                    Log.e("Status", status.name)
+                    if (status == ApiStatus.ERROR) {
+                        apiStatusLiveMerger.value = ApiStatus.ERROR
+                        Log.e("londonDB", londonDataDB.toString())
+                        Log.e("Status", status.name)
+                    } else {
+                        apiStatusLiveMerger.value = ApiStatus.LOADING
+//                       apiStatusLiveMerger.value = ApiStatus.DONE
+                        Log.e("londonDB", londonDataDB.toString())
+                        Log.e("Status", status.name)
+                    }
+
+                } else {
+                    apiStatusLiveMerger.value = ApiStatus.DONE
+                    Log.e("londonDB", londonDataDB.toString())
+                    Log.e("Status", status.name)
+                }
+
+                    apiStatusLiveMerger.removeSource(londonApiStatus)
+                    Log.e("Rem londonDB", londonDataDB.toString())
+                    Log.e("Rem Status", status.name)
+
+            }
+            apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
+            Log.e("lp londonDB", londonDataDB.toString())
+        }
+
+
+
 
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
 
@@ -121,11 +170,16 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
 
     private fun getBeginningTimesFromLondonPrayerTimesApi() {
+        _londonApiStatus.value = ApiStatus.LOADING
+
         viewModelScope.launch {
+
             try {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
                     date = getTodayDate()
                 )
+
+                _londonApiStatus.value = ApiStatus.DONE
 
                 prayerDao.deleteYesterdayPrayers(
                     getYesterdayDate(
@@ -142,32 +196,41 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 workoutNextJamaah(mjt)
 
 
+                Log.e("LonApiCall status set:", londonApiStatus.value.toString())
+
             } catch (e: Exception) {
                 Timber.e("Network exception ${e.message}")
+                _londonApiStatus.value = ApiStatus.ERROR
+
+                Log.e("LonApiCall status set:", londonApiStatus.value.toString())
             }
         }
     }
 
     private fun listenForPrayersFromFirestore() {
         //listen to last friday, if today is friday listen to today.
-        _status.value = FireStoreStatus.LOADING
 
+        _fireStoreApiStatus.value = ApiStatus.LOADING
         val queryLastFriday =
             firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getFridayDate())
 
         listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
+
+
             if (error != null) {
                 Timber.e("Listen failed. $error")
 
-                _status.value = FireStoreStatus.ERROR
-
+                _fireStoreApiStatus.value = ApiStatus.ERROR
+                Log.e("FireApi status set:", fireStoreApiStatus.value!!.name)
                 return@addSnapshotListener
             }
 
             _fireStoreWeekModel.value =
                 value!!.documents[0].toObject(FireStoreWeekModel::class.java)
-            _status.value = FireStoreStatus.DONE
 
+            _fireStoreApiStatus.value = ApiStatus.DONE
+
+            Log.e("FireApi status set:", fireStoreApiStatus.value.toString())
             workoutNextJamaah()
         }
     }

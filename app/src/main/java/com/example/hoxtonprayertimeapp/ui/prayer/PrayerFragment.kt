@@ -10,7 +10,9 @@ import androidx.databinding.DataBindingUtil
 import com.example.hoxtonprayertimeapp.R
 import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.time.Duration
 
 class PrayerFragment : Fragment() {
 
@@ -35,15 +37,44 @@ class PrayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prayerViewModel.status.observe(viewLifecycleOwner) {
-            if (it == FireStoreStatus.DONE) {
-                binding.prayerTimetableCardview.visibility = View.VISIBLE
+        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner){
+            if(it== ApiStatus.DONE){
                 binding.broadcastPrayerCardview.visibility = View.VISIBLE
-            } else {
+                binding.prayerTimetableCardview.visibility = View.VISIBLE
+            }else{
+
                 binding.prayerTimetableCardview.visibility = View.GONE
                 binding.broadcastPrayerCardview.visibility = View.GONE
             }
+
         }
+
+        prayerViewModel.londonApiStatus.observe(viewLifecycleOwner){
+            if(it == ApiStatus.ERROR){
+                Snackbar.make(view,"No network!",Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+//        prayerViewModel.londonApiStatus.observe(viewLifecycleOwner){
+//            if(it== ApiStatus.DONE){
+//                binding.broadcastPrayerCardview.visibility = View.VISIBLE
+//                binding.prayerTimetableCardview.visibility = View.VISIBLE
+//            }else{
+//
+//                binding.prayerTimetableCardview.visibility = View.GONE
+//                binding.broadcastPrayerCardview.visibility = View.GONE
+//            }
+//        }
+
+//        prayerViewModel.fireStoreApiStatus.observe(viewLifecycleOwner) {
+//            if (it == ApiStatus.DONE) {
+//                binding.broadcastPrayerCardview.visibility = View.VISIBLE
+//                binding.prayerTimetableCardview.visibility = View.VISIBLE
+//            } else {
+//                binding.prayerTimetableCardview.visibility = View.GONE
+//                binding.broadcastPrayerCardview.visibility = View.GONE
+//            }
+//        }
 
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             if (it != null) {
