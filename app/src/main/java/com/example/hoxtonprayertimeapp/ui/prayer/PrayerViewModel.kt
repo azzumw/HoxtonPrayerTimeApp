@@ -146,8 +146,12 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                     Log.e("Rem Status", status.name)
 
             }
-            apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
-            Log.e("lp londonDB", londonDataDB.toString())
+
+            if (count>5){
+                apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
+                Log.e("lp londonDB", londonDataDB.toString())
+            }
+
         }
 
 
