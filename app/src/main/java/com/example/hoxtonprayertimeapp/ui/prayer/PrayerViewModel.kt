@@ -123,34 +123,24 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
                     if (status == ApiStatus.ERROR) {
                         apiStatusLiveMerger.value = ApiStatus.ERROR
-                        Log.e("londonDB", londonDataDB.toString())
-                        Log.e("lp status", status.toString())
 
                     } else {
                         apiStatusLiveMerger.value = ApiStatus.LOADING
-                        Log.e("londonDB", londonDataDB.toString())
-                        Log.e("lp status", status.toString())
-
                     }
                 } else {
-                    if(status == ApiStatus.LOADING){
+                    if (status == ApiStatus.LOADING) {
+                        apiStatusLiveMerger.postValue(ApiStatus.LOADING)
+                    } else {
                         apiStatusLiveMerger.postValue(ApiStatus.DONE)
-                    }else {
-                        apiStatusLiveMerger.postValue(ApiStatus.DONE)
-                        Log.e("londonDB", londonDataDB.toString())
-                        Log.e("lp status", status.toString())
                     }
                 }
-                    apiStatusLiveMerger.removeSource(londonApiStatus)
+                apiStatusLiveMerger.removeSource(londonApiStatus)
             }
 
-            if (count>5){
+            if (count > 5) {
                 apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
             }
         }
-
-
-
 
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
 
