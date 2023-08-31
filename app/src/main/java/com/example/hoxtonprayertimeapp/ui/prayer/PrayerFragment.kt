@@ -61,12 +61,6 @@ class PrayerFragment : Fragment() {
                     binding.dhuhrJamaatTimeTv.text = it.dhuhr
                 }
 
-                binding.apply {
-
-                    fajrJamaatTimeTv.text = it.fajar
-                    asrJamaatTimeTv.text = it.asr
-                    ishaJamaatTimeTv.text = it.isha
-                }
             } else {
                 //show no data error animation
 
