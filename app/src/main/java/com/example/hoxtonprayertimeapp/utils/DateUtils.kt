@@ -37,14 +37,14 @@ private fun getIslamicMonth(month: Int): String {
         IslamicCalendar.SAFAR -> "Safar"
         IslamicCalendar.RABI_1 -> "Rabi ul Awal"
         IslamicCalendar.RABI_2 -> "Rabi uth Thani"
-        IslamicCalendar.JUMADA_1 -> "Jumada Awal"
-        IslamicCalendar.JUMADA_2 -> "Jumada Thani"
+        IslamicCalendar.JUMADA_1 -> "Jumaad ul Awal"
+        IslamicCalendar.JUMADA_2 -> "Jumaad uth Thani"
         IslamicCalendar.RAJAB -> "Rajab"
         IslamicCalendar.SHABAN -> "Shabaan"
         IslamicCalendar.RAMADAN -> "Ramadaan"
         IslamicCalendar.SHAWWAL -> "Shawwaal"
-        IslamicCalendar.DHU_AL_QIDAH -> "Dhu al Qidah"
-        IslamicCalendar.DHU_AL_HIJJAH -> "Dhi al Hijjah"
+        IslamicCalendar.DHU_AL_QIDAH -> "Dhul Qidah"
+        IslamicCalendar.DHU_AL_HIJJAH -> "Dhul Hijjah"
         else -> "Unknown Month"
     }
 }
