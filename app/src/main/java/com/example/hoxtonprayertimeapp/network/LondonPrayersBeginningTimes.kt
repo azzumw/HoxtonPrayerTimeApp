@@ -12,12 +12,12 @@ private const val TWO_MINS = 2
 data class LondonPrayersBeginningTimes(
     @PrimaryKey
     val date: String,
-    val fajrBegin: String,
+    val fajr: String,
     val sunrise: String,
-    val dhuhrBegin: String,
-    val asrBegin: String,
-    val magribBegin: String,
-    val ishaBegin: String
+    val dhuhr: String,
+    val asr: String,
+    val magrib: String,
+    val isha: String
 ) {
 
 
@@ -26,7 +26,7 @@ data class LondonPrayersBeginningTimes(
     /*
     * Use below for database approach.*/
     fun getMaghribJamaahTime(): String? {
-        val tempMaghrib = "$magribBegin pm"
+        val tempMaghrib = "$magrib pm"
 
         val formattedDate = fromStringToDateTimeObj(tempMaghrib)
 
