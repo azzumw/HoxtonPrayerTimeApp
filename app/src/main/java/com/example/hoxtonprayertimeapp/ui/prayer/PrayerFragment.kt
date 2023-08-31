@@ -17,7 +17,7 @@ class PrayerFragment : Fragment() {
     private var _binding: FragmentPrayer2Binding? = null
     private val binding get() = _binding!!
 
-    private  val prayerViewModel: PrayerViewModel by viewModel()
+    private val prayerViewModel: PrayerViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,15 +35,12 @@ class PrayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner){
-            if(it== ApiStatus.DONE || it ==ApiStatus.S_ERROR){
-                binding.broadcastPrayerCardview.visibility = View.VISIBLE
-                binding.prayerTimetableCardview.visibility = View.VISIBLE
+        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
+            if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
+                showOrHideCards(false)
 
-            }else{
-
-                binding.prayerTimetableCardview.visibility = View.GONE
-                binding.broadcastPrayerCardview.visibility = View.GONE
+            } else {
+                showOrHideCards(true)
             }
         }
 
@@ -82,6 +79,17 @@ class PrayerFragment : Fragment() {
             false
         }
     }
+
+    private fun showOrHideCards(hide: Boolean) {
+        if (hide) {
+            binding.prayerTimetableCardview.visibility = View.GONE
+            binding.broadcastPrayerCardview.visibility = View.GONE
+        } else {
+            binding.broadcastPrayerCardview.visibility = View.VISIBLE
+            binding.prayerTimetableCardview.visibility = View.VISIBLE
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
