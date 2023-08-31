@@ -12,30 +12,30 @@ private const val TWO_MINS = 2
 data class LondonPrayersBeginningTimes(
     @PrimaryKey
     val date: String,
-    val fajr: String,
+    val fajrBegin: String,
     val sunrise: String,
-    val dhuhr: String,
-    val asr: String,
-    val magrib: String,
-    val isha: String
+    val dhuhrBegin: String,
+    val asrBegin: String,
+    val magribBegin: String,
+    val ishaBegin: String
 ) {
 
 
-    var magribJamaat: String? = null
+    var magribJamaah: String? = null
 
     /*
     * Use below for database approach.*/
     fun getMaghribJamaahTime(): String? {
-        val tempMaghrib = "$magrib pm"
+        val tempMaghrib = "$magribBegin pm"
 
         val formattedDate = fromStringToDateTimeObj(tempMaghrib)
 
-        val maghribJamaatTime = Calendar.getInstance().apply {
+        val maghribJamaahTime = Calendar.getInstance().apply {
             time = formattedDate!!
             add(Calendar.MINUTE, TWO_MINS)
         }.time
 
-        return  SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
+        return  SimpleDateFormat("hh:mm a").format(maghribJamaahTime).lowercase()
     }
 }
 
