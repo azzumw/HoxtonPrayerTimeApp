@@ -38,7 +38,7 @@ android {
    buildFeatures{
        dataBinding true
    }
-    namespace 'com.example.hoxtonprayertimeapp'
+    namespace 'com.hoxtonislah.hoxtonprayertimeapp'
 }
 
 dependencies {

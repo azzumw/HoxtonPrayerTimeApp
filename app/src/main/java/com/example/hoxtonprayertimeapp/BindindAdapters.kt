@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.example.hoxtonprayertimeapp.ui.prayer.ApiStatus
 import com.google.android.material.snackbar.Snackbar
+import com.hoxtonislah.hoxtonprayertimeapp.R
 
 @BindingAdapter("fireStoreApiStatus")
 fun bindStatus(statusImageView: ImageView, status: ApiStatus?) {

@@ -131,7 +131,7 @@ fun formatTimeToString(time: Date?): String? {
 * today's Date objects (to avoid it being set to 1 Jan 1970) ,
 * for Next Prayer feature to work.
 * */
-fun fromStringToDateTimeObj(timeStr: String?): Date? {
+fun formatStringToDate(timeStr: String?): Date? {
 
     return timeStr?.let {
         val formatter = SimpleDateFormat("dd/MM/yyyy")

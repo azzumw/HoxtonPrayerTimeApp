@@ -15,7 +15,7 @@ import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.formatTimeToString
-import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
+import com.example.hoxtonprayertimeapp.utils.formatStringToDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
@@ -28,9 +28,6 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
-import org.checkerframework.checker.units.qual.A
-import org.checkerframework.checker.units.qual.s
-import org.koin.android.ext.koin.ERROR_MSG
 import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
@@ -69,11 +66,11 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
 
     private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
-    val fireStoreApiStatus: LiveData<ApiStatus>
+    private val fireStoreApiStatus: LiveData<ApiStatus>
         get() = _fireStoreApiStatus
 
     private val _londonApiStatus = MutableLiveData<ApiStatus>()
-    val londonApiStatus: LiveData<ApiStatus>
+    private val londonApiStatus: LiveData<ApiStatus>
         get() = _londonApiStatus
 
     val apiStatusLiveMerger = MediatorLiveData<ApiStatus>()
@@ -282,26 +279,26 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     private fun addPrayersToMapForTheNextPrayer(prayerTime: String?): List<Pair<String, Date?>> {
         return nextPrayersMap.also {
 
-            it[FAJR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.fajar)
+            it[FAJR_KEY] = formatStringToDate(fireStoreWeekModel.value?.fajar)
 
             if (isTodayFriday()) {
                 it[FIRST_JUMMAH_KEY] =
-                    fromStringToDateTimeObj(fireStoreWeekModel.value?.firstJummah)
+                    formatStringToDate(fireStoreWeekModel.value?.firstJummah)
                 if (fireStoreWeekModel.value?.secondJummah != null) {
                     it[SECOND_JUMMAH_KEY] =
-                        fromStringToDateTimeObj(fireStoreWeekModel.value?.secondJummah)
+                        formatStringToDate(fireStoreWeekModel.value?.secondJummah)
                 }
             } else {
-                it[DHUHR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.dhuhr)
+                it[DHUHR_KEY] = formatStringToDate(fireStoreWeekModel.value?.dhuhr)
             }
 
-            it[ASR_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.asr)
+            it[ASR_KEY] = formatStringToDate(fireStoreWeekModel.value?.asr)
 
             prayerTime?.let { mjt ->
-                it[MAGHRIB_KEY] = fromStringToDateTimeObj(mjt)
+                it[MAGHRIB_KEY] = formatStringToDate(mjt)
             }
 
-            it[ISHA_KEY] = fromStringToDateTimeObj(fireStoreWeekModel.value?.isha)
+            it[ISHA_KEY] = formatStringToDate(fireStoreWeekModel.value?.isha)
 
         }.toList().sortedBy {
             it.second

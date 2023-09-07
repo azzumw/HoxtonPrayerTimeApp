@@ -2,7 +2,7 @@ package com.example.hoxtonprayertimeapp.network
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
+import com.example.hoxtonprayertimeapp.utils.formatStringToDate
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -28,7 +28,7 @@ data class LondonPrayersBeginningTimes(
     fun getMaghribJamaahTime(): String? {
         val tempMaghrib = "$magrib pm"
 
-        val formattedDate = fromStringToDateTimeObj(tempMaghrib)
+        val formattedDate = formatStringToDate(tempMaghrib)
 
         val maghribJamaahTime = Calendar.getInstance().apply {
             time = formattedDate!!

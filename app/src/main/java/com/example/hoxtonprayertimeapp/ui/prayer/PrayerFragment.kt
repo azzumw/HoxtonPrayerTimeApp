@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import com.example.hoxtonprayertimeapp.R
-import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
+import com.hoxtonislah.hoxtonprayertimeapp.R
+import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PrayerFragment : Fragment() {
