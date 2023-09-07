@@ -26,7 +26,7 @@ android {
     }
     compileOptions {
 //        sourceCompatibility JavaVersion.VERSION_1_8
-//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -38,19 +38,24 @@ android {
    buildFeatures{
        dataBinding true
    }
-    namespace 'com.example.hoxtonprayertimeapp'
+    namespace 'com.hoxtonislah.hoxtonprayertimeapp'
 }
 
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
+//    implementation 'androidx.core:core-ktx:1.6.0'
+//    implementation 'androidx.core:core-ktx:1.8.0'
 //    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 //    implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
 //    implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+
+
 
     //logging lib
     implementation('com.jakewharton.timber:timber:4.7.1')
@@ -58,7 +63,6 @@ dependencies {
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:31.2.2')
-//    implementation platform('com.google.firebase:firebase-bom:31.4.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation('com.google.firebase:firebase-firestore-ktx')
     implementation("com.google.firebase:firebase-auth-ktx")
@@ -66,8 +70,10 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.1"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.1"
+
+//    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
 //    implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
 //    implementation "androidx.navigation:navigation-ui-ktx:2.6.0"
@@ -84,17 +90,35 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 
+    //Room
+    implementation("androidx.room:room-ktx:$version_room")
+    implementation("androidx.room:room-runtime:$version_room")
+    kapt("androidx.room:room-compiler:$version_room")
+    //Room Test
+    implementation("androidx.room:room-testing:$version_room")
+
     // Koin for Android
     implementation "io.insert-koin:koin-android:$version_koin"
     // Jetpack WorkManager
     implementation "io.insert-koin:koin-androidx-workmanager:$version_koin"
     // Navigation Graph
     implementation "io.insert-koin:koin-androidx-navigation:$version_koin"
-    // Koin for Tests
-    testImplementation "io.insert-koin:koin-test-junit4:$version_koin"
 
     //unitTest
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.mockito:mockito-core:$version_mockito"
+    // Optional -- mockito-kotlin
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$version_mockito"
+    // Optional -- Mockk framework
+    testImplementation "io.mockk:mockk:1.13.7"
+
+    // AndroidX Test - JVM testing
+    testImplementation "androidx.test:rules:1.5.0"
+
+    
+    //Mockito
+    androidTestImplementation "org.mockito:mockito-core:$version_mockito"
+    androidTestImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.28.3'
 
     //androidTest
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

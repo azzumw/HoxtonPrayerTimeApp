@@ -7,11 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import com.example.hoxtonprayertimeapp.R
-import com.example.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
-import com.example.hoxtonprayertimeapp.utils.isFridayToday
+import com.example.hoxtonprayertimeapp.utils.isTodayFriday
+import com.hoxtonislah.hoxtonprayertimeapp.R
+import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PrayerFragment : Fragment() {
@@ -37,22 +35,18 @@ class PrayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val viewModelFactory = PrayerViewModelFactory()
-//        prayerViewModel = ViewModelProvider(this, viewModelFactory)[PrayerViewModel::class.java]
+        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
+            if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
+                showOrHideCards(false)
 
-        prayerViewModel.status.observe(viewLifecycleOwner) {
-            if (it == FireStoreStatus.DONE) {
-                binding.prayerTimetableCardview.visibility = View.VISIBLE
-                binding.broadcastPrayerCardview.visibility = View.VISIBLE
             } else {
-                binding.prayerTimetableCardview.visibility = View.GONE
-                binding.broadcastPrayerCardview.visibility = View.GONE
+                showOrHideCards(true)
             }
         }
 
-        prayerViewModel.week.observe(viewLifecycleOwner) {
+        prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             if (it != null) {
-                if (replaceDhuhrWithJummah(isFridayToday())) {
+                if (replaceDhuhrWithJummah(isTodayFriday())) {
                     if (it.secondJummah != null) {
                         binding.jummahJamaatOneTimeTv.text = it.firstJummah
                         binding.jummahJamaatTwoTimeTv.text = it.secondJummah
@@ -64,12 +58,6 @@ class PrayerFragment : Fragment() {
                     binding.dhuhrJamaatTimeTv.text = it.dhuhr
                 }
 
-                binding.apply {
-
-                    fajrJamaatTimeTv.text = it.fajar
-                    asrJamaatTimeTv.text = it.asr
-                    ishaJamaatTimeTv.text = it.isha
-                }
             } else {
                 //show no data error animation
 
@@ -92,8 +80,22 @@ class PrayerFragment : Fragment() {
         }
     }
 
+    private fun showOrHideCards(hide: Boolean) {
+        if (hide) {
+            binding.prayerTimetableCardview.visibility = View.GONE
+            binding.broadcastPrayerCardview.visibility = View.GONE
+        } else {
+            binding.broadcastPrayerCardview.visibility = View.VISIBLE
+            binding.prayerTimetableCardview.visibility = View.VISIBLE
+        }
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 }
+
+// check network connectivity:
+//https://stackoverflow.com/questions/17880287/android-programmatically-check-internet-connection-and-display-dialog-if-notco/17880697#17880697

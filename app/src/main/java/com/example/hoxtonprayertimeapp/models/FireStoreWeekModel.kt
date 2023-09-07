@@ -1,6 +1,5 @@
 package com.example.hoxtonprayertimeapp.models
-
-data class Week(
+data class FireStoreWeekModel(
     val fridayDate: String? = null,
     val fajar: String? = null,
     val dhuhr: String? = null,

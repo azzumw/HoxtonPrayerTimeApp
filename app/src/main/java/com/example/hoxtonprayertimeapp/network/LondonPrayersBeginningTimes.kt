@@ -1,12 +1,16 @@
 package com.example.hoxtonprayertimeapp.network
 
-import com.example.hoxtonprayertimeapp.utils.fromStringToDateTimeObj
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.hoxtonprayertimeapp.utils.formatStringToDate
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
 private const val TWO_MINS = 2
 
+@Entity(tableName = "london_prayers_beginning_times")
 data class LondonPrayersBeginningTimes(
+    @PrimaryKey
     val date: String,
     val fajr: String,
     val sunrise: String,
@@ -15,19 +19,23 @@ data class LondonPrayersBeginningTimes(
     val magrib: String,
     val isha: String
 ) {
-    val magribJamaat: String = getMaghribJamaatTime()
 
-    private fun getMaghribJamaatTime(): String {
+
+    var magribJamaah: String? = null
+
+    /*
+    * Use below for database approach.*/
+    fun getMaghribJamaahTime(): String? {
         val tempMaghrib = "$magrib pm"
 
-        val formattedDate = fromStringToDateTimeObj(tempMaghrib)
+        val formattedDate = formatStringToDate(tempMaghrib)
 
-        val maghribJamaatTime = Calendar.getInstance().apply {
+        val maghribJamaahTime = Calendar.getInstance().apply {
             time = formattedDate!!
             add(Calendar.MINUTE, TWO_MINS)
         }.time
 
-        return SimpleDateFormat("hh:mm a").format(maghribJamaatTime).lowercase()
+        return  SimpleDateFormat("hh:mm a").format(maghribJamaahTime).lowercase()
     }
 }
 

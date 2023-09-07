@@ -9,7 +9,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.hoxtonprayertimeapp.databinding.ActivityMainBinding
+import com.hoxtonislah.hoxtonprayertimeapp.R
+import com.hoxtonislah.hoxtonprayertimeapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,5 +38,4 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, drawerLayout)
     }
-
 }

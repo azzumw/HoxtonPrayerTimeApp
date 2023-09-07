@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center_vertical"
         android:padding="12dp"
         tools:context=".ui.prayer.PrayerFragment">
 
@@ -21,9 +22,9 @@
             android:id="@+id/no_internet_img"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:contentDescription="No internet"
+            app:fireStoreApiStatus="@{viewModel.apiStatusLiveMerger}"
             android:visibility="gone"
-            app:fireStoreApiStatus="@{viewModel.status}"
-            android:layout_gravity="center_vertical"
             android:src="@drawable/no_internet"/>
 
         <com.google.android.material.card.MaterialCardView
@@ -32,7 +33,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginBottom="8dp"
-            android:elevation="20dp"
+            android:elevation="4dp"
             app:cardCornerRadius="@dimen/card_radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/gray"
+                android:background="@color/smoke"
                 android:padding="16dp">
 
                 <TextView
@@ -68,14 +69,13 @@
                     android:id="@+id/next_prayer_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
                     android:text="@string/next_jamaat_text"
-                    android:visibility="@{viewModel.nextJamaatLabelVisibility? View.VISIBLE:View.GONE}"
                     android:textColor="@color/purple"
                     android:textSize="@dimen/next_prayer_label_textsize"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="@{viewModel.nextJamaatLabelVisibility? View.VISIBLE:View.GONE}"
                     app:layout_constraintBottom_toTopOf="@id/salaat_label_and_time_container_layout"
+                    app:layout_constraintStart_toStartOf="parent"
                     tools:text="@string/next_jamaat_text" />
 
                 <LinearLayout
@@ -188,7 +188,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.fajrListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -209,7 +210,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             tools:text="@string/dummy_time"
-                            android:text="@{@string/am(viewModel.londonPrayerBeginningTimes.fajr)}"
+                            android:text="@{@string/am(viewModel.londonPrayerBeginningTimesFromDB.fajr)}"
                             android:textSize="18sp"
                             android:textColor="@color/gray"
                             android:gravity="center" />
@@ -219,7 +220,8 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="@string/dummy_time"
+                            android:text="@{viewModel.fireStoreWeekModel.fajar}"
+                            tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/gray"
@@ -248,7 +250,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.dhuhrListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -269,7 +272,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.dhuhr)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.dhuhr)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -337,7 +340,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.asrListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -359,7 +363,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.asr)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.asr)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -370,7 +374,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/dummy_time"
+                            android:text="@{viewModel.fireStoreWeekModel.asr}"
+                            tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/gray" />
@@ -394,7 +399,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.maghribListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -416,7 +422,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.magrib)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.magrib)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -427,7 +433,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.maghribFromApi}"
+                            android:text="@{viewModel.londonPrayerBeginningTimesFromDB.magribJamaah}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -452,7 +458,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:alpha="0.8"
-                        android:background="@color/purple"
+                        tools:background="@color/purple"
+                        android:background="@{viewModel.ishaListItemBackground.booleanValue() ? @color/teal_300 : @color/purple}"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -474,7 +481,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimes.isha)}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.isha)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -485,7 +492,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/dummy_time"
+                            android:text="@{viewModel.fireStoreWeekModel.isha}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -494,125 +501,7 @@
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
-
-
-        <!--                    <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">-->
-
-        <!--                        <LinearLayout style="@style/prayer_block_linear_layout_style">-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/dhohar_textview"-->
-        <!--                                style="@style/left_prayer_block_text_styles"-->
-        <!--                                android:layout_weight="2"-->
-        <!--                                android:text="@string/dhohar_text"-->
-        <!--                                tools:text="@string/dhohar_text" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/dhohar_start_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/dhohar_jamaat_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-        <!--                        </LinearLayout>-->
-        <!--                    </com.google.android.material.card.MaterialCardView>-->
-
-        <!--                    <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">-->
-
-        <!--                        <LinearLayout style="@style/prayer_block_linear_layout_style">-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/asr_textview"-->
-        <!--                                style="@style/left_prayer_block_text_styles"-->
-        <!--                                android:layout_weight="2"-->
-        <!--                                android:text="@string/asr_text"-->
-        <!--                                tools:text="@string/asr_text" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/asr_start_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/asr_jamaat_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-        <!--                        </LinearLayout>-->
-        <!--                    </com.google.android.material.card.MaterialCardView>-->
-
-        <!--                    <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">-->
-
-        <!--                        <LinearLayout style="@style/prayer_block_linear_layout_style">-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/maghrib_textview"-->
-        <!--                                style="@style/left_prayer_block_text_styles"-->
-        <!--                                android:text="@string/maghrib_text"-->
-        <!--                                tools:text="@string/maghrib_text" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/maghrib_start_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/maghrib_jamaat_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-
-        <!--                        </LinearLayout>-->
-        <!--                    </com.google.android.material.card.MaterialCardView>-->
-        <!--                    -->
-        <!--                    <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">-->
-
-        <!--                        <LinearLayout style="@style/prayer_block_linear_layout_style">-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/isha_textview"-->
-        <!--                                style="@style/left_prayer_block_text_styles"-->
-        <!--                                android:text="@string/isha_text"-->
-        <!--                                tools:text="@string/isha_text" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/isha_start_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/isha_jamaat_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-        <!--                        </LinearLayout>-->
-        <!--                    </com.google.android.material.card.MaterialCardView>-->
-
-        <!--                    <com.google.android.material.card.MaterialCardView style="@style/grid_card_style">-->
-
-        <!--                        <LinearLayout style="@style/prayer_block_linear_layout_style">-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/jummah_textview"-->
-        <!--                                style="@style/left_prayer_block_text_styles"-->
-        <!--                                android:text="@string/jummah_text"-->
-        <!--                                tools:text="@string/jummah_text" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/jummah_start_time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-
-        <!--                            <TextView-->
-        <!--                                android:id="@+id/jummah_jamat__time_textview"-->
-        <!--                                style="@style/prayer_blocks_text_styles"-->
-        <!--                                tools:text="04:30" />-->
-        <!--                        </LinearLayout>-->
-        <!--                    </com.google.android.material.card.MaterialCardView>-->
-
-
     </LinearLayout>
 </layout>
