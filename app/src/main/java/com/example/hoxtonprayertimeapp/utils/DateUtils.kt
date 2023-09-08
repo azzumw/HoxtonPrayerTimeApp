@@ -5,7 +5,11 @@ import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
 import android.util.Log
 import com.google.firebase.Timestamp
+import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Date
 import java.util.Locale
 
@@ -144,4 +148,15 @@ fun formatStringToDate(timeStr: String?): Date? {
 //        Log.e("fromStringToDateObj: ", dateString)
         formatter2.parse(dateString)
     }
+}
+
+fun fromStringToLocalTime(timeinString:String?):LocalTime?{
+    val t = LocalTime.parse(timeinString)
+    Timber.i(t.toString())
+    return t
+}
+
+fun fromLocalTimeToString(time:LocalTime){
+    val timeinString = time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+    Timber.i(timeinString)
 }

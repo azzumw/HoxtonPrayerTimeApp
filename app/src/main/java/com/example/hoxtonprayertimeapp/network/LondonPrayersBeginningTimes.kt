@@ -37,6 +37,19 @@ data class LondonPrayersBeginningTimes(
 
         return  SimpleDateFormat("hh:mm a").format(maghribJamaahTime).lowercase()
     }
+    fun getMaghribJamaahTime2(): String? {
+        val tempMaghrib = "$magrib:00"
+
+        val formattedDate = formatStringToDate(tempMaghrib)
+
+        val maghribJamaahTime = Calendar.getInstance().apply {
+            time = formattedDate!!
+            add(Calendar.MINUTE, TWO_MINS)
+        }.time
+
+        return  SimpleDateFormat("hh:mm a").format(maghribJamaahTime).lowercase()
+    }
+
 }
 
 
