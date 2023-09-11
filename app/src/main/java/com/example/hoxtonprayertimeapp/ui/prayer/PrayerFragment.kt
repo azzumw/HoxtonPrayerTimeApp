@@ -54,10 +54,10 @@ class PrayerFragment : Fragment() {
             if (it != null) {
                 if (isTodayFriday()) {
                     if (it.secondJummah != null) {
-                        replaceDhuhrViewWithJummahIfSecondJammahExists(true)
+                        replaceDhuhrViewWithJummahViewIfSecondJummahExists(true)
 
                     } else {
-                        replaceDhuhrViewWithJummahIfSecondJammahExists()
+                        replaceDhuhrViewWithJummahViewIfSecondJummahExists()
                     }
                 } else {
                     binding.dhuhrTextview.text = getString(R.string.dhohar_text)
@@ -70,8 +70,7 @@ class PrayerFragment : Fragment() {
         }
     }
 
-
-    private fun replaceDhuhrViewWithJummahIfSecondJammahExists(secondJamaahExist: Boolean = false) {
+    private fun replaceDhuhrViewWithJummahViewIfSecondJummahExists(secondJamaahExist: Boolean = false) {
         binding.dhuhrTextview.text = getString(R.string.jummah_text)
         if (secondJamaahExist) {
             binding.dhuhrJamaatTimeTv.visibility = TextView.GONE
@@ -91,7 +90,6 @@ class PrayerFragment : Fragment() {
             binding.prayerTimetableCardview.visibility = View.VISIBLE
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
