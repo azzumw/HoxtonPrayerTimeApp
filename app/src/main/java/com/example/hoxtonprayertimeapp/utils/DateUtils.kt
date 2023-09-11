@@ -108,7 +108,7 @@ fun getLastWeek(calender: java.util.Calendar): Int {
 
 
 fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) =
-    getLastWeek(calender).toString()
+    "${getLastWeek(calender)}_${calender.get(Calendar.YEAR)}"
 
 fun isTodayFriday() = java.util.Calendar.getInstance(Locale.getDefault())
     .get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
