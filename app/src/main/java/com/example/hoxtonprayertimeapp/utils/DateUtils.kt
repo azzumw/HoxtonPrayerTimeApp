@@ -3,18 +3,15 @@ package com.example.hoxtonprayertimeapp.utils
 import android.icu.util.Calendar
 import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
-import android.util.Log
 import com.google.firebase.Timestamp
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.util.Date
 import java.util.Locale
 
 private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
 const val DATE_PATTERN = "yyyy-MM-dd"
+private const val UMAL_QURAH_CALENDER = "@calendar=islamic-umalqura"
 fun getCurrentGregorianDate(): String = SimpleDateFormat(
     GREGORIAN_DATE_FORMAT,
     Locale.getDefault()
@@ -22,7 +19,7 @@ fun getCurrentGregorianDate(): String = SimpleDateFormat(
 
 
 fun getCurrentIslamicDate(): String {
-    val locale = ULocale("@calendar=islamic-umalqura")
+    val locale = ULocale(UMAL_QURAH_CALENDER)
     val islamic = Calendar.getInstance(locale) as IslamicCalendar
 
     islamic.calculationType = IslamicCalendar.CalculationType.ISLAMIC_UMALQURA
@@ -89,8 +86,8 @@ fun getTodayDate(pattern: String = DATE_PATTERN): String {
     return df.format(date)
 }
 
-fun getYesterdayDate( calender: java.util.Calendar, pattern: String = DATE_PATTERN): String {
-    calender.add(java.util.Calendar.DAY_OF_WEEK,-1)
+fun getYesterdayDate(calender: java.util.Calendar, pattern: String = DATE_PATTERN): String {
+    calender.add(java.util.Calendar.DAY_OF_WEEK, -1)
     val yesterday = calender.time
 
     val df = SimpleDateFormat(pattern)
@@ -116,47 +113,11 @@ fun createDocumentReferenceIDForLastWeek(calender: java.util.Calendar) =
 fun isTodayFriday() = java.util.Calendar.getInstance(Locale.getDefault())
     .get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
 
-/*
-* This is the String representation, converts back to String for Next Prayer
-* */
-fun formatTimeToString(time: Date?): String? {
-    val formatter = SimpleDateFormat("hh:mma")
-    if (time != null) {
-        val formattedTime = formatter.format(time)
-        Log.e("formatStringTime", formattedTime)
 
-        return formattedTime.lowercase()
+fun fromStringToLocalTime(timeinString: String?, plusMinutes: Long = 0L) = timeinString?.let {
+        LocalTime.parse(timeinString).plusMinutes(plusMinutes)
     }
-    return null
-}
 
-/*Because the prayer jamaat times from the firestore
-* are read in string, hence we need to convert them to
-* today's Date objects (to avoid it being set to 1 Jan 1970) ,
-* for Next Prayer feature to work.
-* */
-fun formatStringToDate(timeStr: String?): Date? {
 
-    return timeStr?.let {
-        val formatter = SimpleDateFormat("dd/MM/yyyy")
-        val formatter2 = SimpleDateFormat("dd/MM/yyyy hh:mm a")
-
-        val today = java.util.Calendar.getInstance().time
-
-        val fDate = formatter.format(today)
-        val dateString = "$fDate $timeStr"
-//        Log.e("fromStringToDateObj: ", dateString)
-        formatter2.parse(dateString)
-    }
-}
-
-fun fromStringToLocalTime(timeinString:String?):LocalTime?{
-    val t = LocalTime.parse(timeinString)
-    Timber.i(t.toString())
-    return t
-}
-
-fun fromLocalTimeToString(time:LocalTime){
-    val timeinString = time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-    Timber.i(timeinString)
-}
+fun fromLocalTimeToString(time: LocalTime?) = time?.format(DateTimeFormatter.ofPattern("hh:mm a"))
+    ?.lowercase()

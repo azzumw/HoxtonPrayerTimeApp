@@ -14,8 +14,9 @@ import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
-import com.example.hoxtonprayertimeapp.utils.formatTimeToString
-import com.example.hoxtonprayertimeapp.utils.formatStringToDate
+
+import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString
+import com.example.hoxtonprayertimeapp.utils.fromStringToLocalTime
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.example.hoxtonprayertimeapp.utils.getFridayDate
@@ -29,8 +30,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 enum class ApiStatus {
@@ -39,7 +41,7 @@ enum class ApiStatus {
 
 class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
-    private val nextPrayersMap = mutableMapOf<String, Date?>()
+    private val nextPrayersMap2 = mutableMapOf<String, LocalTime?>()
 
     private val _nextJamaat = MutableLiveData<String>()
     val nextJamaat: LiveData<String> get() = _nextJamaat
@@ -58,6 +60,32 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
     private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
     val fireStoreWeekModel: LiveData<FireStoreWeekModel?> get() = _fireStoreWeekModel
+
+    val isTodayFriday:Boolean = isTodayFriday()
+
+    val fajarJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+        it?.to12hour(it.fajar)
+    }
+
+    val dhuhrJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+        it?.to12hour(it.dhuhr)
+    }
+
+    val firstJummahJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+        it?.to12hour(it.firstJummah)
+    }
+
+    val secondJummahJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+        it?.to12hour(it.secondJummah)
+    }
+
+    val asrJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+        it?.to12hour(it.asr)
+    }
+
+    val ishaJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+        it?.to12hour(it.isha)
+    }
 
     val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         prayerDao.getTodayPrayers(
@@ -128,9 +156,11 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                         ApiStatus.LOADING -> {
                             apiStatusLiveMerger.value = (ApiStatus.LOADING)
                         }
+
                         ApiStatus.ERROR -> {
                             apiStatusLiveMerger.value = ApiStatus.S_ERROR
                         }
+
                         else -> {
                             apiStatusLiveMerger.value = (ApiStatus.DONE)
                         }
@@ -149,6 +179,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         writePrayerTimesToFirestoreForThisWeek()
 
         listenForPrayersFromFirestore()
+
 
     }
 
@@ -233,12 +264,10 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
      */
     private fun workoutNextJamaah(prayerTime: String? = null) {
         //get the current time
-        val currentTime = Calendar.getInstance().time
-
-        Timber.i(nextPrayersMap.keys.toString())
+        val currentTime = LocalTime.now()
 
         val tempPairNextJammah = addPrayersToMapForTheNextPrayer(prayerTime).firstOrNull {
-            currentTime.before(it.second)
+            currentTime.isBefore(it.second)
         }
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
@@ -250,9 +279,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                             Html.FROM_HTML_MODE_LEGACY
                         )
                     } ${tempPairNextJammah.first.substringAfter(" ")} ${
-                        formatTimeToString(
-                            tempPairNextJammah.second
-                        )
+                        fromLocalTimeToString(tempPairNextJammah.second)
                     }"
                 }
 
@@ -263,42 +290,42 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                             Html.FROM_HTML_MODE_LEGACY
                         )
                     } ${tempPairNextJammah.first.substringAfter(" ")} ${
-                        formatTimeToString(
+                        fromLocalTimeToString(
                             tempPairNextJammah.second
                         )
                     }"
                 }
 
-                else -> "${tempPairNextJammah.first} ${formatTimeToString(tempPairNextJammah.second)}"
+                else -> "${tempPairNextJammah.first} ${fromLocalTimeToString(tempPairNextJammah.second)}"
 
             }
 
         } else GOOD_NIGHT_MSG
     }
 
-    private fun addPrayersToMapForTheNextPrayer(prayerTime: String?): List<Pair<String, Date?>> {
-        return nextPrayersMap.also {
+    private fun addPrayersToMapForTheNextPrayer(prayerTime: String?): List<Pair<String, LocalTime?>> {
+        return nextPrayersMap2.also {
 
-            it[FAJR_KEY] = formatStringToDate(fireStoreWeekModel.value?.fajar)
+            it[FAJR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.fajar)
 
             if (isTodayFriday()) {
                 it[FIRST_JUMMAH_KEY] =
-                    formatStringToDate(fireStoreWeekModel.value?.firstJummah)
+                    fromStringToLocalTime(fireStoreWeekModel.value?.firstJummah)
                 if (fireStoreWeekModel.value?.secondJummah != null) {
                     it[SECOND_JUMMAH_KEY] =
-                        formatStringToDate(fireStoreWeekModel.value?.secondJummah)
+                        fromStringToLocalTime(fireStoreWeekModel.value?.secondJummah)
                 }
             } else {
-                it[DHUHR_KEY] = formatStringToDate(fireStoreWeekModel.value?.dhuhr)
+                it[DHUHR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.dhuhr)
             }
 
-            it[ASR_KEY] = formatStringToDate(fireStoreWeekModel.value?.asr)
+            it[ASR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.asr)
 
             prayerTime?.let { mjt ->
-                it[MAGHRIB_KEY] = formatStringToDate(mjt)
+                it[MAGHRIB_KEY] = fromStringToLocalTime(mjt)
             }
 
-            it[ISHA_KEY] = formatStringToDate(fireStoreWeekModel.value?.isha)
+            it[ISHA_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.isha)
 
         }.toList().sortedBy {
             it.second
@@ -310,12 +337,12 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getFridayDate(),
-            fajar = "05:15 am",
-            dhuhr = "01:30 pm",
-            asr = "06:15 pm",
-            isha = "09:30 pm",
-            firstJummah = "01:30 pm",
-            secondJummah = "02:15 pm"
+            fajar = "05:15:00",
+            dhuhr = "13:30:00",
+            asr = "17:45:00",
+            isha = "21:00:00",
+            firstJummah = "13:30:00",
+            secondJummah = "14:15:00"
         )
         val docRef = collectionPrayers.document(lastWeekNumber)
 

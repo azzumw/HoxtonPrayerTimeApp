@@ -5,9 +5,12 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="java.util.Map"/>
         <variable
             name="viewModel"
             type="com.example.hoxtonprayertimeapp.ui.prayer.PrayerViewModel" />
+        
+
     </data>
 
     <LinearLayout
@@ -220,7 +223,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="@{viewModel.fireStoreWeekModel.fajar}"
+                            android:text="@{viewModel.fajarJamaah12hour}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -283,7 +286,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@string/dummy_time"
+                            android:text="@{viewModel.isTodayFriday? viewModel.firstJummahJamaah12hour:viewModel.dhuhrJamaah12hour}"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             tools:text="@string/dummy_time"
@@ -302,7 +305,7 @@
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="@string/dummy_time"
+                                android:text="@{viewModel.firstJummahJamaah12hour}"
                                 android:textSize="15sp"
                                 android:textStyle="bold"
                                 tools:text="@string/dummy_time"
@@ -314,7 +317,7 @@
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="@string/dummy_time"
+                                android:text="@{viewModel.secondJummahJamaah12hour}"
                                 android:textSize="15sp"
                                 android:textStyle="bold"
                                 tools:text="@string/dummy_time"
@@ -374,7 +377,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.fireStoreWeekModel.asr}"
+                            android:text="@{viewModel.asrJamaah12hour}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -433,7 +436,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.londonPrayerBeginningTimesFromDB.magribJamaah}"
+                            android:text="@{@string/pm(viewModel.londonPrayerBeginningTimesFromDB.magribJamaah)}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -492,7 +495,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.fireStoreWeekModel.isha}"
+                            android:text="@{viewModel.ishaJamaah12hour}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"

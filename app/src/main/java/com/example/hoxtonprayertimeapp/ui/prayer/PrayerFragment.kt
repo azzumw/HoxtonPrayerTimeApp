@@ -48,18 +48,19 @@ class PrayerFragment : Fragment() {
             }
         }
 
+
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
+
             if (it != null) {
-                if (replaceDhuhrWithJummah(isTodayFriday())) {
+                if (isTodayFriday()) {
                     if (it.secondJummah != null) {
-                        binding.jummahJamaatOneTimeTv.text = it.firstJummah
-                        binding.jummahJamaatTwoTimeTv.text = it.secondJummah
+                        replaceDhuhrViewWithJummahIfSecondJammahExists(true)
 
                     } else {
-                        binding.dhuhrJamaatTimeTv.text = it.firstJummah
+                        replaceDhuhrViewWithJummahIfSecondJammahExists()
                     }
                 } else {
-                    binding.dhuhrJamaatTimeTv.text = it.dhuhr
+                    binding.dhuhrTextview.text = getString(R.string.dhohar_text)
                 }
 
             } else {
@@ -70,17 +71,14 @@ class PrayerFragment : Fragment() {
     }
 
 
-    private fun replaceDhuhrWithJummah(isFriday: Boolean): Boolean {
-        return if (isFriday) {
+    private fun replaceDhuhrViewWithJummahIfSecondJammahExists(secondJamaahExist: Boolean = false) {
+        binding.dhuhrTextview.text = getString(R.string.jummah_text)
+        if (secondJamaahExist) {
             binding.dhuhrJamaatTimeTv.visibility = TextView.GONE
             binding.jummahJamaatsContainer.visibility = TextView.VISIBLE
-            binding.dhuhrTextview.text = getString(R.string.jummah_text)
-            true
         } else {
-            binding.dhuhrTextview.text = getString(R.string.dhohar_text)
             binding.dhuhrJamaatTimeTv.visibility = TextView.VISIBLE
             binding.jummahJamaatsContainer.visibility = TextView.GONE
-            false
         }
     }
 

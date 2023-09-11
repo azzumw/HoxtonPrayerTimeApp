@@ -2,11 +2,10 @@ package com.example.hoxtonprayertimeapp.network
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.hoxtonprayertimeapp.utils.formatStringToDate
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import com.example.hoxtonprayertimeapp.utils.fromStringToLocalTime
+import timber.log.Timber
 
-private const val TWO_MINS = 2
+private const val TWO_MINS = 2L
 
 @Entity(tableName = "london_prayers_beginning_times")
 data class LondonPrayersBeginningTimes(
@@ -23,33 +22,10 @@ data class LondonPrayersBeginningTimes(
 
     var magribJamaah: String? = null
 
-    /*
-    * Use below for database approach.*/
-    fun getMaghribJamaahTime(): String? {
-        val tempMaghrib = "$magrib pm"
-
-        val formattedDate = formatStringToDate(tempMaghrib)
-
-        val maghribJamaahTime = Calendar.getInstance().apply {
-            time = formattedDate!!
-            add(Calendar.MINUTE, TWO_MINS)
-        }.time
-
-        return  SimpleDateFormat("hh:mm a").format(maghribJamaahTime).lowercase()
-    }
-    fun getMaghribJamaahTime2(): String? {
+    fun getMaghribJamaahTime():String {
         val tempMaghrib = "$magrib:00"
-
-        val formattedDate = formatStringToDate(tempMaghrib)
-
-        val maghribJamaahTime = Calendar.getInstance().apply {
-            time = formattedDate!!
-            add(Calendar.MINUTE, TWO_MINS)
-        }.time
-
-        return  SimpleDateFormat("hh:mm a").format(maghribJamaahTime).lowercase()
+       return fromStringToLocalTime(tempMaghrib, TWO_MINS).toString()
     }
-
 }
 
 
