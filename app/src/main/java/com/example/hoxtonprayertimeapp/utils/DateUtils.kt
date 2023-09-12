@@ -48,7 +48,8 @@ private fun getIslamicMonth(month: Int): String {
     }
 }
 
-fun getLastOrTodayFridayDate(clock: Clock): String {
+/**Documentation.... */
+fun getMostRecentFriday(clock: Clock): String {
     val todayDate = LocalDate.now(clock)
     val fridayDate: LocalDate
 

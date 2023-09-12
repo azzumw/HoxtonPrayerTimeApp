@@ -1,8 +1,8 @@
 package com.example.hoxtonprayertimeapp.utils
 
 import androidx.test.filters.SmallTest
-import org.junit.Assert.*
-
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert
 import org.junit.Test
 import java.time.Clock
 import java.time.Instant
@@ -11,26 +11,26 @@ import java.time.ZoneId
 
 
 @SmallTest
-class DateUtilsKtTest {
+class DateUtilsTest {
 
     @Test
     fun getTodayDate_returnsTodayDate() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
-        val local = LocalDate.now(fixedClock)
+        val localDate = LocalDate.now(fixedClock)
 
         //WHEN - getTodayDate is invoked
-        val result  = getTodayDate(local)
+        val result  = getTodayDate(localDate)
 
         //THEN - assert that it returns the same date 2023-08-08
         val expectedDate = "2023-08-08"
-        assertEquals(expectedDate,result)
+        MatcherAssert.assertThat("The actual $result date does not match expected date: $expectedDate",result, `is`(expectedDate))
 
     }
 
     @Test
-    fun isTodayFriday_todayTuesday_False() {
+    fun isTodayFriday_returns_false_when_today_is_tuesday() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
@@ -40,7 +40,7 @@ class DateUtilsKtTest {
         val result = isTodayFriday(local)
 
         //THEN - verify it returns false i.e. it is not Friday
-        assertFalse(result)
+        MatcherAssert.assertThat(result, `is`(false))
     }
 
     @Test
@@ -54,7 +54,7 @@ class DateUtilsKtTest {
         val result = isTodayFriday(local)
 
         //THEN - verify it returns false i.e. it is not Friday
-        assertTrue(result)
+        MatcherAssert.assertThat(result, `is`(true))
     }
 
     @Test
@@ -69,34 +69,33 @@ class DateUtilsKtTest {
         val expectedYesterday = "2023-08-07"
 
         // THEN - verify that the date returned is 7th Aug 2023
-        assertEquals(expectedYesterday,result)
-
+        MatcherAssert.assertThat(result, `is`(expectedYesterday))
     }
 
     @Test
-    fun getLastOrTodayFridayDate_todayDate_lastFriday() {
+    fun getMostRecentFriday_when_today_is_tuesday_returns_last_friday() {
         //GIVEN - a fixed date of Tue 8th August 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
 
         //WHEN - getLastOrTodayFridayDate is invoked
-        val result  = getLastOrTodayFridayDate(fixedClock)
+        val result  = getMostRecentFriday(fixedClock)
 
         //THEN - assert that the date returned is Fri 4th Aug
         val expectedLastFridayDate = "2023-08-04"
-        assertEquals(expectedLastFridayDate,result)
+        MatcherAssert.assertThat(result, `is`(expectedLastFridayDate))
     }
 
     @Test
-    fun getLastOrTodayFridayDate_futureFridayDate_sameFridayDate() {
+    fun getMostRecentFriday_futureFridayDate_sameFridayDate() {
 
         //GIVEN - a fixed date of Fri 15th Sept 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-09-15T00:00:00.00Z"), ZoneId.systemDefault())
 
         // WHEN - getLastOrTodayFridayDate is invoked
-        val result  = getLastOrTodayFridayDate(fixedClock)
+        val result  = getMostRecentFriday(fixedClock)
 
         // THEN - assert that the date returned is 15th Sept 2023
         val expectedFridayDate = "2023-09-15"
-        assertEquals(expectedFridayDate,result)
+        MatcherAssert.assertThat(result, `is`(expectedFridayDate))
     }
 }

@@ -18,7 +18,7 @@ import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToLocalTime
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
-import com.example.hoxtonprayertimeapp.utils.getLastOrTodayFridayDate
+import com.example.hoxtonprayertimeapp.utils.getMostRecentFriday
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import com.example.hoxtonprayertimeapp.utils.getYesterdayDate
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
@@ -224,7 +224,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         _fireStoreApiStatus.value = ApiStatus.LOADING
         val queryLastFriday =
-            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getLastOrTodayFridayDate(
+            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getMostRecentFriday(
                 Clock.systemDefaultZone()))
 
         listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
@@ -327,13 +327,13 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek()
 
         val fireStoreWeekModel = FireStoreWeekModel(
-            getLastOrTodayFridayDate(Clock.systemDefaultZone()),
-            fajar = "05:15:00",
-            dhuhr = "13:30:00",
-            asr = "17:45:00",
-            isha = "21:00:00",
-            firstJummah = "13:30:00",
-            secondJummah = "14:15:00"
+            getMostRecentFriday(Clock.systemDefaultZone()),
+            fajar = "05:30",
+            dhuhr = "13:30",
+            asr = "17:45",
+            isha = "21:00",
+            firstJummah = "13:30",
+            secondJummah = "14:15"
         )
         val docRef = collectionPrayers.document(lastWeekNumber)
 

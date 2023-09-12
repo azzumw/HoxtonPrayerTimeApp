@@ -52,14 +52,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-//    implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
-//    implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
-
-
-
     //logging lib
     implementation('com.jakewharton.timber:timber:4.7.1')
-
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:31.2.2')
@@ -114,7 +108,8 @@ dependencies {
 
     // AndroidX Test - JVM testing
     testImplementation "androidx.test:rules:1.5.0"
-
+    //hamcrest
+    testImplementation("org.hamcrest:hamcrest:2.2")
     
     //Mockito
     androidTestImplementation "org.mockito:mockito-core:$version_mockito"
