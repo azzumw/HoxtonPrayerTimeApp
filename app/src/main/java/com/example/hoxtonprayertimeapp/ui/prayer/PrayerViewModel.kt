@@ -11,7 +11,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.hoxtonprayertimeapp.database.PrayerDao
 import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
-import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
+import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString

@@ -1,9 +1,8 @@
-package com.example.hoxtonprayertimeapp.network
+package com.example.hoxtonprayertimeapp.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.hoxtonprayertimeapp.utils.fromStringToLocalTime
-import timber.log.Timber
 
 private const val TWO_MINS = 2L
 

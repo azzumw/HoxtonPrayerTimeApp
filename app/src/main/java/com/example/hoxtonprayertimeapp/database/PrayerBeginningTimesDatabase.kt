@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
+import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 
 @Database([LondonPrayersBeginningTimes::class], version = 1, exportSchema = false)
 abstract class PrayerBeginningTimesDatabase:RoomDatabase() {
