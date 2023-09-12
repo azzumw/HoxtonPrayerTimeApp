@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString
-import com.example.hoxtonprayertimeapp.utils.fromStringToLocalTime
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.R
 import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
@@ -36,8 +34,6 @@ class PrayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fromLocalTimeToString(fromStringToLocalTime("18:30:00")!!)
-
 
         prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
             if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {

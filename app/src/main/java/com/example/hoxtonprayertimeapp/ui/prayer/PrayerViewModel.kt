@@ -14,12 +14,11 @@ import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.network.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
-
 import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToLocalTime
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
-import com.example.hoxtonprayertimeapp.utils.getFridayDate
+import com.example.hoxtonprayertimeapp.utils.getLastOrTodayFridayDate
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import com.example.hoxtonprayertimeapp.utils.getYesterdayDate
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
@@ -30,10 +29,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
-import java.util.Locale
 
 enum class ApiStatus {
     LOADING, ERROR, DONE, S_ERROR
@@ -55,8 +52,6 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
     private val _islamicTodayDate = MutableLiveData(getCurrentIslamicDate())
     val islamicTodayDate: LiveData<String> get() = _islamicTodayDate
-
-    private val calendar = Calendar.getInstance(Locale.getDefault())
 
     private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
     val fireStoreWeekModel: LiveData<FireStoreWeekModel?> get() = _fireStoreWeekModel
@@ -204,9 +199,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 _londonApiStatus.value = ApiStatus.DONE
 
                 prayerDao.deleteYesterdayPrayers(
-                    getYesterdayDate(
-                        Calendar.getInstance()
-                    )
+                    getYesterdayDate(LocalDate.now())
                 )
 
                 prayerDao.insertPrayer(apiResult)
@@ -218,13 +211,9 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 workoutNextJamaah(mjt)
 
 
-                Log.e("LonApiCall status set:", londonApiStatus.value.toString())
-
             } catch (e: Exception) {
                 Timber.e("Network exception ${e.message}")
                 _londonApiStatus.value = ApiStatus.ERROR
-
-                Log.e("LonApiCall status set:", londonApiStatus.value.toString())
             }
         }
     }
@@ -234,7 +223,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         _fireStoreApiStatus.value = ApiStatus.LOADING
         val queryLastFriday =
-            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getFridayDate())
+            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getLastOrTodayFridayDate())
 
         listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
 
@@ -333,10 +322,10 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     }
 
     private fun writePrayerTimesToFirestoreForThisWeek() {
-        val lastWeekNumber = createDocumentReferenceIDForLastWeek(calendar)
+        val lastWeekNumber = createDocumentReferenceIDForLastWeek()
 
         val fireStoreWeekModel = FireStoreWeekModel(
-            getFridayDate(),
+            getLastOrTodayFridayDate(),
             fajar = "05:15:00",
             dhuhr = "13:30:00",
             asr = "17:45:00",
