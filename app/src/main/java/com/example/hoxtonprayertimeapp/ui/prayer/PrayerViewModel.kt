@@ -29,6 +29,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -56,7 +57,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
     val fireStoreWeekModel: LiveData<FireStoreWeekModel?> get() = _fireStoreWeekModel
 
-    val isTodayFriday:Boolean = isTodayFriday()
+    val isTodayFriday:Boolean = isTodayFriday(LocalDate.now())
 
     val fajarJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.fajar)
@@ -84,7 +85,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
     val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         prayerDao.getTodayPrayers(
-            getTodayDate()
+            getTodayDate(LocalDate.now())
         ).asLiveData()
 
 
@@ -134,7 +135,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         getBeginningTimesFromLondonPrayerTimesApi()
 
         initialiseFireStoreEmulator()
-        var count = 1;
+        var count = 1
 
         apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) { londonDataDB ->
             apiStatusLiveMerger.addSource(londonApiStatus) { status ->
@@ -193,7 +194,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
             try {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
-                    date = getTodayDate()
+                    date = getTodayDate(LocalDate.now())
                 )
 
                 _londonApiStatus.value = ApiStatus.DONE
@@ -204,9 +205,9 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
                 prayerDao.insertPrayer(apiResult)
 
-                val mjt = apiResult.getMaghribJamaahTime()!!
+                val mjt = apiResult.getMaghribJamaahTime()
 
-                prayerDao.updateMaghribJamaah(mjt, getTodayDate())
+                prayerDao.updateMaghribJamaah(mjt, getTodayDate(LocalDate.now()))
 
                 workoutNextJamaah(mjt)
 
@@ -223,7 +224,8 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         _fireStoreApiStatus.value = ApiStatus.LOADING
         val queryLastFriday =
-            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getLastOrTodayFridayDate())
+            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getLastOrTodayFridayDate(
+                Clock.systemDefaultZone()))
 
         listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
 
@@ -297,7 +299,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
             it[FAJR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.fajar)
 
-            if (isTodayFriday()) {
+            if (isTodayFriday(LocalDate.now())) {
                 it[FIRST_JUMMAH_KEY] =
                     fromStringToLocalTime(fireStoreWeekModel.value?.firstJummah)
                 if (fireStoreWeekModel.value?.secondJummah != null) {
@@ -325,7 +327,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek()
 
         val fireStoreWeekModel = FireStoreWeekModel(
-            getLastOrTodayFridayDate(),
+            getLastOrTodayFridayDate(Clock.systemDefaultZone()),
             fajar = "05:15:00",
             dhuhr = "13:30:00",
             asr = "17:45:00",
