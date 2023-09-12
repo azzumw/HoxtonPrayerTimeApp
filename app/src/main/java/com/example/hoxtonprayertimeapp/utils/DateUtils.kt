@@ -14,7 +14,8 @@ import java.util.Locale
 private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
 private const val UMAL_QURAH_CALENDER = "@calendar=islamic-umalqura"
 
-fun getCurrentGregorianDate():String = LocalDate.now().format(DateTimeFormatter.ofPattern(GREGORIAN_DATE_FORMAT))
+fun getCurrentGregorianDate(): String =
+    LocalDate.now().format(DateTimeFormatter.ofPattern(GREGORIAN_DATE_FORMAT))
 
 fun getCurrentIslamicDate(): String {
     val locale = ULocale(UMAL_QURAH_CALENDER)
@@ -47,30 +48,36 @@ private fun getIslamicMonth(month: Int): String {
     }
 }
 
-fun getLastOrTodayFridayDate(clock:Clock):String{
+fun getLastOrTodayFridayDate(clock: Clock): String {
     val todayDate = LocalDate.now(clock)
-    val fridayDate : LocalDate
-    when(todayDate.dayOfWeek){
+    val fridayDate: LocalDate
+
+    when (todayDate.dayOfWeek) {
         DayOfWeek.SATURDAY -> {
             fridayDate = todayDate.minusDays(1)
         }
+
         DayOfWeek.SUNDAY -> {
             fridayDate = todayDate.minusDays(2)
         }
+
         DayOfWeek.MONDAY -> {
             fridayDate = todayDate.minusDays(3)
         }
+
         DayOfWeek.TUESDAY -> {
             fridayDate = todayDate.minusDays(4)
         }
+
         DayOfWeek.WEDNESDAY -> {
             fridayDate = todayDate.minusDays(5)
         }
+
         DayOfWeek.THURSDAY -> {
             fridayDate = todayDate.minusDays(6)
         }
 
-        else ->{
+        else -> {
             fridayDate = todayDate
         }
     }
@@ -94,8 +101,8 @@ fun createDocumentReferenceIDForLastWeek() =
 fun isTodayFriday(localDate: LocalDate) = localDate.dayOfWeek == DayOfWeek.FRIDAY
 
 fun fromStringToLocalTime(timeinString: String?, plusMinutes: Long = 0L) = timeinString?.let {
-        LocalTime.parse(timeinString).plusMinutes(plusMinutes)
-    }
+    LocalTime.parse(timeinString).plusMinutes(plusMinutes)
+}
 
 fun fromLocalTimeToString(time: LocalTime?) = time?.format(DateTimeFormatter.ofPattern("hh:mm a"))
     ?.lowercase()
