@@ -39,7 +39,7 @@ enum class ApiStatus {
 
 class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
-    private val nextPrayersMap2 = mutableMapOf<String, LocalTime?>()
+    private val nextPrayersMap = mutableMapOf<String, LocalTime?>()
 
     private val _nextJamaat = MutableLiveData<String>()
     val nextJamaat: LiveData<String> get() = _nextJamaat
@@ -295,7 +295,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     }
 
     private fun addPrayersToMapForTheNextPrayer(prayerTime: String?): List<Pair<String, LocalTime?>> {
-        return nextPrayersMap2.also {
+        return nextPrayersMap.also {
 
             it[FAJR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.fajar)
 
