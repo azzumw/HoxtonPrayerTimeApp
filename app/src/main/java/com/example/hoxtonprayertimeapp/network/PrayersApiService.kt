@@ -26,6 +26,7 @@ interface PrayersApiService {
     suspend fun getTodaysPrayerBeginningTimes(
         @Query("format") format: String = QUERY_FORMAT_JSON,
         @Query("key") key: String = KEY,
+        @Query("24hours")timeFormat : Boolean =  true,
         @Query("date") date: String
     ): LondonPrayersBeginningTimes
 }

@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hoxtonprayertimeapp.database.PrayerDao
 import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
+import com.example.hoxtonprayertimeapp.models.convertTo12hour
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString
@@ -32,6 +33,7 @@ import timber.log.Timber
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeParseException
 
 enum class ApiStatus {
     LOADING, ERROR, DONE, S_ERROR
@@ -83,11 +85,19 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         it?.to12hour(it.isha)
     }
 
-    val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
+    private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         prayerDao.getTodayPrayers(
             getTodayDate(LocalDate.now())
         ).asLiveData()
 
+    val tempLondonPrayerTimein12HourFormat:LiveData<LondonPrayersBeginningTimes?> = londonPrayerBeginningTimesFromDB.map {
+        it?.convertTo12hour()
+    }
+
+
+    val magribJamaahTime12HourFormat:LiveData<String?> = londonPrayerBeginningTimesFromDB.map {
+        fromLocalTimeToString(fromStringToLocalTime(londonPrayerBeginningTimesFromDB.value?.magribJamaah),"hh:mm a")
+    }
 
     private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
     private val fireStoreApiStatus: LiveData<ApiStatus>
@@ -212,7 +222,9 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 workoutNextJamaah(mjt)
 
 
-            } catch (e: Exception) {
+            } catch (dateTimeException:DateTimeParseException) {
+                Timber.e("Date parsing exception ${dateTimeException.message}")
+            }catch (e: Exception){
                 Timber.e("Network exception ${e.message}")
                 _londonApiStatus.value = ApiStatus.ERROR
             }
@@ -256,10 +268,14 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     private fun workoutNextJamaah(prayerTime: String? = null) {
         //get the current time
         val currentTime = LocalTime.now()
+        Timber.i(currentTime.toString())
 
         val tempPairNextJammah = addPrayersToMapForTheNextPrayer(prayerTime).firstOrNull {
+            Timber.i("prayer: ${it.first} ${it.second}" )
             currentTime.isBefore(it.second)
         }
+
+        Timber.i("${tempPairNextJammah?.second}")
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
             when (tempPairNextJammah.first) {
@@ -270,7 +286,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                             Html.FROM_HTML_MODE_LEGACY
                         )
                     } ${tempPairNextJammah.first.substringAfter(" ")} ${
-                        fromLocalTimeToString(tempPairNextJammah.second)
+                        fromLocalTimeToString(tempPairNextJammah.second,"hh:mm a")
                     }"
                 }
 
@@ -282,12 +298,12 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                         )
                     } ${tempPairNextJammah.first.substringAfter(" ")} ${
                         fromLocalTimeToString(
-                            tempPairNextJammah.second
+                            tempPairNextJammah.second,"hh:mm a"
                         )
                     }"
                 }
 
-                else -> "${tempPairNextJammah.first} ${fromLocalTimeToString(tempPairNextJammah.second)}"
+                else -> "${tempPairNextJammah.first} ${fromLocalTimeToString(tempPairNextJammah.second,"hh:mm a")}"
 
             }
 
@@ -320,6 +336,8 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         }.toList().sortedBy {
             it.second
+        }.also {
+            Timber.i("${it.size}")
         }
     }
 
