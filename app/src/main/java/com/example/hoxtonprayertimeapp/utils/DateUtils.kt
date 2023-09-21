@@ -91,7 +91,7 @@ fun getMostRecentFriday(clock: Clock): String {
 
 fun getTodayDate(localDate: LocalDate) = localDate.toString()
 
-fun getYesterdayDate(localDate: LocalDate) = localDate.minusDays(1L).toString()
+fun getYesterdayDate(localDate: LocalDate = LocalDate.now()) = localDate.minusDays(1L).toString()
 
 fun getLastWeek(): Int {
     val reduceOneWeek = LocalDate.now().minusWeeks(1)
