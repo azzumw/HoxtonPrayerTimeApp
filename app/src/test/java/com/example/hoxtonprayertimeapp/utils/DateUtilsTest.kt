@@ -7,6 +7,7 @@ import org.junit.Test
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 
 
@@ -97,5 +98,59 @@ class DateUtilsTest {
         // THEN - assert that the date returned is 15th Sept 2023
         val expectedFridayDate = "2023-09-15"
         MatcherAssert.assertThat(result, `is`(expectedFridayDate))
+    }
+
+    @Test
+    fun fromStringToLocalTime_when_no_mins_are_added_returns_the_same_time_in_LocalTime() {
+        // GIVEN - a ISO format time of 14:15 in string
+        val timeInString = "14:45"
+
+        // WHEN - fromStringtoLocalTime is invoked with 0 minutes added
+        val resultTime = fromStringToLocalTime(timeInString)
+
+        // THEN - assert that the time is converted to the LocalTime object
+        val expectedTime = LocalTime.of(14,45)
+        MatcherAssert.assertThat(resultTime, `is`(expectedTime))
+    }
+
+    @Test
+    fun fromStringToLocalTime_when_5_mins_are_added_returns_the_time_in_LocalTime_with_5_mins_added() {
+        // GIVEN - a ISO format time of 14:15 in string
+        val timeInString = "14:45"
+
+        // WHEN - fromStringtoLocalTime is invoked with 5 minutes added
+        val resultTime = fromStringToLocalTime(timeInString,5L)
+
+        // THEN - assert that the time is converted to the LocalTime object
+        val expectedTime = LocalTime.of(14,50)
+        MatcherAssert.assertThat(resultTime, `is`(expectedTime))
+    }
+
+    @Test
+    fun fromLocalTimeToString_when_time_is_before_noon_returns_12_hour_format() {
+        // GIVEN - a local time in
+        val localTime = LocalTime.of(5,15)
+
+        // WHEN - fromLocalTimeToString is invoked
+        val resultTimeInString = fromLocalTimeToString(localTime)
+
+        // THEN - assert that the time returned is correctly shown
+        val expectedResult = "05:15 am"
+        MatcherAssert.assertThat(resultTimeInString, `is`(expectedResult))
+
+    }
+
+    @Test
+    fun fromLocalTimeToString_when_time_is_after_noon_returns_12_hour_format() {
+        // GIVEN - a local time in
+        val localTime = LocalTime.of(15,15)
+
+        // WHEN - fromLocalTimeToString is invoked
+        val resultTimeInString = fromLocalTimeToString(localTime)
+
+        // THEN - assert that the time returned is correctly shown
+        val expectedResult = "03:15 pm"
+        MatcherAssert.assertThat(resultTimeInString, `is`(expectedResult))
+
     }
 }
