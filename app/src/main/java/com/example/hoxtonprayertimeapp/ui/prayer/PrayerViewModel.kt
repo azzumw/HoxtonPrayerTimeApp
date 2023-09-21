@@ -197,27 +197,27 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
     }
 
 
-    private fun getBeginningTimesFromLondonPrayerTimesApi() {
+    private fun getBeginningTimesFromLondonPrayerTimesApi(todayLocalDate: LocalDate = LocalDate.now()) {
         _londonApiStatus.value = ApiStatus.LOADING
 
         viewModelScope.launch {
 
             try {
                 val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
-                    date = getTodayDate(LocalDate.now())
+                    date = getTodayDate(todayLocalDate)
                 )
 
                 _londonApiStatus.value = ApiStatus.DONE
 
                 prayerDao.deleteYesterdayPrayers(
-                    getYesterdayDate(LocalDate.now())
+                    getYesterdayDate(todayLocalDate)
                 )
 
                 prayerDao.insertPrayer(apiResult)
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
-                prayerDao.updateMaghribJamaah(mjt, getTodayDate(LocalDate.now()))
+                prayerDao.updateMaghribJamaah(mjt, getTodayDate(todayLocalDate))
 
                 workoutNextJamaah(mjt)
 
@@ -286,7 +286,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                             Html.FROM_HTML_MODE_LEGACY
                         )
                     } ${tempPairNextJammah.first.substringAfter(" ")} ${
-                        fromLocalTimeToString(tempPairNextJammah.second,"hh:mm a")
+                        fromLocalTimeToString(tempPairNextJammah.second)
                     }"
                 }
 
@@ -298,7 +298,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                         )
                     } ${tempPairNextJammah.first.substringAfter(" ")} ${
                         fromLocalTimeToString(
-                            tempPairNextJammah.second,"hh:mm a"
+                            tempPairNextJammah.second
                         )
                     }"
                 }
@@ -346,7 +346,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getMostRecentFriday(Clock.systemDefaultZone()),
-            fajar = "05:30",
+            fajar = "05:45",
             dhuhr = "13:30",
             asr = "17:45",
             isha = "21:00",
