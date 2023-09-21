@@ -128,7 +128,7 @@ class DateUtilsTest {
 
     @Test
     fun fromLocalTimeToString_when_time_is_before_noon_returns_12_hour_format() {
-        // GIVEN - a local time in
+        // GIVEN - a local time in 24 hour format before noon
         val localTime = LocalTime.of(5,15)
 
         // WHEN - fromLocalTimeToString is invoked
@@ -142,7 +142,7 @@ class DateUtilsTest {
 
     @Test
     fun fromLocalTimeToString_when_time_is_after_noon_returns_12_hour_format() {
-        // GIVEN - a local time in
+        // GIVEN - a local time in 24 hour format afternoon
         val localTime = LocalTime.of(15,15)
 
         // WHEN - fromLocalTimeToString is invoked
