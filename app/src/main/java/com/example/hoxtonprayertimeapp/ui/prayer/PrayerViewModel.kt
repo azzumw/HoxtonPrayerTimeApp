@@ -6,14 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.example.hoxtonprayertimeapp.database.PrayerDao
 import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.models.convertTo12hour
-import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.repository.Repository
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString
@@ -22,7 +19,6 @@ import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.example.hoxtonprayertimeapp.utils.getMostRecentFriday
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
-import com.example.hoxtonprayertimeapp.utils.getYesterdayDate
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -201,23 +197,17 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
 
             try {
-                val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
-                    date = getTodayDate(todayLocalDate)
-                )
+
+                val apiResult = repository.getPrayerBeginningTimesFromLondonApi(todayLocalDate)
 
                 _londonApiStatus.value = ApiStatus.DONE
 
                 repository.deleteYesterdayPrayer()
-//                prayerDao.deleteYesterdayPrayers(
-//                    getYesterdayDate()
-//                )
 
                 repository.insertTodayPrayer(apiResult)
-//                prayerDao.insertPrayer(apiResult)
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
-//                prayerDao.updateMaghribJamaah(magribJamaahTime = mjt, todayDate = getTodayDate(todayLocalDate))
                 repository.updateMaghribJamaahTime(maghribJamaahTime = mjt, todayLocalDate = getTodayDate(todayLocalDate))
 
                 workoutNextJamaah(mjt)

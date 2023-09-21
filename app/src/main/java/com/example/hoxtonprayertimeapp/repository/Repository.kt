@@ -24,8 +24,12 @@ class Repository(
             getTodayDate(LocalDate.now())
         ).asLiveData()
 
-    suspend fun getPrayerBeginningTimesFromLondonApi(localDate: LocalDate){
-        val apiResult = PrayersApi.retrofitService.getTodaysPrayerBeginningTimes( date = getTodayDate(localDate))
+    suspend fun getPrayerBeginningTimesFromLondonApi(localDate: LocalDate): LondonPrayersBeginningTimes {
+        return PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
+            date = getTodayDate(
+                localDate
+            )
+        )
     }
 
     suspend fun deleteYesterdayPrayer(yesterdayDate: String = getYesterdayDate()) {
