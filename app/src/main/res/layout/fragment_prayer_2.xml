@@ -436,7 +436,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.magribJamaahTime12HourFormat}"
+                            android:text="@{viewModel.tempLondonPrayerTimein12HourFormat.magribJamaah}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"

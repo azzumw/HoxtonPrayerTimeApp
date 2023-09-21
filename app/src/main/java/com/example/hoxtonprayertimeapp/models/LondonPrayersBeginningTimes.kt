@@ -16,27 +16,39 @@ data class LondonPrayersBeginningTimes(
     val dhuhr: String?,
     val asr: String?,
     val magrib: String?,
-    val isha: String?
+    val isha: String?,
 ) {
 
 
     var magribJamaah: String? = null
 
-    fun getMaghribJamaahTime():String? {
+    fun getMaghribJamaahTime(): String? {
         magribJamaah = fromStringToLocalTime(magrib, TWO_MINS).toString()
-       return magribJamaah
+        return magribJamaah
     }
 }
 
-fun LondonPrayersBeginningTimes.convertTo12hour(pattern:String="hh:mm a"):LondonPrayersBeginningTimes{
-    val f = fromLocalTimeToString(fromStringToLocalTime(fajr),pattern)
-    val sun = fromLocalTimeToString(fromStringToLocalTime(sunrise),pattern)
-    val d = fromLocalTimeToString(fromStringToLocalTime(dhuhr),pattern)
-    val a = fromLocalTimeToString(fromStringToLocalTime(asr),pattern)
-    val m = fromLocalTimeToString(fromStringToLocalTime(magrib),pattern)
-    val i = fromLocalTimeToString(fromStringToLocalTime(isha),pattern)
-//    this.magribJamaah = fromLocalTimeToString(fromStringToLocalTime(magribJamaah),pattern)
-    return LondonPrayersBeginningTimes(fajr = f, sunrise = sun, dhuhr = d, asr = a, magrib = m, isha = i, date = date)
+fun LondonPrayersBeginningTimes.convertTo12hour(): LondonPrayersBeginningTimes {
+    val fajrTo12HourFormat = fromLocalTimeToString(fromStringToLocalTime(fajr))
+    val sunriseTo12HourFormat = fromLocalTimeToString(fromStringToLocalTime(sunrise))
+    val dhuhrTo12HourFormat = fromLocalTimeToString(fromStringToLocalTime(dhuhr))
+    val asrTo12HourFormat = fromLocalTimeToString(fromStringToLocalTime(asr))
+    val magribTo12HourFormat = fromLocalTimeToString(fromStringToLocalTime(magrib))
+    val ishaTo12HourFormat = fromLocalTimeToString(fromStringToLocalTime(isha))
+    val magribJamaahTo12HourFormat = fromLocalTimeToString(fromStringToLocalTime(magribJamaah))
+
+    val obj = LondonPrayersBeginningTimes(
+        date,
+        fajr = fajrTo12HourFormat,
+        dhuhr = dhuhrTo12HourFormat,
+        asr = asrTo12HourFormat,
+        magrib = magribTo12HourFormat,
+        isha = ishaTo12HourFormat,
+        sunrise = sunriseTo12HourFormat
+    )
+    obj.magribJamaah = magribJamaahTo12HourFormat
+
+    return obj
 }
 
 

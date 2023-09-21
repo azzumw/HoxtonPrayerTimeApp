@@ -85,18 +85,13 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
         it?.to12hour(it.isha)
     }
 
-    private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
+     private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         prayerDao.getTodayPrayers(
             getTodayDate(LocalDate.now())
         ).asLiveData()
 
     val tempLondonPrayerTimein12HourFormat:LiveData<LondonPrayersBeginningTimes?> = londonPrayerBeginningTimesFromDB.map {
         it?.convertTo12hour()
-    }
-
-
-    val magribJamaahTime12HourFormat:LiveData<String?> = londonPrayerBeginningTimesFromDB.map {
-        fromLocalTimeToString(fromStringToLocalTime(londonPrayerBeginningTimesFromDB.value?.magribJamaah),"hh:mm a")
     }
 
     private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
@@ -153,29 +148,34 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                 if (londonDataDB == null) {
                     if (status == ApiStatus.ERROR) {
                         apiStatusLiveMerger.value = ApiStatus.ERROR
+                        Timber.i("DB null,status = ERROR")
 
                     } else {
                         apiStatusLiveMerger.value = ApiStatus.LOADING
+                        Timber.i("DB null,status = LOAD")
                     }
                 } else {
                     when (status) {
                         ApiStatus.LOADING -> {
                             apiStatusLiveMerger.value = (ApiStatus.LOADING)
+                            Timber.i("DB,status = LOAD")
                         }
 
                         ApiStatus.ERROR -> {
                             apiStatusLiveMerger.value = ApiStatus.S_ERROR
+                            Timber.i("DB ,status = S_ERROR")
                         }
 
                         else -> {
                             apiStatusLiveMerger.value = (ApiStatus.DONE)
+                            Timber.i("DB,status = DONE")
                         }
                     }
                 }
                 apiStatusLiveMerger.removeSource(londonApiStatus)
             }
 
-            if (count > 4) {
+            if (count > 5) {
                 apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
             }
         }
@@ -303,7 +303,7 @@ class PrayerViewModel(private val prayerDao: PrayerDao) : ViewModel() {
                     }"
                 }
 
-                else -> "${tempPairNextJammah.first} ${fromLocalTimeToString(tempPairNextJammah.second,"hh:mm a")}"
+                else -> "${tempPairNextJammah.first} ${fromLocalTimeToString(tempPairNextJammah.second)}"
 
             }
 

@@ -30,7 +30,7 @@ class DateUtilsTest {
     }
 
     @Test
-    fun isTodayFriday_returns_false_when_today_is_tuesday() {
+    fun isTodayFriday_when_today_is_tuesday_returns_false() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
@@ -44,7 +44,7 @@ class DateUtilsTest {
     }
 
     @Test
-    fun isTodayFriday_todayFriday_True() {
+    fun isTodayFriday_when_today_is_friday_returns_true() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-08-11T00:00:00.00Z"), ZoneId.systemDefault())
@@ -86,7 +86,7 @@ class DateUtilsTest {
     }
 
     @Test
-    fun getMostRecentFriday_futureFridayDate_sameFridayDate() {
+    fun getMostRecentFriday_when_today_is_friday_returns_same_friday_date() {
 
         //GIVEN - a fixed date of Fri 15th Sept 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-09-15T00:00:00.00Z"), ZoneId.systemDefault())

@@ -105,6 +105,6 @@ fun fromStringToLocalTime(timeinString: String?, plusMinutes: Long = 0L) = timei
     LocalTime.parse(timeinString).plusMinutes(plusMinutes)
 }
 
-fun fromLocalTimeToString(time: LocalTime?,pattern:String = "hh:mm") = time?.format(DateTimeFormatter.ofPattern(pattern))
+fun fromLocalTimeToString(time: LocalTime?,pattern:String = "hh:mm a") = time?.format(DateTimeFormatter.ofPattern(pattern))
     ?.lowercase()
 

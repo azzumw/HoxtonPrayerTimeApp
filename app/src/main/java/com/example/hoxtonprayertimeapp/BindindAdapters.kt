@@ -22,7 +22,7 @@ fun bindStatus(statusImageView: ImageView, status: ApiStatus?) {
 
         ApiStatus.S_ERROR -> {
             statusImageView.visibility = View.GONE
-            Snackbar.make(statusImageView.rootView,"Network unavailable!",Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(statusImageView.rootView,"Could not connect to London API!",Snackbar.LENGTH_SHORT).show()
         }
 
         else -> {
