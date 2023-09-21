@@ -1,7 +1,6 @@
 package com.example.hoxtonprayertimeapp.ui.prayer
 
 import android.text.Html
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,22 +11,14 @@ import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.models.convertTo12hour
 import com.example.hoxtonprayertimeapp.repository.Repository
-import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.fromLocalTimeToString
 import com.example.hoxtonprayertimeapp.utils.fromStringToLocalTime
 import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
-import com.example.hoxtonprayertimeapp.utils.getMostRecentFriday
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeParseException
@@ -53,40 +44,41 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private val _islamicTodayDate = MutableLiveData(getCurrentIslamicDate())
     val islamicTodayDate: LiveData<String> get() = _islamicTodayDate
 
-    private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
-    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> get() = _fireStoreWeekModel
+    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = repository.fireStoreWeekModel
 
-    val isTodayFriday:Boolean = isTodayFriday(LocalDate.now())
+    val isTodayFriday: Boolean = isTodayFriday(LocalDate.now())
 
-    val fajarJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+    val fajarJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.fajar)
     }
 
-    val dhuhrJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+    val dhuhrJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.dhuhr)
     }
 
-    val firstJummahJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+    val firstJummahJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.firstJummah)
     }
 
-    val secondJummahJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+    val secondJummahJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.secondJummah)
     }
 
-    val asrJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+    val asrJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.asr)
     }
 
-    val ishaJamaah12hour:LiveData<String?> = fireStoreWeekModel.map {
+    val ishaJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.isha)
     }
 
-     private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> = repository.todaysBeginningTimesFromDB
+    private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
+        repository.todaysBeginningTimesFromDB
 
-    val tempLondonPrayerTimein12HourFormat:LiveData<LondonPrayersBeginningTimes?> = londonPrayerBeginningTimesFromDB.map {
-        it?.convertTo12hour()
-    }
+    val prayerBeginningTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
+        londonPrayerBeginningTimesFromDB.map {
+            it?.convertTo12hour()
+        }
 
     private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
     private val fireStoreApiStatus: LiveData<ApiStatus>
@@ -97,12 +89,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         get() = _londonApiStatus
 
     val apiStatusLiveMerger = MediatorLiveData<ApiStatus>()
-
-    private lateinit var firestore: FirebaseFirestore
-
-    private val collectionPrayers: CollectionReference
-
-    private lateinit var listernerRegisteration: ListenerRegistration
 
     //To highlight next prayer background view
     val fajrListItemBackground: LiveData<Boolean> = nextJamaat.map {
@@ -133,7 +119,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     init {
         getBeginningTimesFromLondonPrayerTimesApi()
 
-        initialiseFireStoreEmulator()
         var count = 1
 
         apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) { londonDataDB ->
@@ -174,20 +159,10 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
             }
         }
 
-        collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
-
-        writePrayerTimesToFirestoreForThisWeek()
+        repository.writeJamaahTimesToFireStore()
 
         listenForPrayersFromFirestore()
 
-
-    }
-
-
-    private fun initialiseFireStoreEmulator() {
-        firestore = Firebase.firestore
-        firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
-        Timber.e("ViewModel initialised ${firestore.app}")
     }
 
 
@@ -208,14 +183,17 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
-                repository.updateMaghribJamaahTime(maghribJamaahTime = mjt, todayLocalDate = getTodayDate(todayLocalDate))
+                repository.updateMaghribJamaahTime(
+                    maghribJamaahTime = mjt,
+                    todayLocalDate = getTodayDate(todayLocalDate)
+                )
 
                 workoutNextJamaah(mjt)
 
 
-            } catch (dateTimeException:DateTimeParseException) {
+            } catch (dateTimeException: DateTimeParseException) {
                 Timber.e("Date parsing exception ${dateTimeException.message}")
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Timber.e("Network exception ${e.message}")
                 _londonApiStatus.value = ApiStatus.ERROR
             }
@@ -226,28 +204,10 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         //listen to last friday, if today is friday listen to today.
 
         _fireStoreApiStatus.value = ApiStatus.LOADING
-        val queryLastFriday =
-            firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(FRIDAY_DAY_KEY, getMostRecentFriday(
-                Clock.systemDefaultZone()))
 
-        listernerRegisteration = queryLastFriday.addSnapshotListener { value, error ->
-
-
-            if (error != null) {
-                Timber.e("Listen failed. $error")
-
-                _fireStoreApiStatus.value = ApiStatus.ERROR
-                Log.e("FireApi status set:", fireStoreApiStatus.value!!.name)
-                return@addSnapshotListener
-            }
-
-            _fireStoreWeekModel.value =
-                value!!.documents[0].toObject(FireStoreWeekModel::class.java)
-
-            _fireStoreApiStatus.value = ApiStatus.DONE
-
-            Log.e("FireApi status set:", fireStoreApiStatus.value.toString())
+        repository.getJamaahTimesFromFireStore {
             workoutNextJamaah()
+            _fireStoreApiStatus.value = ApiStatus.DONE
         }
     }
 
@@ -262,7 +222,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         Timber.i(currentTime.toString())
 
         val tempPairNextJammah = addPrayersToMapForTheNextPrayer(prayerTime).firstOrNull {
-            Timber.i("prayer: ${it.first} ${it.second}" )
+            Timber.i("prayer: ${it.first} ${it.second}")
             currentTime.isBefore(it.second)
         }
 
@@ -332,40 +292,12 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    private fun writePrayerTimesToFirestoreForThisWeek() {
-        val lastWeekNumber = createDocumentReferenceIDForLastWeek()
-
-        val fireStoreWeekModel = FireStoreWeekModel(
-            getMostRecentFriday(Clock.systemDefaultZone()),
-            fajar = "05:45",
-            dhuhr = "13:30",
-            asr = "17:45",
-            isha = "21:00",
-            firstJummah = "13:30",
-            secondJummah = "14:15"
-        )
-        val docRef = collectionPrayers.document(lastWeekNumber)
-
-        docRef.set(fireStoreWeekModel).addOnCompleteListener {
-            if (it.isSuccessful) {
-                Timber.e("Data Saved")
-            } else Timber.e(it.exception.toString())
-        }
-    }
-
     override fun onCleared() {
         super.onCleared()
-        firestore.clearPersistence()
-        listernerRegisteration.remove()
+        repository.clear()
     }
 
     companion object {
-        private const val EMULATOR_HOST = "10.0.2.2"
-        private const val EMULATOR_PORT = 8080
-
-        private const val COLLECTIONS_PRAYERS = "Prayers"
-
-        private const val FRIDAY_DAY_KEY = "fridayDate"
 
         private const val GOOD_NIGHT_MSG = "Good Night"
 
@@ -382,11 +314,3 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         const val SECOND_SUPERSCRIPT = "2&#x207F;&#x1D48;"
     }
 }
-
-//class PrayerViewModelFactory(private val dao: PrayerDao) : ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(PrayerViewModel::class.java)) {
-//            return PrayerViewModel(dao) as T
-//        } else throw IllegalArgumentException("ViewModel not recognised")
-//    }
-//}
