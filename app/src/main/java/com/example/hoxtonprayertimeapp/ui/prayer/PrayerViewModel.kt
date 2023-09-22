@@ -115,7 +115,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         it.substringBefore(" ") == ISHA_KEY
     }
 
-
     init {
         getBeginningTimesFromLondonPrayerTimesApi()
 
@@ -162,7 +161,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         repository.writeJamaahTimesToFireStore()
 
         listenForPrayersFromFirestore()
-
     }
 
 
@@ -200,15 +198,14 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+
     private fun listenForPrayersFromFirestore() {
-        //listen to last friday, if today is friday listen to today.
 
         _fireStoreApiStatus.value = ApiStatus.LOADING
-
         repository.getJamaahTimesFromFireStore {
             workoutNextJamaah()
-            _fireStoreApiStatus.value = ApiStatus.DONE
         }
+        _fireStoreApiStatus.value = ApiStatus.DONE
     }
 
     /**

@@ -27,7 +27,8 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
     }
 
-    override fun getTodayJamaahTimesFromFireStore() {
+    override fun getTodayJamaahTimesFromFireStore(func: () -> Unit) {
+        Timber.i("hello from FireStoreDataSource")
         val queryMostRecentFriday =
             firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(
                 FRIDAY_DAY_KEY, getMostRecentFriday(
@@ -47,6 +48,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
             _fireStoreWeekModel.value =
                 value!!.documents[0].toObject(FireStoreWeekModel::class.java)
 
+            func()
         }
     }
 
@@ -87,7 +89,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
         maghribJamaahTime: String?,
         todayLocalDate: String
     ) {
-        TODO("Not yet implemented")
+        TODO("Not Required")
     }
 
     fun clear(){

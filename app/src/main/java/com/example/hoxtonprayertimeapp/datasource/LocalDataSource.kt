@@ -10,11 +10,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
-class LocalDataSource(private val prayerDao: PrayerDao,private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO):PrayerDataSource {
+class LocalDataSource(
+    private val prayerDao: PrayerDao,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : PrayerDataSource {
 
-    val todayPrayersFromLocalDataSource : LiveData<LondonPrayersBeginningTimes?> = prayerDao.getTodayPrayers(
-        getTodayDate(LocalDate.now())
-    ).asLiveData()
+    val todayPrayersFromLocalDataSource: LiveData<LondonPrayersBeginningTimes?> =
+        prayerDao.getTodayPrayers(
+            getTodayDate(LocalDate.now())
+        ).asLiveData()
 
     override suspend fun insertTodayPrayerToLocalDataSource(todayPrayerFromApi: LondonPrayersBeginningTimes) {
         withContext(ioDispatcher) {
@@ -40,7 +44,7 @@ class LocalDataSource(private val prayerDao: PrayerDao,private val ioDispatcher:
         }
     }
 
-    override fun getTodayJamaahTimesFromFireStore() {
+    override fun getTodayJamaahTimesFromFireStore(func: () -> Unit) {
         TODO("Not Required")
     }
 
