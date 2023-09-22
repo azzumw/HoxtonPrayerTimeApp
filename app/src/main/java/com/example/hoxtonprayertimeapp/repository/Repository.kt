@@ -2,14 +2,12 @@ package com.example.hoxtonprayertimeapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import com.example.hoxtonprayertimeapp.database.PrayerDao
+import com.example.hoxtonprayertimeapp.datasource.LocalDataSource
+import com.example.hoxtonprayertimeapp.datasource.RemoteDataSource
 import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
-import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.getMostRecentFriday
-import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import com.example.hoxtonprayertimeapp.utils.getYesterdayDate
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,7 +20,8 @@ import java.time.Clock
 import java.time.LocalDate
 
 class Repository(
-    private val prayerDao: PrayerDao,
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
@@ -35,9 +34,7 @@ class Repository(
     private val collectionPrayers: CollectionReference
 
     val todaysBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
-        prayerDao.getTodayPrayers(
-            getTodayDate(LocalDate.now())
-        ).asLiveData()
+        localDataSource.todayPrayersFromLocalDataSource
 
     init {
         firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
@@ -45,30 +42,26 @@ class Repository(
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
     }
     suspend fun getPrayerBeginningTimesFromLondonApi(localDate: LocalDate): LondonPrayersBeginningTimes {
-        return PrayersApi.retrofitService.getTodaysPrayerBeginningTimes(
-            date = getTodayDate(
-                localDate
-            )
-        )
+        return remoteDataSource.getPrayerBeginningTimesFromRemoteNetwork(localDate)
     }
 
     suspend fun deleteYesterdayPrayer(yesterdayDate: String = getYesterdayDate()) {
         withContext(ioDispatcher) {
-            prayerDao.deleteYesterdayPrayers(yesterdayDate)
+            localDataSource.deleteYesterdayPrayerFromLocalDataSource(yesterdayDate)
         }
     }
 
     suspend fun insertTodayPrayer(todayPrayerFromApi: LondonPrayersBeginningTimes) {
         withContext(ioDispatcher) {
-            prayerDao.insertPrayer(todayPrayerFromApi)
+            localDataSource.insertTodayPrayerToLocalDataSource(todayPrayerFromApi)
         }
     }
 
     suspend fun updateMaghribJamaahTime(maghribJamaahTime: String?, todayLocalDate: String) {
         withContext(ioDispatcher) {
-            prayerDao.updateMaghribJamaah(
-                magribJamaahTime = maghribJamaahTime,
-                todayDate = todayLocalDate
+            localDataSource.updateMaghribJamaahTimeInLocalDataSource(
+                 maghribJamaahTime =  maghribJamaahTime,
+                todayLocalDate = todayLocalDate
             )
         }
     }
