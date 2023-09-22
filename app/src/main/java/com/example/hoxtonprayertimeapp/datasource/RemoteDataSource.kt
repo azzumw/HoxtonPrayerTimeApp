@@ -30,4 +30,12 @@ class RemoteDataSource(private val retrofit: PrayersApi) : PrayerDataSource {
         TODO("Not required")
     }
 
+    override fun getTodayJamaahTimesFromFireStore() {
+        TODO("Not required")
+    }
+
+    override fun writeJamaahTimesToFireStore() {
+        TODO("Not required")
+    }
+
 }

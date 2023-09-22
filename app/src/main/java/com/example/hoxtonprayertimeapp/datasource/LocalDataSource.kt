@@ -40,6 +40,14 @@ class LocalDataSource(private val prayerDao: PrayerDao,private val ioDispatcher:
         }
     }
 
+    override fun getTodayJamaahTimesFromFireStore() {
+        TODO("Not Required")
+    }
+
+    override fun writeJamaahTimesToFireStore() {
+        TODO("Not Required")
+    }
+
     override suspend fun getPrayerBeginningTimesFromRemoteNetwork(localDate: LocalDate): LondonPrayersBeginningTimes {
         TODO("Not Required")
     }

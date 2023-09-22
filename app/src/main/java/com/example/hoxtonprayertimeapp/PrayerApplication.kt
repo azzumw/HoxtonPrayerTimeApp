@@ -2,11 +2,13 @@ package com.example.hoxtonprayertimeapp
 
 import android.app.Application
 import com.example.hoxtonprayertimeapp.database.PrayerBeginningTimesDatabase
+import com.example.hoxtonprayertimeapp.datasource.FireStoreDataSource
 import com.example.hoxtonprayertimeapp.datasource.LocalDataSource
 import com.example.hoxtonprayertimeapp.datasource.RemoteDataSource
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.repository.Repository
 import com.example.hoxtonprayertimeapp.ui.prayer.PrayerViewModel
+import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -27,7 +29,8 @@ class PrayerApplication : Application() {
 
             single { RemoteDataSource(PrayersApi) }
             single { LocalDataSource(database.prayerDao) }
-            single { Repository(get(),get()) }
+            single { FireStoreDataSource(FirebaseFirestore.getInstance()) }
+            single { Repository(get(),get(), get()) }
             viewModel { PrayerViewModel(get()) }
         }
 
