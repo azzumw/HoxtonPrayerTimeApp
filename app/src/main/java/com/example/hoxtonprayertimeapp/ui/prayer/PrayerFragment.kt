@@ -36,6 +36,8 @@ class PrayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        showOrHideCards(true)
+
         prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
             if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
                 showOrHideCards(false)
