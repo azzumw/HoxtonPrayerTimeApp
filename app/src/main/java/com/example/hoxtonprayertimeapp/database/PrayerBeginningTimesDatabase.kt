@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 
-@Database([LondonPrayersBeginningTimes::class], version = 1, exportSchema = false)
+@Database([LondonPrayersBeginningTimes::class], version = 2, exportSchema = false)
 abstract class PrayerBeginningTimesDatabase:RoomDatabase() {
 
     abstract val prayerDao : PrayerDao
