@@ -218,7 +218,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         val currentTime = LocalTime.now()
         Timber.i(currentTime.toString())
 
-        val tempPairNextJammah = addPrayersToMapForTheNextPrayer(prayerTime).firstOrNull {
+        val tempPairNextJammah = addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
             Timber.i("prayer: ${it.first} ${it.second}")
             currentTime.isBefore(it.second)
         }
@@ -227,7 +227,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
             when (tempPairNextJammah.first) {
-                FIRST_JUMMAH_KEY -> {
+                FIRST_JUMUAH_KEY -> {
                     "${
                         Html.fromHtml(
                             FIRST_SUPERSCRIPT,
@@ -238,7 +238,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                     }"
                 }
 
-                SECOND_JUMMAH_KEY -> {
+                SECOND_JUMUAH_KEY -> {
                     "${
                         Html.fromHtml(
                             SECOND_SUPERSCRIPT,
@@ -258,16 +258,16 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         } else GOOD_NIGHT_MSG
     }
 
-    private fun addPrayersToMapForTheNextPrayer(prayerTime: String?): List<Pair<String, LocalTime?>> {
+    private fun addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime: String?): List<Pair<String, LocalTime?>> {
         return nextPrayersMap.also {
 
             it[FAJR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.fajar)
 
             if (isTodayFriday(LocalDate.now())) {
-                it[FIRST_JUMMAH_KEY] =
+                it[FIRST_JUMUAH_KEY] =
                     fromStringToLocalTime(fireStoreWeekModel.value?.firstJummah)
                 if (fireStoreWeekModel.value?.secondJummah != null) {
-                    it[SECOND_JUMMAH_KEY] =
+                    it[SECOND_JUMUAH_KEY] =
                         fromStringToLocalTime(fireStoreWeekModel.value?.secondJummah)
                 }
             } else {
@@ -284,8 +284,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
         }.toList().sortedBy {
             it.second
-        }.also {
-            Timber.i("${it.size}")
         }
     }
 
@@ -304,8 +302,8 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         const val MAGHRIB_KEY = "Maghrib"
         const val ISHA_KEY = "Isha"
         const val JUMUAH_TEXT = "Jumuah"
-        const val FIRST_JUMMAH_KEY = "1st Jumuah"
-        const val SECOND_JUMMAH_KEY = "2nd Jumuah"
+        const val FIRST_JUMUAH_KEY = "1st Jumuah"
+        const val SECOND_JUMUAH_KEY = "2nd Jumuah"
 
         const val FIRST_SUPERSCRIPT = "1&#x02E2;&#x1D57;"
         const val SECOND_SUPERSCRIPT = "2&#x207F;&#x1D48;"
