@@ -15,6 +15,21 @@ import java.time.ZoneId
 class DateUtilsTest {
 
     @Test
+    fun getCurrentGregorianDate_returns_today_date_in_format() {
+        //GIVEN - a fixed date of Tue 8th August 2023
+        val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
+        val localDate = LocalDate.now(fixedClock)
+
+        // WHEN - getCurrentGregorianDate() is invoked
+        val result = getCurrentGregorianDate(localDate)
+
+        //THEN - assert that it returns the same date in the format EEE dd MMM yyyy
+        val expectedDate = "Tue 08 Aug 2023"
+        MatcherAssert.assertThat(result, `is`(expectedDate))
+
+    }
+
+    @Test
     fun getTodayDate_returnsTodayDate() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
@@ -47,7 +62,7 @@ class DateUtilsTest {
     @Test
     fun isTodayFriday_when_today_is_friday_returns_true() {
 
-        //GIVEN - a fixed date of Tue 8th August 2023
+        //GIVEN - a fixed date of Fri 11th August 2023
         val fixedClock = Clock.fixed(Instant.parse("2023-08-11T00:00:00.00Z"), ZoneId.systemDefault())
         val local = LocalDate.now(fixedClock)
 

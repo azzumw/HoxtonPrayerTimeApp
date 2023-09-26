@@ -44,11 +44,11 @@ class LocalDataSource(
         }
     }
 
-    override fun getTodayJamaahTimesFromFireStore(func: () -> Unit) {
+    override fun getTodayJamaahTimes(func: () -> Unit) {
         TODO("Not Required")
     }
 
-    override fun writeJamaahTimesToFireStore() {
+    override fun writeJamaahTimes() {
         TODO("Not Required")
     }
 

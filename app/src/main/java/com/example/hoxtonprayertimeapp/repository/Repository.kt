@@ -50,11 +50,11 @@ class Repository(
     }
 
     fun getJamaahTimesFromFireStore(func: () -> Unit) =
-        fireStoreDataSource.getTodayJamaahTimesFromFireStore(func)
+        fireStoreDataSource.getTodayJamaahTimes(func)
 
 
     fun writeJamaahTimesToFireStore() =
-        fireStoreDataSource.writeJamaahTimesToFireStore()
+        fireStoreDataSource.writeJamaahTimes()
 
     fun clear() = fireStoreDataSource.clear()
 

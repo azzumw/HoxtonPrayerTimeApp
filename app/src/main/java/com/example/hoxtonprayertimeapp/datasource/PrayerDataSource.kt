@@ -13,7 +13,7 @@ interface PrayerDataSource {
 
     suspend fun updateMaghribJamaahTimeInLocalDataSource(maghribJamaahTime: String?, todayLocalDate: String)
 
-    fun getTodayJamaahTimesFromFireStore(func: () -> Unit)
+    fun getTodayJamaahTimes(func: () -> Unit)
 
-    fun writeJamaahTimesToFireStore()
+    fun writeJamaahTimes()
 }

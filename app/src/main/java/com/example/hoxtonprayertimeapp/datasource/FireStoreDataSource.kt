@@ -27,8 +27,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
     }
 
-    override fun getTodayJamaahTimesFromFireStore(func: () -> Unit) {
-        Timber.i("hello from FireStoreDataSource")
+    override fun getTodayJamaahTimes(func: () -> Unit) {
         val queryMostRecentFriday =
             firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(
                 FRIDAY_DAY_KEY, getMostRecentFriday(
@@ -52,15 +51,15 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
         }
     }
 
-    override fun writeJamaahTimesToFireStore() {
+    override fun writeJamaahTimes() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek()
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getMostRecentFriday(Clock.systemDefaultZone()),
             fajar = "06:00",
             dhuhr = "13:30",
-            asr = "17:45",
-            isha = "21:00",
+            asr = "17:15",
+            isha = "20:30",
             firstJummah = "13:30",
             secondJummah = "14:15"
         )

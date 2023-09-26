@@ -202,9 +202,11 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private fun listenForPrayersFromFirestore() {
 
         _fireStoreApiStatus.value = ApiStatus.LOADING
+
         repository.getJamaahTimesFromFireStore {
             workoutNextJamaah()
         }
+
         _fireStoreApiStatus.value = ApiStatus.DONE
     }
 

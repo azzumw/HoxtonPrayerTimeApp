@@ -14,8 +14,8 @@ import java.util.Locale
 private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
 private const val UMAL_QURAH_CALENDER = "@calendar=islamic-umalqura"
 
-fun getCurrentGregorianDate(): String =
-    LocalDate.now().format(DateTimeFormatter.ofPattern(GREGORIAN_DATE_FORMAT))
+fun getCurrentGregorianDate(localDate: LocalDate = LocalDate.now()): String =
+    localDate.format(DateTimeFormatter.ofPattern(GREGORIAN_DATE_FORMAT))
 
 fun getCurrentIslamicDate(): String {
     val locale = ULocale(UMAL_QURAH_CALENDER)
@@ -93,8 +93,8 @@ fun getTodayDate(localDate: LocalDate) = localDate.toString()
 
 fun getYesterdayDate(localDate: LocalDate = LocalDate.now()) = localDate.minusDays(1L).toString()
 
-fun getLastWeek(): Int {
-    val reduceOneWeek = LocalDate.now().minusWeeks(1)
+fun getLastWeek(localDate: LocalDate = LocalDate.now()): Int {
+    val reduceOneWeek = localDate.minusWeeks(1)
     return reduceOneWeek.get(WeekFields.of(Locale.getDefault()).weekOfYear())
 }
 
