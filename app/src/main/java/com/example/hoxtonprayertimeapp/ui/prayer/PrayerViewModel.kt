@@ -217,12 +217,10 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
      */
     private fun workoutNextJamaah(prayerTime: String? = null) {
         //get the current time
-        val currentTime = LocalTime.now()
-        Timber.i(currentTime.toString())
 
         val tempPairNextJammah = addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
             Timber.i("prayer: ${it.first} ${it.second}")
-            currentTime.isBefore(it.second)
+            LocalTime.now().isBefore(it.second)
         }
 
         Timber.i("${tempPairNextJammah?.second}")
