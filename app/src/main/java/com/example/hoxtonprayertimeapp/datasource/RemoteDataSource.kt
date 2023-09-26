@@ -5,10 +5,10 @@ import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import java.time.LocalDate
 
-class RemoteDataSource(private val retrofit: PrayersApi) : PrayerDataSource {
+class RemoteDataSource(private val prayersApiService: PrayersApi) : PrayerDataSource {
 
     override suspend fun getPrayerBeginningTimesFromRemoteNetwork(localDate: LocalDate): LondonPrayersBeginningTimes {
-        return retrofit.retrofitService.getTodaysPrayerBeginningTimes(
+        return prayersApiService.retrofitService.getTodaysPrayerBeginningTimes(
             date = getTodayDate(
                localDate
             )
