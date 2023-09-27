@@ -1,6 +1,5 @@
 package com.example.hoxtonprayertimeapp.datasource
 
-import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
