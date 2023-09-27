@@ -1,11 +1,13 @@
 package com.example.hoxtonprayertimeapp.datasource
 
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.getMostRecentFriday
+import com.google.firebase.firestore.BuildConfig
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -22,7 +24,9 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
     val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = _fireStoreWeekModel
 
     init {
-        firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
+        if(BuildConfig.DEBUG){
+            firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
+        }
 
         collectionPrayers = firestore.collection(COLLECTIONS_PRAYERS)
     }
