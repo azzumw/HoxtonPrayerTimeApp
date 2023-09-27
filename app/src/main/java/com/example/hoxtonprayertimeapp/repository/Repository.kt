@@ -49,8 +49,8 @@ class Repository(
         }
     }
 
-    fun getJamaahTimesFromFireStore(func: () -> Unit) =
-        fireStoreDataSource.getTodayJamaahTimes(func)
+    fun getJamaahTimesFromFireStore(workoutNextJamaah: () -> Unit) =
+        fireStoreDataSource.getTodayJamaahTimes(workoutNextJamaah)
 
 
     fun writeJamaahTimesToFireStore() =
