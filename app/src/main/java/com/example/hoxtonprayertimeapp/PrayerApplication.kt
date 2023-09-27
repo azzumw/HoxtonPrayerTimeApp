@@ -8,7 +8,8 @@ import com.example.hoxtonprayertimeapp.datasource.RemoteDataSource
 import com.example.hoxtonprayertimeapp.network.PrayersApi
 import com.example.hoxtonprayertimeapp.repository.Repository
 import com.example.hoxtonprayertimeapp.ui.prayer.PrayerViewModel
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -29,7 +30,7 @@ class PrayerApplication : Application() {
 
             single { RemoteDataSource(PrayersApi) }
             single { LocalDataSource(database.prayerDao) }
-            single { FireStoreDataSource(FirebaseFirestore.getInstance()) }
+            single { FireStoreDataSource(Firebase.firestore) }
             single { Repository(get(),get(), get()) }
             viewModel { PrayerViewModel(get()) }
         }
