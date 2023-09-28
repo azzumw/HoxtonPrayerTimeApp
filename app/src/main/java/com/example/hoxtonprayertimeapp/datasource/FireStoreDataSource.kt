@@ -6,10 +6,10 @@ import com.example.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.example.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.example.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.example.hoxtonprayertimeapp.utils.getMostRecentFriday
-import com.google.firebase.firestore.BuildConfig
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
 import timber.log.Timber
 import java.time.Clock
 import java.time.LocalDate
@@ -24,6 +24,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
 
     init {
         if(BuildConfig.DEBUG){
+            Timber.d("debug firestore")
             firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
         }
 
