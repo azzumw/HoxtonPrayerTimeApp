@@ -87,6 +87,7 @@ dependencies {
     //Room
     implementation("androidx.room:room-ktx:$version_room")
     implementation("androidx.room:room-runtime:$version_room")
+    implementation 'androidx.test:runner:1.5.2'
     kapt("androidx.room:room-compiler:$version_room")
     //Room Test
     implementation("androidx.room:room-testing:$version_room")
