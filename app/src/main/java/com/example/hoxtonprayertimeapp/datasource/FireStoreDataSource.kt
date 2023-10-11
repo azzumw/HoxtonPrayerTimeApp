@@ -20,7 +20,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
     private lateinit var listernerRegisteration: ListenerRegistration
 
     private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
-    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = _fireStoreWeekModel
+    val fireStoreWeekModel: LiveData  <FireStoreWeekModel?> = _fireStoreWeekModel
 
     init {
         if(BuildConfig.DEBUG){
@@ -64,10 +64,10 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getMostRecentFriday(Clock.systemDefaultZone()),
-            fajar = "06:00",
+            fajar = "06:15",
             dhuhr = "13:30",
-            asr = "17:15",
-            isha = "20:30",
+            asr = "17:00",
+            isha = "20:00",
             firstJummah = "13:30",
             secondJummah = "14:15"
         )
