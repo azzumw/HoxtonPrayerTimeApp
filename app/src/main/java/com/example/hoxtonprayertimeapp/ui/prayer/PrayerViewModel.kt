@@ -17,6 +17,7 @@ import com.example.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.example.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.example.hoxtonprayertimeapp.utils.getTodayDate
 import com.example.hoxtonprayertimeapp.utils.isTodayFriday
+import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -126,27 +127,36 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 if (londonDataDB == null) {
                     if (status == ApiStatus.ERROR) {
                         apiStatusLiveMerger.value = ApiStatus.ERROR
-                        Timber.i("DB null,status = ERROR")
-
+                        if(BuildConfig.DEBUG){
+                            Timber.d("DB null,status = ERROR")
+                        }
                     } else {
                         apiStatusLiveMerger.value = ApiStatus.LOADING
-                        Timber.i("DB null,status = LOAD")
+                        if(BuildConfig.DEBUG){
+                            Timber.d("DB null,status = LOAD")
+                        }
                     }
                 } else {
                     when (status) {
                         ApiStatus.LOADING -> {
                             apiStatusLiveMerger.value = (ApiStatus.LOADING)
-                            Timber.i("DB,status = LOAD")
+                            if (BuildConfig.DEBUG){
+                                Timber.d("DB,status = LOAD")
+                            }
                         }
 
                         ApiStatus.ERROR -> {
                             apiStatusLiveMerger.value = ApiStatus.S_ERROR
-                            Timber.i("DB ,status = S_ERROR")
+                            if(BuildConfig.DEBUG){
+                                Timber.d("DB ,status = S_ERROR")
+                            }
                         }
 
                         else -> {
                             apiStatusLiveMerger.value = (ApiStatus.DONE)
-                            Timber.i("DB,status = DONE")
+                            if(BuildConfig.DEBUG){
+                                Timber.d("DB,status = DONE")
+                            }
                         }
                     }
                 }
@@ -190,9 +200,13 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
 
             } catch (dateTimeException: DateTimeParseException) {
-                Timber.e("Date parsing exception ${dateTimeException.message}")
+               if (BuildConfig.DEBUG){
+                   Timber.e("Date parsing exception ${dateTimeException.message}")
+               }
             } catch (e: Exception) {
-                Timber.e("Network exception ${e.message}")
+                if(BuildConfig.DEBUG){
+                    Timber.e("Network exception ${e.message}")
+                }
                 _londonApiStatus.value = ApiStatus.ERROR
             }
         }
@@ -219,11 +233,9 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         //get the current time
 
         val tempPairNextJammah = addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
-            Timber.i("prayer: ${it.first} ${it.second}")
+
             LocalTime.now().isBefore(it.second)
         }
-
-        Timber.i("${tempPairNextJammah?.second}")
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
             when (tempPairNextJammah.first) {

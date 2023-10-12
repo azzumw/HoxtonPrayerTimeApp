@@ -47,7 +47,9 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
 
 
             if (error != null) {
-                Timber.e("Listen failed. $error")
+                if(BuildConfig.DEBUG){
+                    Timber.d("Listen failed. $error")
+                }
 
                 return@addSnapshotListener
             }
@@ -75,8 +77,15 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore):PrayerDataSo
 
         docRef.set(fireStoreWeekModel).addOnCompleteListener {
             if (it.isSuccessful) {
-                Timber.e("Data Saved")
-            } else Timber.e(it.exception.toString())
+                if(BuildConfig.DEBUG){
+                    Timber.d("Data Saved")
+                }
+
+            } else{
+                if(BuildConfig.DEBUG){
+                    Timber.e(it.exception.toString())
+                }
+            }
         }
     }
 
