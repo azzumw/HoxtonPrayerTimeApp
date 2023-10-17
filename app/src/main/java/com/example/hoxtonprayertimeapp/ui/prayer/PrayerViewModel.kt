@@ -168,7 +168,9 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
             }
         }
 
-        repository.writeJamaahTimesToFireStore()
+        if(BuildConfig.DEBUG){
+            repository.writeJamaahTimesToFireStore()
+        }
 
         listenForPrayersFromFirestore()
     }

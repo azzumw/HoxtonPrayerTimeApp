@@ -22,7 +22,44 @@
           }
         },
         {
-          "client_id": "1002460352065-6k5k30217c4roj0rlv5dtdgm910foau8.apps.googleusercontent.com",
+          "client_id": "1002460352065-l30qav21cgss5t0833ackbd7hvboc40b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyNazeV40f7t6QlKqi3k_HFq_mN7hWqDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002460352065-6k5k30217c4roj0rlv5dtdgm910foau8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002460352065:android:a7a37cb8913e92c03640c0",
+        "android_client_info": {
+          "package_name": "com.hoxtonislah.hoxtonprayertimeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002460352065-nn4e93h91mgu9dk6niksbjkbvpeifj65.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hoxtonislah.hoxtonprayertimeapp",
+            "certificate_hash": "d86355392af4c2f1e51fc2dd23201589f955298d"
+          }
+        },
+        {
+          "client_id": "1002460352065-l30qav21cgss5t0833ackbd7hvboc40b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
