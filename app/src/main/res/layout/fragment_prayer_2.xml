@@ -8,7 +8,7 @@
         <import type="java.util.Map"/>
         <variable
             name="viewModel"
-            type="com.example.hoxtonprayertimeapp.ui.prayer.PrayerViewModel" />
+            type="com.hoxtonislah.hoxtonprayertimeapp.ui.prayer.PrayerViewModel" />
         
 
     </data>
