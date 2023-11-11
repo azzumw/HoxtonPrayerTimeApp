@@ -30,7 +30,7 @@ class RemoteDataSource(private val prayersApiService: PrayersApi) : PrayerDataSo
         TODO("Not required")
     }
 
-    override fun getTodayJamaahTimes(func: () -> Unit) {
+    override fun getTodayJamaahTimes(workoutNextJamaah: () -> Unit) {
         TODO("Not required")
     }
 

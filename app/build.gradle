@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId "com.hoxtonislah.hoxtonprayertimeapp"
-        minSdk 31
+        minSdk 29
         targetSdk 33
         versionCode 2
         versionName "1.0"

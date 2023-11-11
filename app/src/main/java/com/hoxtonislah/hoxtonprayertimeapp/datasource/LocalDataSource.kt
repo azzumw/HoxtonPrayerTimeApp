@@ -44,7 +44,7 @@ class LocalDataSource(
         }
     }
 
-    override fun getTodayJamaahTimes(func: () -> Unit) {
+    override fun getTodayJamaahTimes(workoutNextJamaah: () -> Unit) {
         TODO("Not Required")
     }
 
