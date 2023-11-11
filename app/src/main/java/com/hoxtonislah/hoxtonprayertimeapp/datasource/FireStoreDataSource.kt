@@ -50,7 +50,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore): PrayerDataS
                 if(BuildConfig.DEBUG){
                     Timber.d("Listen failed. $error")
                 }
-
+                Timber.e("Errorro")
                 return@addSnapshotListener
             }
 
@@ -66,12 +66,12 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore): PrayerDataS
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getMostRecentFriday(Clock.systemDefaultZone()),
-            fajar = "06:45",
-            dhuhr = "13:30",
-            asr = "16:30",
+            fajar = "06:00",
+            dhuhr = "13:00",
+            asr = "15:15",
             isha = "20:00",
-            firstJummah = "13:30",
-            secondJummah = "14:15"
+            firstJummah = "12:20",
+            secondJummah = "13:00"
         )
         val docRef = collectionPrayers.document(lastWeekNumber)
 
