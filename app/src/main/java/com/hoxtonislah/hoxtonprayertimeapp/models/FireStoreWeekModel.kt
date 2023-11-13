@@ -9,11 +9,11 @@ data class FireStoreWeekModel(
     val dhuhr: String? = null,
     val asr: String? = null,
     val isha: String? = null,
+    val weekendIsha: String? = null,
+    val winterTime: Boolean? = false,
     val firstJummah: String? = null,
     val secondJummah: String? = null,
-){
-    fun to12hour(time:String?) = fromLocalTimeToString(fromStringToLocalTime(time),"hh:mm a")
+) {
+    fun to12hour(time: String?) = fromLocalTimeToString(fromStringToLocalTime(time), "hh:mm a")
 
 }
-
-

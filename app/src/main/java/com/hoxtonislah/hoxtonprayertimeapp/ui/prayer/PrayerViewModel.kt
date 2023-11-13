@@ -18,6 +18,7 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.getCurrentIslamicDate
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getTodayDate
 import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
+import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayWeekend
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -70,7 +71,11 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
     val ishaJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
-        it?.to12hour(it.isha)
+        if(isTodayWeekend()&& it?.winterTime == true){
+            it.to12hour(it.weekendIsha)
+        }else {
+            it?.to12hour(it.isha)
+        }
     }
 
     private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
@@ -82,8 +87,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
 
     private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
-    private val fireStoreApiStatus: LiveData<ApiStatus>
-        get() = _fireStoreApiStatus
 
     private val _londonApiStatus = MutableLiveData<ApiStatus>()
     private val londonApiStatus: LiveData<ApiStatus>
@@ -294,8 +297,11 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 it[MAGHRIB_KEY] = fromStringToLocalTime(mjt)
             }
 
-            it[ISHA_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.isha)
-
+            it[ISHA_KEY] = if(isTodayWeekend() && fireStoreWeekModel.value?.winterTime == true){
+                fromStringToLocalTime(fireStoreWeekModel.value?.weekendIsha)
+            }else{
+                fromStringToLocalTime(fireStoreWeekModel.value?.isha)
+            }
         }.toList().sortedBy {
             it.second
         }

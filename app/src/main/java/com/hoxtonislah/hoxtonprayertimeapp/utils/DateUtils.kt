@@ -104,6 +104,8 @@ fun createDocumentReferenceIDForLastWeek() =
 
 fun isTodayFriday(localDate: LocalDate) = localDate.dayOfWeek == DayOfWeek.FRIDAY
 
+fun isTodayWeekend(localDate: LocalDate = LocalDate.now()) = ((localDate.dayOfWeek == DayOfWeek.SATURDAY) || (localDate.dayOfWeek == DayOfWeek.SUNDAY))
+
 fun fromStringToLocalTime(timeinString: String?, plusMinutes: Long = 0L) = timeinString?.let {
     LocalTime.parse(timeinString).plusMinutes(plusMinutes)
 }

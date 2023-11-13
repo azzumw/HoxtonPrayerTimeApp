@@ -74,6 +74,32 @@ class DateUtilsTest {
     }
 
     @Test
+    fun istodayWeekend_sunday_returns_true() {
+        //GIVEN - a fixed date of Sun 12th Nov 2023
+        val fixedClock = Clock.fixed(Instant.parse("2023-11-12T00:00:00.00Z"), ZoneId.systemDefault())
+        val local = LocalDate.now(fixedClock)
+
+        // WHEN - isTodayWeekend is invoked
+        val result = isTodayWeekend(local)
+
+        // THEN - verify it returns true
+        MatcherAssert.assertThat(result, `is`(true))
+    }
+
+    @Test
+    fun istodayWeekend_monday_returns_false() {
+        //GIVEN - a fixed date of Sun 12th Nov 2023
+        val fixedClock = Clock.fixed(Instant.parse("2023-11-13T00:00:00.00Z"), ZoneId.systemDefault())
+        val local = LocalDate.now(fixedClock)
+
+        // WHEN - isTodayWeekend is invoked
+        val result = isTodayWeekend(local)
+
+        // THEN - verify it returns true
+        MatcherAssert.assertThat(result, `is`(false))
+    }
+
+    @Test
     fun getYesterdayDate_returnsYesterdayDate() {
 
         //GIVEN - a fixed date of Tue 8th August 2023

@@ -14,16 +14,16 @@ import timber.log.Timber
 import java.time.Clock
 import java.time.LocalDate
 
-class FireStoreDataSource(private val firestore: FirebaseFirestore): PrayerDataSource {
+class FireStoreDataSource(private val firestore: FirebaseFirestore) : PrayerDataSource {
 
     private val collectionPrayers: CollectionReference
     private lateinit var listernerRegisteration: ListenerRegistration
 
     private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
-    val fireStoreWeekModel: LiveData  <FireStoreWeekModel?> = _fireStoreWeekModel
+    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = _fireStoreWeekModel
 
     init {
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             Timber.d("debug firestore")
             firestore.useEmulator(EMULATOR_HOST, EMULATOR_PORT)
         }
@@ -47,7 +47,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore): PrayerDataS
 
 
             if (error != null) {
-                if(BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     Timber.d("Listen failed. $error")
                 }
                 Timber.e("Errorro")
@@ -66,10 +66,12 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore): PrayerDataS
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getMostRecentFriday(Clock.systemDefaultZone()),
-            fajar = "06:00",
+            fajar = "06:15",
             dhuhr = "13:00",
-            asr = "15:15",
+            asr = "14:45",
             isha = "20:00",
+            weekendIsha = "18:30",
+            winterTime = true,
             firstJummah = "12:20",
             secondJummah = "13:00"
         )
@@ -77,12 +79,12 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore): PrayerDataS
 
         docRef.set(fireStoreWeekModel).addOnCompleteListener {
             if (it.isSuccessful) {
-                if(BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     Timber.d("Data Saved")
                 }
 
-            } else{
-                if(BuildConfig.DEBUG){
+            } else {
+                if (BuildConfig.DEBUG) {
                     Timber.e(it.exception.toString())
                 }
             }
@@ -108,12 +110,12 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore): PrayerDataS
         TODO("Not Required")
     }
 
-    fun clear(){
+    fun clear() {
         firestore.clearPersistence()
         listernerRegisteration.remove()
     }
 
-    companion object{
+    companion object {
         private const val EMULATOR_HOST = "10.0.2.2"
         private const val EMULATOR_PORT = 8080
 
