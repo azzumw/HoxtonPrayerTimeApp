@@ -17,7 +17,8 @@ class DateUtilsTest {
     @Test
     fun getCurrentGregorianDate_returns_today_date_in_format() {
         //GIVEN - a fixed date of Tue 8th August 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
         val localDate = LocalDate.now(fixedClock)
 
         // WHEN - getCurrentGregorianDate() is invoked
@@ -33,15 +34,20 @@ class DateUtilsTest {
     fun getTodayDate_returnsTodayDate() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
         val localDate = LocalDate.now(fixedClock)
 
         //WHEN - getTodayDate is invoked
-        val result  = getTodayDate(localDate)
+        val result = getTodayDate(localDate)
 
         //THEN - assert that it returns the same date 2023-08-08
         val expectedDate = "2023-08-08"
-        MatcherAssert.assertThat("The actual $result date does not match expected date: $expectedDate",result, `is`(expectedDate))
+        MatcherAssert.assertThat(
+            "The actual $result date does not match expected date: $expectedDate",
+            result,
+            `is`(expectedDate)
+        )
 
     }
 
@@ -49,7 +55,8 @@ class DateUtilsTest {
     fun isTodayFriday_when_today_is_tuesday_returns_false() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
         val local = LocalDate.now(fixedClock)
 
         // WHEN - isTodayFriday is invoked
@@ -63,7 +70,8 @@ class DateUtilsTest {
     fun isTodayFriday_when_today_is_friday_returns_true() {
 
         //GIVEN - a fixed date of Fri 11th August 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-08-11T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-08-11T00:00:00.00Z"), ZoneId.systemDefault())
         val local = LocalDate.now(fixedClock)
 
         // WHEN - isTodayFriday is invoked
@@ -74,9 +82,10 @@ class DateUtilsTest {
     }
 
     @Test
-    fun istodayWeekend_sunday_returns_true() {
+    fun isTodayWeekend_when_today_is_sunday_returns_true() {
         //GIVEN - a fixed date of Sun 12th Nov 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-11-12T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-11-12T00:00:00.00Z"), ZoneId.systemDefault())
         val local = LocalDate.now(fixedClock)
 
         // WHEN - isTodayWeekend is invoked
@@ -87,15 +96,16 @@ class DateUtilsTest {
     }
 
     @Test
-    fun istodayWeekend_monday_returns_false() {
-        //GIVEN - a fixed date of Sun 12th Nov 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-11-13T00:00:00.00Z"), ZoneId.systemDefault())
+    fun isTodayWeekend_when_today_is_monday_returns_false() {
+        //GIVEN - a fixed date of Mon 13th Nov 2023
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-11-13T00:00:00.00Z"), ZoneId.systemDefault())
         val local = LocalDate.now(fixedClock)
 
         // WHEN - isTodayWeekend is invoked
         val result = isTodayWeekend(local)
 
-        // THEN - verify it returns true
+        // THEN - verify it returns false
         MatcherAssert.assertThat(result, `is`(false))
     }
 
@@ -103,11 +113,12 @@ class DateUtilsTest {
     fun getYesterdayDate_returnsYesterdayDate() {
 
         //GIVEN - a fixed date of Tue 8th August 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
         val local = LocalDate.now(fixedClock)
 
         // WHEN - getYesterday is invoked
-        val result  = getYesterdayDate(local)
+        val result = getYesterdayDate(local)
         val expectedYesterday = "2023-08-07"
 
         // THEN - verify that the date returned is 7th Aug 2023
@@ -117,10 +128,11 @@ class DateUtilsTest {
     @Test
     fun getMostRecentFriday_when_today_is_tuesday_returns_last_friday() {
         //GIVEN - a fixed date of Tue 8th August 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
 
         //WHEN - getLastOrTodayFridayDate is invoked
-        val result  = getMostRecentFriday(fixedClock)
+        val result = getMostRecentFriday(fixedClock)
 
         //THEN - assert that the date returned is Fri 4th Aug
         val expectedLastFridayDate = "2023-08-04"
@@ -131,10 +143,11 @@ class DateUtilsTest {
     fun getMostRecentFriday_when_today_is_friday_returns_same_friday_date() {
 
         //GIVEN - a fixed date of Fri 15th Sept 2023
-        val fixedClock = Clock.fixed(Instant.parse("2023-09-15T00:00:00.00Z"), ZoneId.systemDefault())
+        val fixedClock =
+            Clock.fixed(Instant.parse("2023-09-15T00:00:00.00Z"), ZoneId.systemDefault())
 
         // WHEN - getLastOrTodayFridayDate is invoked
-        val result  = getMostRecentFriday(fixedClock)
+        val result = getMostRecentFriday(fixedClock)
 
         // THEN - assert that the date returned is 15th Sept 2023
         val expectedFridayDate = "2023-09-15"
@@ -150,7 +163,7 @@ class DateUtilsTest {
         val resultTime = fromStringToLocalTime(timeInString)
 
         // THEN - assert that the time is converted to the LocalTime object
-        val expectedTime = LocalTime.of(14,45)
+        val expectedTime = LocalTime.of(14, 45)
         MatcherAssert.assertThat(resultTime, `is`(expectedTime))
     }
 
@@ -160,17 +173,17 @@ class DateUtilsTest {
         val timeInString = "14:45"
 
         // WHEN - fromStringtoLocalTime is invoked with 5 minutes added
-        val resultTime = fromStringToLocalTime(timeInString,5L)
+        val resultTime = fromStringToLocalTime(timeInString, 5L)
 
         // THEN - assert that the time is converted to the LocalTime object
-        val expectedTime = LocalTime.of(14,50)
+        val expectedTime = LocalTime.of(14, 50)
         MatcherAssert.assertThat(resultTime, `is`(expectedTime))
     }
 
     @Test
     fun fromLocalTimeToString_when_time_is_before_noon_returns_12_hour_format() {
         // GIVEN - a local time in 24 hour format before noon
-        val localTime = LocalTime.of(5,15)
+        val localTime = LocalTime.of(5, 15)
 
         // WHEN - fromLocalTimeToString is invoked
         val resultTimeInString = fromLocalTimeToString(localTime)
@@ -184,7 +197,7 @@ class DateUtilsTest {
     @Test
     fun fromLocalTimeToString_when_time_is_after_noon_returns_12_hour_format() {
         // GIVEN - a local time in 24 hour format afternoon
-        val localTime = LocalTime.of(15,15)
+        val localTime = LocalTime.of(15, 15)
 
         // WHEN - fromLocalTimeToString is invoked
         val resultTimeInString = fromLocalTimeToString(localTime)
