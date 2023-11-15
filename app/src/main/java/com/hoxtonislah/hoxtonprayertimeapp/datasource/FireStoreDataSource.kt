@@ -71,7 +71,6 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore) : PrayerData
             asr = "14:45",
             isha = "20:00",
             weekendIsha = "18:30",
-            winterTime = true,
             firstJummah = "12:20",
             secondJummah = "13:00"
         )

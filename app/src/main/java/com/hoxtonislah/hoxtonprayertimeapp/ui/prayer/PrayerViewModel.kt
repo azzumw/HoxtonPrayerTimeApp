@@ -71,11 +71,9 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
     val ishaJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
-        if(isTodayWeekend()&& it?.winterTime == true){
+        if (isTodayWeekend() && it?.weekendIsha != null) {
             it.to12hour(it.weekendIsha)
-        }else {
-            it?.to12hour(it.isha)
-        }
+        } else it?.to12hour(it.isha)
     }
 
     private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
@@ -130,12 +128,12 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 if (londonDataDB == null) {
                     if (status == ApiStatus.ERROR) {
                         apiStatusLiveMerger.value = ApiStatus.ERROR
-                        if(BuildConfig.DEBUG){
+                        if (BuildConfig.DEBUG) {
                             Timber.d("DB null,status = ERROR")
                         }
                     } else {
                         apiStatusLiveMerger.value = ApiStatus.LOADING
-                        if(BuildConfig.DEBUG){
+                        if (BuildConfig.DEBUG) {
                             Timber.d("DB null,status = LOAD")
                         }
                     }
@@ -143,21 +141,21 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                     when (status) {
                         ApiStatus.LOADING -> {
                             apiStatusLiveMerger.value = (ApiStatus.LOADING)
-                            if (BuildConfig.DEBUG){
+                            if (BuildConfig.DEBUG) {
                                 Timber.d("DB,status = LOAD")
                             }
                         }
 
                         ApiStatus.ERROR -> {
                             apiStatusLiveMerger.value = ApiStatus.S_ERROR
-                            if(BuildConfig.DEBUG){
+                            if (BuildConfig.DEBUG) {
                                 Timber.d("DB ,status = S_ERROR")
                             }
                         }
 
                         else -> {
                             apiStatusLiveMerger.value = (ApiStatus.DONE)
-                            if(BuildConfig.DEBUG){
+                            if (BuildConfig.DEBUG) {
                                 Timber.d("DB,status = DONE")
                             }
                         }
@@ -171,7 +169,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
             }
         }
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             repository.writeJamaahTimesToFireStore()
         }
 
@@ -205,11 +203,11 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
 
             } catch (dateTimeException: DateTimeParseException) {
-               if (BuildConfig.DEBUG){
-                   Timber.e("Date parsing exception ${dateTimeException.message}")
-               }
+                if (BuildConfig.DEBUG) {
+                    Timber.e("Date parsing exception ${dateTimeException.message}")
+                }
             } catch (e: Exception) {
-                if(BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     Timber.e("Network exception ${e.message}")
                 }
                 _londonApiStatus.value = ApiStatus.ERROR
@@ -237,10 +235,11 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private fun workoutNextJamaah(prayerTime: String? = null) {
         //get the current time
 
-        val tempPairNextJammah = addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
+        val tempPairNextJammah =
+            addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
 
-            LocalTime.now().isBefore(it.second)
-        }
+                LocalTime.now().isBefore(it.second)
+            }
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
             when (tempPairNextJammah.first) {
@@ -297,9 +296,9 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 it[MAGHRIB_KEY] = fromStringToLocalTime(mjt)
             }
 
-            it[ISHA_KEY] = if(isTodayWeekend() && fireStoreWeekModel.value?.winterTime == true){
+            it[ISHA_KEY] = if (isTodayWeekend() && fireStoreWeekModel.value?.weekendIsha != null) {
                 fromStringToLocalTime(fireStoreWeekModel.value?.weekendIsha)
-            }else{
+            } else {
                 fromStringToLocalTime(fireStoreWeekModel.value?.isha)
             }
         }.toList().sortedBy {
