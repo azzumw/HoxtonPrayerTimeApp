@@ -10,7 +10,6 @@ data class FireStoreWeekModel(
     val asr: String? = null,
     val isha: String? = null,
     val weekendIsha: String? = null,
-    val winterTime: Boolean? = false,
     val firstJummah: String? = null,
     val secondJummah: String? = null,
 ) {
