@@ -54,10 +54,14 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore) : PrayerData
                 return@addSnapshotListener
             }
 
-            _fireStoreWeekModel.value =
-                value!!.documents[0].toObject(FireStoreWeekModel::class.java)
+          value?.let {
+              if(it.documents.isNotEmpty()){
+                  _fireStoreWeekModel.value =
+                      value.documents[0].toObject(FireStoreWeekModel::class.java)
 
-            workoutNextJamaah()
+                  workoutNextJamaah()
+              }
+          }
         }
     }
 
