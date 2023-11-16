@@ -2,7 +2,6 @@ package com.hoxtonislah.hoxtonprayertimeapp.ui.prayer
 
 import android.text.Html
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
@@ -26,7 +25,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeParseException
 
 enum class ApiStatus {
-    LOADING, ERROR, DONE, S_ERROR
+    LOADING, ERROR, DONE
 }
 
 class PrayerViewModel(private val repository: Repository) : ViewModel() {
@@ -76,7 +75,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         } else it?.to12hour(it.isha)
     }
 
-    private val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
+     val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         repository.todaysBeginningTimesFromDB
 
     val prayerBeginningTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
@@ -87,10 +86,8 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
 
     private val _londonApiStatus = MutableLiveData<ApiStatus>()
-    private val londonApiStatus: LiveData<ApiStatus>
+     val londonApiStatus: LiveData<ApiStatus>
         get() = _londonApiStatus
-
-    val apiStatusLiveMerger = MediatorLiveData<ApiStatus>()
 
     //To highlight next prayer background view
     val fajrListItemBackground: LiveData<Boolean> = nextJamaat.map {
@@ -118,56 +115,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
     init {
-        getBeginningTimesFromLondonPrayerTimesApi()
-
-        var count = 1
-
-        apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) { londonDataDB ->
-            apiStatusLiveMerger.addSource(londonApiStatus) { status ->
-                count++
-                if (londonDataDB == null) {
-                    if (status == ApiStatus.ERROR) {
-                        apiStatusLiveMerger.value = ApiStatus.ERROR
-                        if (BuildConfig.DEBUG) {
-                            Timber.d("DB null,status = ERROR")
-                        }
-                    } else {
-                        apiStatusLiveMerger.value = ApiStatus.LOADING
-                        if (BuildConfig.DEBUG) {
-                            Timber.d("DB null,status = LOAD")
-                        }
-                    }
-                } else {
-                    when (status) {
-                        ApiStatus.LOADING -> {
-                            apiStatusLiveMerger.value = (ApiStatus.LOADING)
-                            if (BuildConfig.DEBUG) {
-                                Timber.d("DB,status = LOAD")
-                            }
-                        }
-
-                        ApiStatus.ERROR -> {
-                            apiStatusLiveMerger.value = ApiStatus.S_ERROR
-                            if (BuildConfig.DEBUG) {
-                                Timber.d("DB ,status = S_ERROR")
-                            }
-                        }
-
-                        else -> {
-                            apiStatusLiveMerger.value = (ApiStatus.DONE)
-                            if (BuildConfig.DEBUG) {
-                                Timber.d("DB,status = DONE")
-                            }
-                        }
-                    }
-                }
-                apiStatusLiveMerger.removeSource(londonApiStatus)
-            }
-
-            if (count > 5) {
-                apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
-            }
-        }
 
         if (BuildConfig.DEBUG) {
             repository.writeJamaahTimesToFireStore()
@@ -177,8 +124,9 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
 
-    private fun getBeginningTimesFromLondonPrayerTimesApi(todayLocalDate: LocalDate = LocalDate.now()) {
+    fun getBeginningTimesFromLondonPrayerTimesApi(todayLocalDate: LocalDate = LocalDate.now()) {
         _londonApiStatus.value = ApiStatus.LOADING
+        Timber.e("Im inside network method")
 
         viewModelScope.launch {
 
@@ -205,12 +153,14 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
             } catch (dateTimeException: DateTimeParseException) {
                 if (BuildConfig.DEBUG) {
                     Timber.e("Date parsing exception ${dateTimeException.message}")
+                    _londonApiStatus.value = ApiStatus.ERROR
                 }
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     Timber.e("Network exception ${e.message}")
                 }
                 _londonApiStatus.value = ApiStatus.ERROR
+                Timber.e("Network exception ApiStatus set to ERROR")
             }
         }
     }

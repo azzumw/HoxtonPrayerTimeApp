@@ -11,6 +11,7 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.R
 import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.time.LocalDate
 
 class PrayerFragment : Fragment() {
@@ -30,22 +31,31 @@ class PrayerFragment : Fragment() {
         binding.viewModel = prayerViewModel
         binding.lifecycleOwner = this
 
+        hideCards(true)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showOrHideCards(true)
-
-        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
-            if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
-                showOrHideCards(false)
-
-            } else {
-                showOrHideCards(true)
-            }
+        prayerViewModel.londonPrayerBeginningTimesFromDB.observe(viewLifecycleOwner){
+            if(it == null){
+                hideCards(true)
+                Timber.e("from fragment, making network call")
+                prayerViewModel.getBeginningTimesFromLondonPrayerTimesApi()
+            }else hideCards(false)
         }
+
+
+//        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
+//            if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
+//                hideCards(false)
+//
+//            } else {
+//                hideCards(true)
+//            }
+//        }
 
 
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
@@ -80,7 +90,7 @@ class PrayerFragment : Fragment() {
         }
     }
 
-    private fun showOrHideCards(hide: Boolean) {
+    private fun hideCards(hide: Boolean) {
         if (hide) {
             binding.prayerTimetableCardview.visibility = View.GONE
             binding.broadcastPrayerCardview.visibility = View.GONE
