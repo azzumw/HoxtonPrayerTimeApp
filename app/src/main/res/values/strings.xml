@@ -29,5 +29,6 @@
 
     <string name="first_jumuah">1<sup>1&#x02E2;&#x1D57;</sup></string>
     <string name="second_jumuah">2<sup>2&#x207F;&#x1D48;</sup></string>
+    <string name="cd_no_internet">No internet</string>
 
 </resources>

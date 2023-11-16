@@ -47,20 +47,8 @@ class PrayerFragment : Fragment() {
             }else hideCards(false)
         }
 
-
-//        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
-//            if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
-//                hideCards(false)
-//
-//            } else {
-//                hideCards(true)
-//            }
-//        }
-
-
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
-
-            if (it != null) {
+            it?.let {
                 if (isTodayFriday(LocalDate.now())) {
                     if (it.secondJummah != null) {
                         replaceDhuhrViewWithJummahViewIfSecondJummahExists(true)
@@ -71,10 +59,6 @@ class PrayerFragment : Fragment() {
                 } else {
                     binding.dhuhrTextview.text = getString(R.string.dhohar_text)
                 }
-
-            } else {
-                //show no data error animation
-
             }
         }
     }

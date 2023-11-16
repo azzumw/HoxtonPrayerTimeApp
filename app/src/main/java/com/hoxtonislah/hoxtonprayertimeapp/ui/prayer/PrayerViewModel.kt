@@ -121,6 +121,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
 
         listenForPrayersFromFirestore()
+
     }
 
 
