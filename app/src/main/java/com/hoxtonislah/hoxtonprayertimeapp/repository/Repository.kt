@@ -6,6 +6,7 @@ import com.hoxtonislah.hoxtonprayertimeapp.datasource.LocalDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.RemoteDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.models.FireStoreWeekModel
 import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.utils.getTodayDate
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getYesterdayDate
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,8 @@ class Repository(
 
     val todaysBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         localDataSource.todayPrayersFromLocalDataSource
+
+//    val magribJ:LiveData<String?> = localDataSource.mTime
 
     suspend fun getPrayerBeginningTimesFromLondonApi(localDate: LocalDate): LondonPrayersBeginningTimes {
         return remoteDataSource.getPrayerBeginningTimesFromRemoteNetwork(localDate)
@@ -46,6 +49,13 @@ class Repository(
                 maghribJamaahTime = maghribJamaahTime,
                 todayLocalDate = todayLocalDate
             )
+        }
+    }
+
+
+    suspend fun getMagribJamaah(localdate:String):String?{
+        return withContext(ioDispatcher){
+            localDataSource.getMagribJamaah(localdate)
         }
     }
 

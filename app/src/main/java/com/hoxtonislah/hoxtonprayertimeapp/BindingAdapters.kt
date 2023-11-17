@@ -3,6 +3,7 @@ package com.hoxtonislah.hoxtonprayertimeapp
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.hoxtonislah.hoxtonprayertimeapp.ui.prayer.ApiStatus
 
 @BindingAdapter("apiStatus")

@@ -1,7 +1,9 @@
 package com.hoxtonislah.hoxtonprayertimeapp.ui.prayer
 
 import android.text.Html
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
@@ -25,7 +27,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeParseException
 
 enum class ApiStatus {
-    LOADING, ERROR, DONE
+    LOADING, ERROR, DONE, S_ERROR
 }
 
 class PrayerViewModel(private val repository: Repository) : ViewModel() {
@@ -75,7 +77,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         } else it?.to12hour(it.isha)
     }
 
-     val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
+    val londonPrayerBeginningTimesFromDB: LiveData<LondonPrayersBeginningTimes?> =
         repository.todaysBeginningTimesFromDB
 
     val prayerBeginningTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
@@ -86,8 +88,10 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
 
     private val _londonApiStatus = MutableLiveData<ApiStatus>()
-     val londonApiStatus: LiveData<ApiStatus>
+    val londonApiStatus: LiveData<ApiStatus>
         get() = _londonApiStatus
+
+    val apiStatusLiveMerger = MediatorLiveData<ApiStatus>()
 
     //To highlight next prayer background view
     val fajrListItemBackground: LiveData<Boolean> = nextJamaat.map {
@@ -114,7 +118,61 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         it.substringBefore(" ") == ISHA_KEY
     }
 
+    private var maghribJamaahTimeFromLocalDB: String? = null
+
+
     init {
+
+        getBeginningTimesFromLondonPrayerTimesApi()
+
+        var count = 1
+
+        apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) { londonDataDB ->
+            apiStatusLiveMerger.addSource(londonApiStatus) { status ->
+                count++
+                if (londonDataDB == null) {
+                    if (status == ApiStatus.ERROR) {
+                        apiStatusLiveMerger.value = ApiStatus.ERROR
+                        if (BuildConfig.DEBUG) {
+                            Timber.d("DB null,status = ERROR")
+                        }
+                    } else {
+                        apiStatusLiveMerger.value = ApiStatus.LOADING
+                        if (BuildConfig.DEBUG) {
+                            Timber.d("DB null,status = LOAD")
+                        }
+                    }
+                } else {
+                    when (status) {
+                        ApiStatus.LOADING -> {
+                            apiStatusLiveMerger.value = (ApiStatus.LOADING)
+                            if (BuildConfig.DEBUG) {
+                                Timber.d("DB,status = LOAD")
+                            }
+                        }
+
+                        ApiStatus.ERROR -> {
+                            apiStatusLiveMerger.value = ApiStatus.S_ERROR
+                            if (BuildConfig.DEBUG) {
+                                Timber.d("DB ,status = S_ERROR")
+                            }
+                        }
+
+                        else -> {
+                            apiStatusLiveMerger.value = (ApiStatus.DONE)
+                            if (BuildConfig.DEBUG) {
+                                Timber.d("DB,status = DONE")
+                            }
+                        }
+                    }
+                }
+                apiStatusLiveMerger.removeSource(londonApiStatus)
+            }
+
+            if (count > 5) {
+                apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
+            }
+        }
 
         if (BuildConfig.DEBUG) {
             repository.writeJamaahTimesToFireStore()
@@ -125,7 +183,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
 
-    fun getBeginningTimesFromLondonPrayerTimesApi(todayLocalDate: LocalDate = LocalDate.now()) {
+    private fun getBeginningTimesFromLondonPrayerTimesApi(todayLocalDate: LocalDate = LocalDate.now()) {
         _londonApiStatus.value = ApiStatus.LOADING
         Timber.e("Im inside network method")
 
@@ -166,17 +224,20 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-
     private fun listenForPrayersFromFirestore() {
-
-        _fireStoreApiStatus.value = ApiStatus.LOADING
-
+        getMaghribJamaahTimeFromLocalDB()
         repository.getJamaahTimesFromFireStore {
-            workoutNextJamaah()
+            workoutNextJamaah(maghribJamaahTimeFromLocalDB)
         }
-
-        _fireStoreApiStatus.value = ApiStatus.DONE
     }
+
+
+    private fun getMaghribJamaahTimeFromLocalDB() {
+        viewModelScope.launch {
+            maghribJamaahTimeFromLocalDB = repository.getMagribJamaah(getTodayDate(LocalDate.now()))
+        }
+    }
+
 
     /**
     This method weeds out those prayer times before the current time,
@@ -190,7 +251,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
             addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
 
                 LocalTime.now().isBefore(it.second)
-            }
+            }.also { Log.e("Next Jammah 2", it.toString()) }
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
             when (tempPairNextJammah.first) {

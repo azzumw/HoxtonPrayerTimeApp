@@ -1,5 +1,6 @@
 package com.hoxtonislah.hoxtonprayertimeapp.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -18,6 +19,9 @@ interface PrayerDao {
 
     @Query("update london_prayers_beginning_times set magribJamaah = :magribJamaahTime where date = :todayDate ")
     suspend fun updateMaghribJamaah(magribJamaahTime:String?,todayDate:String)
+
+    @Query("select magribJamaah from london_prayers_beginning_times where date = :today")
+    fun getMaghribJamaahTime(today:String):String?
     @Query("delete from london_prayers_beginning_times where date = :yesterday")
     suspend fun deleteYesterdayPrayers(yesterday:String)
     @Query("delete from london_prayers_beginning_times")

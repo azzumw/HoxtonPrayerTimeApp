@@ -20,6 +20,7 @@ class LocalDataSource(
             getTodayDate(LocalDate.now())
         ).asLiveData()
 
+//    val mTime:LiveData<String?> = prayerDao.getMaghribJamaahTime(getTodayDate(LocalDate.now()))
     override suspend fun insertTodayPrayerToLocalDataSource(todayPrayerFromApi: LondonPrayersBeginningTimes) {
         withContext(ioDispatcher) {
             prayerDao.insertPrayer(todayPrayerFromApi)
@@ -41,6 +42,12 @@ class LocalDataSource(
                 magribJamaahTime = maghribJamaahTime,
                 todayDate = todayLocalDate
             )
+        }
+    }
+
+    suspend fun getMagribJamaah(today:String):String?{
+        return withContext(ioDispatcher){
+            prayerDao.getMaghribJamaahTime(today)
         }
     }
 

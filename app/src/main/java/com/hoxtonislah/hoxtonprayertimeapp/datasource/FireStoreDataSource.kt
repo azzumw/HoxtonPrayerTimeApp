@@ -1,5 +1,6 @@
 package com.hoxtonislah.hoxtonprayertimeapp.datasource
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hoxtonislah.hoxtonprayertimeapp.models.FireStoreWeekModel
@@ -55,6 +56,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore) : PrayerData
             }
 
           value?.let {
+              Log.e("FiresetorData",value.documents.size.toString())
               if(it.documents.isNotEmpty()){
                   _fireStoreWeekModel.value =
                       value.documents[0].toObject(FireStoreWeekModel::class.java)
