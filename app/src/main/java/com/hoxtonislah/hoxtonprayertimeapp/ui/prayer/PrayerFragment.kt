@@ -2,7 +2,6 @@ package com.hoxtonislah.hoxtonprayertimeapp.ui.prayer
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.R
 import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import java.time.LocalDate
 
 class PrayerFragment : Fragment() {
@@ -34,8 +32,6 @@ class PrayerFragment : Fragment() {
         binding.lifecycleOwner = this
 
         hideCards(true)
-
-
 
         return binding.root
     }
@@ -62,8 +58,6 @@ class PrayerFragment : Fragment() {
 //
 //            }
 //        }
-
-
 
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             it?.let {
