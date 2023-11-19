@@ -12,6 +12,7 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.R
 import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.time.LocalDate
 
 class PrayerFragment : Fragment() {
@@ -39,25 +40,27 @@ class PrayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
-            if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
-                hideCards(false)
-
-            } else {
-                hideCards(true)
-            }
-        }
-
-//        prayerViewModel.londonPrayerBeginningTimesFromDB.observe(viewLifecycleOwner){
-//            if(it == null){
-//                hideCards(true)
-//                Timber.e("TAG from fragment, making network call")
-//                prayerViewModel.getBeginningTimesFromLondonPrayerTimesApi()
-//            }else {
+//        prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
+//            if (it == ApiStatus.DONE || it == ApiStatus.S_ERROR) {
 //                hideCards(false)
 //
+//
+//            } else {
+//                hideCards(true)
 //            }
 //        }
+
+
+        prayerViewModel.londonPrayerBeginningTimesFromDB.observe(viewLifecycleOwner){
+            if(it == null){
+                hideCards(true)
+                Timber.e("TAG from fragment, making network call")
+                prayerViewModel.getPrayerBeginTimesFromRemote()
+            }else {
+                prayerViewModel.getJamaahTimesFromFireStore(it.magribJamaah)
+                hideCards(false)
+            }
+        }
 
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             it?.let {
