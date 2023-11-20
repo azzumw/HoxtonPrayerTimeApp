@@ -1,6 +1,5 @@
 package com.hoxtonislah.hoxtonprayertimeapp.datasource
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hoxtonislah.hoxtonprayertimeapp.models.FireStoreWeekModel
@@ -56,7 +55,6 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore) : PrayerData
             }
 
           value?.let {
-              Log.e("FiresetorData",value.documents.size.toString())
               if(it.documents.isNotEmpty()){
                   _fireStoreWeekModel.value =
                       value.documents[0].toObject(FireStoreWeekModel::class.java)
@@ -72,7 +70,7 @@ class FireStoreDataSource(private val firestore: FirebaseFirestore) : PrayerData
 
         val fireStoreWeekModel = FireStoreWeekModel(
             getMostRecentFriday(Clock.systemDefaultZone()),
-            fajar = "06:15",
+            fajar = "06:30",
             dhuhr = "13:00",
             asr = "14:45",
             isha = "20:00",

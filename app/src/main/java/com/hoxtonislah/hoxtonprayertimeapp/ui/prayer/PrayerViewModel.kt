@@ -1,7 +1,6 @@
 package com.hoxtonislah.hoxtonprayertimeapp.ui.prayer
 
 import android.text.Html
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,7 +26,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeParseException
 
 enum class ApiStatus {
-    LOADING, ERROR, DONE, S_ERROR
+    LOADING, ERROR, DONE
 }
 
 class PrayerViewModel(private val repository: Repository) : ViewModel() {
@@ -77,17 +76,15 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         } else it?.to12hour(it.isha)
     }
 
-    val londonPrayerBeginningTimesFromDB = repository.todaysBeginningTimesFromDB
+    private val londonPrayerBeginningTimesFromDB = repository.todaysBeginningTimesFromDB
 
     val prayerBeginningTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
         londonPrayerBeginningTimesFromDB.map {
             it?.convertTo12hour()
         }
 
-    private val _fireStoreApiStatus = MutableLiveData<ApiStatus>()
-
     private val _londonApiStatus = MutableLiveData<ApiStatus>()
-    val londonApiStatus: LiveData<ApiStatus>
+    private val londonApiStatus: LiveData<ApiStatus>
         get() = _londonApiStatus
 
     val apiStatusLiveMerger = MediatorLiveData<ApiStatus>()
@@ -118,69 +115,49 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
     init {
+        var count = 1
+        apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) {
+            if (it != null) {
+                getJamaahTimesFromFireStore(it.magribJamaah)
+                apiStatusLiveMerger.value = ApiStatus.DONE
 
-//        listenForPrayersFromFirestore()
-//        getBeginningTimesFromLondonPrayerTimesApi()
+            } else {
+                count++
+                getPrayerBeginTimesFromRemote()
+                apiStatusLiveMerger.addSource(londonApiStatus) { status ->
+                    when (status) {
+                        ApiStatus.LOADING -> {
+                            apiStatusLiveMerger.value = ApiStatus.LOADING
+                        }
 
-//        var count = 1
+                        ApiStatus.ERROR -> {
+                            apiStatusLiveMerger.value = ApiStatus.ERROR
+                        }
 
-//        apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) { londonDataDB ->
-//            apiStatusLiveMerger.addSource(londonApiStatus) { status ->
-//                count++
-//                if (londonDataDB == null) {
-//                    Timber.e("DB null: $count")
-//                    if (status == ApiStatus.ERROR) {
-//                        apiStatusLiveMerger.value = ApiStatus.ERROR
-//                        if (BuildConfig.DEBUG) {
-//                            Timber.e("DB null,status = ERROR")
-//                        }
-//                    } else {
-//                        apiStatusLiveMerger.value = ApiStatus.LOADING
-//                        if (BuildConfig.DEBUG) {
-//                            Timber.e("DB null,status = LOAD")
-//                        }
-//                    }
-//                } else {
-//                    when (status) {
-//                        ApiStatus.LOADING -> {
-//                            apiStatusLiveMerger.value = (ApiStatus.LOADING)
-//                            if (BuildConfig.DEBUG) {
-//                                Timber.e("DB,status = LOAD")
-//                            }
-//                        }
-//
-//                        ApiStatus.ERROR -> {
-//                            apiStatusLiveMerger.value = ApiStatus.S_ERROR
-//                            if (BuildConfig.DEBUG) {
-//                                Timber.e("DB ,status = S_ERROR")
-//                            }
-//                        }
-//
-//                        else -> {
-//                            apiStatusLiveMerger.value = (ApiStatus.DONE)
-//                            if (BuildConfig.DEBUG) {
-//                                Timber.e("DB,status = DONE")
-//                            }
-//                        }
-//                    }
-//                }
-//                apiStatusLiveMerger.removeSource(londonApiStatus)
-//            }
-//
-//            if (count > 5) {
-//                apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
-//            }
-//        }
+                        else -> {
+                            apiStatusLiveMerger.value = ApiStatus.DONE
+                        }
+
+                    }
+
+                    if(count > 5){
+                        apiStatusLiveMerger.removeSource(londonApiStatus)
+                    }
+                }
+            }
+
+            if(count > 5){
+                apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
+            }
+        }
 
         if (BuildConfig.DEBUG) {
             repository.writeJamaahTimesToFireStore()
         }
-
-
     }
 
 
-     fun getPrayerBeginTimesFromRemote(todayLocalDate: LocalDate = LocalDate.now()) {
+    private fun getPrayerBeginTimesFromRemote(todayLocalDate: LocalDate = LocalDate.now()) {
         _londonApiStatus.value = ApiStatus.LOADING
         Timber.e("Im inside network method")
 
@@ -202,14 +179,9 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                     maghribJamaahTime = mjt,
                     todayLocalDate = getTodayDate(todayLocalDate)
                 )
-
-                workoutNextJamaah(mjt)
-
-
             } catch (dateTimeException: DateTimeParseException) {
                 if (BuildConfig.DEBUG) {
                     Timber.e("Date parsing exception ${dateTimeException.message}")
-//                    _londonApiStatus.value = ApiStatus.ERROR
                 }
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
@@ -221,22 +193,22 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-     fun getJamaahTimesFromFireStore(mgb:String?=null) {
+    private fun getJamaahTimesFromFireStore(mgb: String? = null) {
         repository.getJamaahTimesFromFireStore {
             workoutNextJamaah(mgb)
         }
     }
 
-    private fun insertTodayPrayerIntoLocal(resultFromNetwork:LondonPrayersBeginningTimes){
+    private fun insertTodayPrayerIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
         viewModelScope.launch {
             repository.insertTodayPrayer(resultFromNetwork)
         }
     }
 
-    private fun deleteYesterdayDataFromLocal(){
-       viewModelScope.launch {
-           repository.deleteYesterdayPrayer()
-       }
+    private fun deleteYesterdayDataFromLocal() {
+        viewModelScope.launch {
+            repository.deleteYesterdayPrayer()
+        }
     }
 
 
@@ -250,9 +222,8 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
         val tempPairNextJammah =
             addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
-
                 LocalTime.now().isBefore(it.second)
-            }.also { Log.e("Next Jammah 2", it.toString()) }
+            }
 
         _nextJamaat.value = if (tempPairNextJammah != null) {
             when (tempPairNextJammah.first) {
