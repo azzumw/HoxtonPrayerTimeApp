@@ -3,7 +3,7 @@ package com.hoxtonislah.hoxtonprayertimeapp.models
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromLocalTimeToString
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromStringToLocalTime
 
-data class FireStoreWeekModel(
+data class JamaahTimeCloudModel(
     val fridayDate: String? = null,
     val fajar: String? = null,
     val dhuhr: String? = null,

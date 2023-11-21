@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 interface PrayerDataSource {
 
-    suspend fun getPrayerBeginningTimesFromRemoteNetwork(localDate:LocalDate): LondonPrayersBeginningTimes
+    suspend fun getPrayerBeginTimesFromRemoteApi(localDate:LocalDate): LondonPrayersBeginningTimes
 
     suspend fun insertTodayPrayerToLocalDataSource(todayPrayerFromApi: LondonPrayersBeginningTimes)
 
@@ -13,7 +13,7 @@ interface PrayerDataSource {
 
     suspend fun updateMaghribJamaahTimeInLocalDataSource(maghribJamaahTime: String?, todayLocalDate: String)
 
-    fun getTodayJamaahTimes(workoutNextJamaah: () -> Unit)
+    fun getTodayJamaahTimesFromCloud(workoutNextJamaah: () -> Unit)
 
-    fun writeJamaahTimes()
+    fun writeJamaahTimesToCloud()
 }

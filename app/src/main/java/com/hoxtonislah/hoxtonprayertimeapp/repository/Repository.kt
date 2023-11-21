@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.CloudDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.LocalDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.RemoteDataSource
-import com.hoxtonislah.hoxtonprayertimeapp.models.FireStoreWeekModel
+import com.hoxtonislah.hoxtonprayertimeapp.models.JamaahTimeCloudModel
 import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getYesterdayDate
 import kotlinx.coroutines.CoroutineDispatcher
@@ -19,28 +19,28 @@ class Repository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = cloudDataSource.fireStoreWeekModel
+    val jamaahTimeCloudModel: LiveData<JamaahTimeCloudModel?> = cloudDataSource.jamaahTimeCloudModel
 
     val todayPrayerBeginTimesFromLocal: LiveData<LondonPrayersBeginningTimes?> =
         localDataSource.todayPrayersFromLocalDataSource
 
-    suspend fun getPrayerBeginningTimesFromLondonApi(localDate: LocalDate): LondonPrayersBeginningTimes {
-        return remoteDataSource.getPrayerBeginningTimesFromRemoteNetwork(localDate)
+    suspend fun getBeginPrayerTimesFromRemote(localDate: LocalDate): LondonPrayersBeginningTimes {
+        return remoteDataSource.getPrayerBeginTimesFromRemoteApi(localDate)
     }
 
-    suspend fun deleteYesterdayPrayer(yesterdayDate: String = getYesterdayDate()) {
+    suspend fun deleteYesterdayBeginPrayerTimesFromLocal(yesterdayDate: String = getYesterdayDate()) {
         withContext(ioDispatcher) {
             localDataSource.deleteYesterdayPrayerFromLocalDataSource(yesterdayDate)
         }
     }
 
-    suspend fun insertTodayPrayer(todayPrayerFromApi: LondonPrayersBeginningTimes) {
+    suspend fun insertTodayBeginPrayerTimesIntoLocal(todayPrayerFromApi: LondonPrayersBeginningTimes) {
         withContext(ioDispatcher) {
             localDataSource.insertTodayPrayerToLocalDataSource(todayPrayerFromApi)
         }
     }
 
-    suspend fun updateMaghribJamaahTime(maghribJamaahTime: String?, todayLocalDate: String) {
+    suspend fun updateMaghribJamaahTimeForTodayPrayerLocal(maghribJamaahTime: String?, todayLocalDate: String) {
         withContext(ioDispatcher) {
             localDataSource.updateMaghribJamaahTimeInLocalDataSource(
                 maghribJamaahTime = maghribJamaahTime,
@@ -49,12 +49,12 @@ class Repository(
         }
     }
 
-    fun getJamaahTimesFromFireStore(workoutNextJamaah: () -> Unit) =
-        cloudDataSource.getTodayJamaahTimes(workoutNextJamaah)
+    fun getJamaahTimesFromCloud(workoutNextJamaah: () -> Unit) =
+        cloudDataSource.getTodayJamaahTimesFromCloud(workoutNextJamaah)
 
 
     fun writeJamaahTimesToCloud() =
-        cloudDataSource.writeJamaahTimes()
+        cloudDataSource.writeJamaahTimesToCloud()
 
     fun clear() = cloudDataSource.clear()
 

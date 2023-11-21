@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.hoxtonislah.hoxtonprayertimeapp.models.FireStoreWeekModel
+import com.hoxtonislah.hoxtonprayertimeapp.models.JamaahTimeCloudModel
 import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.hoxtonislah.hoxtonprayertimeapp.models.convertTo12hour
 import com.hoxtonislah.hoxtonprayertimeapp.repository.Repository
@@ -46,31 +46,31 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private val _islamicTodayDate = MutableLiveData(getCurrentIslamicDate())
     val islamicTodayDate: LiveData<String> get() = _islamicTodayDate
 
-    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = repository.fireStoreWeekModel
+    val jamaahTimeCloudModel: LiveData<JamaahTimeCloudModel?> = repository.jamaahTimeCloudModel
 
     val isTodayFriday: Boolean = isTodayFriday()
 
-    val fajarJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
+    val fajarJamaah12hour: LiveData<String?> = jamaahTimeCloudModel.map {
         it?.to12hour(it.fajar)
     }
 
-    val dhuhrJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
+    val dhuhrJamaah12hour: LiveData<String?> = jamaahTimeCloudModel.map {
         it?.to12hour(it.dhuhr)
     }
 
-    val firstJummahJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
+    val firstJummahJamaah12hour: LiveData<String?> = jamaahTimeCloudModel.map {
         it?.to12hour(it.firstJummah)
     }
 
-    val secondJummahJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
+    val secondJummahJamaah12hour: LiveData<String?> = jamaahTimeCloudModel.map {
         it?.to12hour(it.secondJummah)
     }
 
-    val asrJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
+    val asrJamaah12hour: LiveData<String?> = jamaahTimeCloudModel.map {
         it?.to12hour(it.asr)
     }
 
-    val ishaJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
+    val ishaJamaah12hour: LiveData<String?> = jamaahTimeCloudModel.map {
         if (isTodayWeekend() && it?.weekendIsha != null) {
             it.to12hour(it.weekendIsha)
         } else it?.to12hour(it.isha)
@@ -167,7 +167,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
             try {
 
-                val apiResult = repository.getPrayerBeginningTimesFromLondonApi(todayLocalDate)
+                val apiResult = repository.getBeginPrayerTimesFromRemote(todayLocalDate)
 
                 _remoteApiStatus.value = ApiStatus.DONE
 
@@ -177,7 +177,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
-                repository.updateMaghribJamaahTime(
+                repository.updateMaghribJamaahTimeForTodayPrayerLocal(
                     maghribJamaahTime = mjt,
                     todayLocalDate = getTodayDate(todayLocalDate)
                 )
@@ -196,20 +196,20 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
     private fun getJamaahTimesFromCloud(maghribJamaahTime: String? = null) {
-        repository.getJamaahTimesFromFireStore {
+        repository.getJamaahTimesFromCloud {
             workoutNextJamaah(maghribJamaahTime)
         }
     }
 
     private fun insertTodayPrayersIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
         viewModelScope.launch {
-            repository.insertTodayPrayer(resultFromNetwork)
+            repository.insertTodayBeginPrayerTimesIntoLocal(resultFromNetwork)
         }
     }
 
     private fun deleteYesterdayPrayersFromLocal() {
         viewModelScope.launch {
-            repository.deleteYesterdayPrayer()
+            repository.deleteYesterdayBeginPrayerTimesFromLocal()
         }
     }
 
@@ -262,29 +262,29 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private fun addJamaahTimesToMapReturnsChronologicallySortedList(magribJamaahTime: String?): List<Pair<String, LocalTime?>> {
         return nextPrayersMap.also {
 
-            it[FAJR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.fajar)
+            it[FAJR_KEY] = fromStringToLocalTime(jamaahTimeCloudModel.value?.fajar)
 
             if (isTodayFriday()) {
                 it[FIRST_JUMUAH_KEY] =
-                    fromStringToLocalTime(fireStoreWeekModel.value?.firstJummah)
-                if (fireStoreWeekModel.value?.secondJummah != null) {
+                    fromStringToLocalTime(jamaahTimeCloudModel.value?.firstJummah)
+                if (jamaahTimeCloudModel.value?.secondJummah != null) {
                     it[SECOND_JUMUAH_KEY] =
-                        fromStringToLocalTime(fireStoreWeekModel.value?.secondJummah)
+                        fromStringToLocalTime(jamaahTimeCloudModel.value?.secondJummah)
                 }
             } else {
-                it[DHUHR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.dhuhr)
+                it[DHUHR_KEY] = fromStringToLocalTime(jamaahTimeCloudModel.value?.dhuhr)
             }
 
-            it[ASR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.asr)
+            it[ASR_KEY] = fromStringToLocalTime(jamaahTimeCloudModel.value?.asr)
 
             magribJamaahTime?.let { mjt ->
                 it[MAGHRIB_KEY] = fromStringToLocalTime(mjt)
             }
 
-            it[ISHA_KEY] = if (isTodayWeekend() && fireStoreWeekModel.value?.weekendIsha != null) {
-                fromStringToLocalTime(fireStoreWeekModel.value?.weekendIsha)
+            it[ISHA_KEY] = if (isTodayWeekend() && jamaahTimeCloudModel.value?.weekendIsha != null) {
+                fromStringToLocalTime(jamaahTimeCloudModel.value?.weekendIsha)
             } else {
-                fromStringToLocalTime(fireStoreWeekModel.value?.isha)
+                fromStringToLocalTime(jamaahTimeCloudModel.value?.isha)
             }
         }.toList().sortedBy {
             it.second

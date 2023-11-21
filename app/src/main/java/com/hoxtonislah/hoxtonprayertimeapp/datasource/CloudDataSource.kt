@@ -2,7 +2,7 @@ package com.hoxtonislah.hoxtonprayertimeapp.datasource
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.hoxtonislah.hoxtonprayertimeapp.models.FireStoreWeekModel
+import com.hoxtonislah.hoxtonprayertimeapp.models.JamaahTimeCloudModel
 import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.hoxtonislah.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getMostRecentFriday
@@ -19,8 +19,8 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
     private val collectionPrayers: CollectionReference
     private lateinit var listernerRegisteration: ListenerRegistration
 
-    private val _fireStoreWeekModel = MutableLiveData<FireStoreWeekModel?>()
-    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = _fireStoreWeekModel
+    private val _jamaahTimeCloudModel = MutableLiveData<JamaahTimeCloudModel?>()
+    val jamaahTimeCloudModel: LiveData<JamaahTimeCloudModel?> = _jamaahTimeCloudModel
 
     init {
         if (BuildConfig.DEBUG) {
@@ -35,7 +35,7 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
      * Listens to the prayer data from firestore
      * @param - adds the jamaah time to a map, and works out the next upcoming Jamaah
      * */
-    override fun getTodayJamaahTimes(workoutNextJamaah: () -> Unit) {
+    override fun getTodayJamaahTimesFromCloud(workoutNextJamaah: () -> Unit) {
         val queryMostRecentFriday =
             firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(
                 FRIDAY_DAY_KEY, getMostRecentFriday(
@@ -56,8 +56,8 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
 
           value?.let {
               if(it.documents.isNotEmpty()){
-                  _fireStoreWeekModel.value =
-                      value.documents[0].toObject(FireStoreWeekModel::class.java)
+                  _jamaahTimeCloudModel.value =
+                      value.documents[0].toObject(JamaahTimeCloudModel::class.java)
 
                   workoutNextJamaah()
               }
@@ -65,10 +65,10 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
         }
     }
 
-    override fun writeJamaahTimes() {
+    override fun writeJamaahTimesToCloud() {
         val lastWeekNumber = createDocumentReferenceIDForLastWeek()
 
-        val fireStoreWeekModel = FireStoreWeekModel(
+        val jamaahTimeCloudModel = JamaahTimeCloudModel(
             getMostRecentFriday(Clock.systemDefaultZone()),
             fajar = "06:30",
             dhuhr = "13:00",
@@ -80,7 +80,7 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
         )
         val docRef = collectionPrayers.document(lastWeekNumber)
 
-        docRef.set(fireStoreWeekModel).addOnCompleteListener {
+        docRef.set(jamaahTimeCloudModel).addOnCompleteListener {
             if (it.isSuccessful) {
                 if (BuildConfig.DEBUG) {
                     Timber.d("Data Saved")
@@ -94,7 +94,7 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
         }
     }
 
-    override suspend fun getPrayerBeginningTimesFromRemoteNetwork(localDate: LocalDate): LondonPrayersBeginningTimes {
+    override suspend fun getPrayerBeginTimesFromRemoteApi(localDate: LocalDate): LondonPrayersBeginningTimes {
         TODO("Not yet implemented")
     }
 

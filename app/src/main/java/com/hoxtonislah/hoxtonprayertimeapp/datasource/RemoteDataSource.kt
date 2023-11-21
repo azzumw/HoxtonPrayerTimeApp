@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 class RemoteDataSource(private val prayersApiService: PrayersApi) : PrayerDataSource {
 
-    override suspend fun getPrayerBeginningTimesFromRemoteNetwork(localDate: LocalDate): LondonPrayersBeginningTimes {
+    override suspend fun getPrayerBeginTimesFromRemoteApi(localDate: LocalDate): LondonPrayersBeginningTimes {
         return prayersApiService.retrofitService.getTodaysPrayerBeginningTimes(
             date = getTodayDate(
                localDate
@@ -30,11 +30,11 @@ class RemoteDataSource(private val prayersApiService: PrayersApi) : PrayerDataSo
         TODO("Not required")
     }
 
-    override fun getTodayJamaahTimes(workoutNextJamaah: () -> Unit) {
+    override fun getTodayJamaahTimesFromCloud(workoutNextJamaah: () -> Unit) {
         TODO("Not required")
     }
 
-    override fun writeJamaahTimes() {
+    override fun writeJamaahTimesToCloud() {
         TODO("Not required")
     }
 

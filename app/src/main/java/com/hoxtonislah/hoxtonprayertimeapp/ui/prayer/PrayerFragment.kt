@@ -42,7 +42,7 @@ class PrayerFragment : Fragment() {
             if (it == ApiStatus.DONE) hideCards(false) else hideCards()
         }
 
-        prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
+        prayerViewModel.jamaahTimeCloudModel.observe(viewLifecycleOwner) {
             it?.let {
                 if (isTodayFriday()) {
                     if (it.secondJummah != null) {
