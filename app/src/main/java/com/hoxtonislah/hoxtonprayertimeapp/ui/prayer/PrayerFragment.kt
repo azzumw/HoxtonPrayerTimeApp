@@ -39,21 +39,17 @@ class PrayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
-            if (it == ApiStatus.DONE) {
-                hideCards(false)
-            } else {
-                hideCards()
-            }
+            if (it == ApiStatus.DONE) hideCards(false) else hideCards()
         }
 
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             it?.let {
                 if (isTodayFriday()) {
                     if (it.secondJummah != null) {
-                        replaceDhuhrViewWithJummahViewIfSecondJummahExists(true)
+                        swapDhuhrViewForTwoJummahView(true)
 
                     } else {
-                        replaceDhuhrViewWithJummahViewIfSecondJummahExists()
+                        swapDhuhrViewForTwoJummahView()
                     }
                 } else {
                     binding.dhuhrTextview.text = getString(R.string.dhohar_text)
@@ -62,7 +58,7 @@ class PrayerFragment : Fragment() {
         }
     }
 
-    private fun replaceDhuhrViewWithJummahViewIfSecondJummahExists(secondJamaahExist: Boolean = false) {
+    private fun swapDhuhrViewForTwoJummahView(secondJamaahExist: Boolean = false) {
         binding.dhuhrTextview.text = getString(R.string.jummah_text)
         if (secondJamaahExist) {
             binding.dhuhrJamaatTimeTv.visibility = TextView.GONE

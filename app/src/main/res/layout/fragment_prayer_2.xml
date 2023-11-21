@@ -213,7 +213,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             tools:text="@string/dummy_time"
-                            android:text="@{viewModel.prayerBeginningTimesIn12HourFormat.fajr}"
+                            android:text="@{viewModel.prayerBeginTimesIn12HourFormat.fajr}"
                             android:textSize="18sp"
                             android:textColor="@color/gray"
                             android:gravity="center" />
@@ -275,7 +275,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.prayerBeginningTimesIn12HourFormat.dhuhr}"
+                            android:text="@{viewModel.prayerBeginTimesIn12HourFormat.dhuhr}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -366,7 +366,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.prayerBeginningTimesIn12HourFormat.asr}"
+                            android:text="@{viewModel.prayerBeginTimesIn12HourFormat.asr}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -425,7 +425,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.prayerBeginningTimesIn12HourFormat.magrib}"
+                            android:text="@{viewModel.prayerBeginTimesIn12HourFormat.magrib}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />
@@ -436,7 +436,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.prayerBeginningTimesIn12HourFormat.magribJamaah}"
+                            android:text="@{viewModel.prayerBeginTimesIn12HourFormat.magribJamaah}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textStyle="bold"
@@ -484,7 +484,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="@{viewModel.prayerBeginningTimesIn12HourFormat.isha}"
+                            android:text="@{viewModel.prayerBeginTimesIn12HourFormat.isha}"
                             tools:text="@string/dummy_time"
                             android:textSize="18sp"
                             android:textColor="@color/gray" />

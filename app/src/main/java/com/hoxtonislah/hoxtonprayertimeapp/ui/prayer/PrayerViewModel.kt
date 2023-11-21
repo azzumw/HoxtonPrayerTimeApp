@@ -76,28 +76,27 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         } else it?.to12hour(it.isha)
     }
 
-    private val prayerBeginTimesFromLocal = repository.todaysBeginningTimesFromDB
+    private val prayerBeginTimesFromLocal = repository.todayPrayerBeginTimesFromLocal
 
-    val prayerBeginningTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
+    val prayerBeginTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
         prayerBeginTimesFromLocal.map {
             it?.convertTo12hour()
         }
 
-    private val _londonApiStatus = MutableLiveData<ApiStatus>()
-    private val londonApiStatus: LiveData<ApiStatus>
-        get() = _londonApiStatus
+    private val _remoteApiStatus = MutableLiveData<ApiStatus>()
+    private val remoteApiStatus: LiveData<ApiStatus>
+        get() = _remoteApiStatus
 
     val apiStatusLiveMerger = MediatorLiveData<ApiStatus>()
 
-    //To highlight next prayer background view
+    //To highlight the 'Next Prayer' background
     val fajrListItemBackground: LiveData<Boolean> = nextJamaat.map {
         it.substringBefore(" ") == FAJR_KEY
     }
 
     val dhuhrListItemBackground: LiveData<Boolean> = nextJamaat.map {
         when {
-            it.contains(DHUHR_KEY) -> true
-            it.contains(JUMUAH_TEXT) -> true
+            it.contains(DHUHR_KEY) || it.contains(JUMUAH_TEXT) -> true
             else -> false
         }
     }
@@ -116,15 +115,18 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
     init {
         var count = 1
-        apiStatusLiveMerger.addSource(prayerBeginTimesFromLocal) {
-            if (it != null) {
-                getJamaahTimesFromCloud(it.magribJamaah)
-                apiStatusLiveMerger.value = ApiStatus.DONE
 
+        apiStatusLiveMerger.addSource(prayerBeginTimesFromLocal) { local ->
+            if (local != null) {
+                getJamaahTimesFromCloud(local.magribJamaah)
+                apiStatusLiveMerger.value = ApiStatus.DONE
             } else {
+
                 count++
+
                 getPrayerBeginTimesFromRemote()
-                apiStatusLiveMerger.addSource(londonApiStatus) { status ->
+
+                apiStatusLiveMerger.addSource(remoteApiStatus) { status ->
                     when (status) {
                         ApiStatus.LOADING -> {
                             apiStatusLiveMerger.value = ApiStatus.LOADING
@@ -140,25 +142,25 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
                     }
 
-                    if(count > 5){
-                        apiStatusLiveMerger.removeSource(londonApiStatus)
+                    if (count > 5) {
+                        apiStatusLiveMerger.removeSource(remoteApiStatus)
                     }
                 }
             }
 
-            if(count > 5){
+            if (count > 5) {
                 apiStatusLiveMerger.removeSource(prayerBeginTimesFromLocal)
             }
         }
 
         if (BuildConfig.DEBUG) {
-            repository.writeJamaahTimesToFireStore()
+            repository.writeJamaahTimesToCloud()
         }
     }
 
 
     private fun getPrayerBeginTimesFromRemote(todayLocalDate: LocalDate = LocalDate.now()) {
-        _londonApiStatus.value = ApiStatus.LOADING
+        _remoteApiStatus.value = ApiStatus.LOADING
         Timber.e("Im inside network method")
 
         viewModelScope.launch {
@@ -167,11 +169,11 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
                 val apiResult = repository.getPrayerBeginningTimesFromLondonApi(todayLocalDate)
 
-                _londonApiStatus.value = ApiStatus.DONE
+                _remoteApiStatus.value = ApiStatus.DONE
 
-                deleteYesterdayPrayerFromLocal()
+                deleteYesterdayPrayersFromLocal()
 
-                insertTodayPrayerIntoLocal(apiResult)
+                insertTodayPrayersIntoLocal(apiResult)
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
@@ -187,25 +189,25 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 if (BuildConfig.DEBUG) {
                     Timber.e("Network exception ${e.message}")
                 }
-                _londonApiStatus.value = ApiStatus.ERROR
+                _remoteApiStatus.value = ApiStatus.ERROR
                 Timber.e("Network exception ApiStatus set to ERROR")
             }
         }
     }
 
-    private fun getJamaahTimesFromCloud(mgb: String? = null) {
+    private fun getJamaahTimesFromCloud(maghribJamaahTime: String? = null) {
         repository.getJamaahTimesFromFireStore {
-            workoutNextJamaah(mgb)
+            workoutNextJamaah(maghribJamaahTime)
         }
     }
 
-    private fun insertTodayPrayerIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
+    private fun insertTodayPrayersIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
         viewModelScope.launch {
             repository.insertTodayPrayer(resultFromNetwork)
         }
     }
 
-    private fun deleteYesterdayPrayerFromLocal() {
+    private fun deleteYesterdayPrayersFromLocal() {
         viewModelScope.launch {
             repository.deleteYesterdayPrayer()
         }
@@ -217,24 +219,24 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     If the list is empty i.e. all prayers have been filtered out, then a Good Night
     message is displayed. At midnight, this cycle repeats.
      */
-    private fun workoutNextJamaah(prayerTime: String? = null) {
+    private fun workoutNextJamaah(maghribJamaahTime: String? = null) {
         //get the current time
 
         val tempPairNextJammah =
-            addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime).firstOrNull {
+            addJamaahTimesToMapReturnsChronologicallySortedList(maghribJamaahTime).firstOrNull {
                 LocalTime.now().isBefore(it.second)
             }
 
-        _nextJamaat.value = if (tempPairNextJammah != null) {
-            when (tempPairNextJammah.first) {
+        _nextJamaat.value = tempPairNextJammah?.let {
+            when (it.first) {
                 FIRST_JUMUAH_KEY -> {
                     "${
                         Html.fromHtml(
                             FIRST_SUPERSCRIPT,
                             Html.FROM_HTML_MODE_LEGACY
                         )
-                    } ${tempPairNextJammah.first.substringAfter(" ")} ${
-                        fromLocalTimeToString(tempPairNextJammah.second)
+                    } ${it.first.substringAfter(" ")} ${
+                        fromLocalTimeToString(it.second)
                     }"
                 }
 
@@ -244,21 +246,20 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                             SECOND_SUPERSCRIPT,
                             Html.FROM_HTML_MODE_LEGACY
                         )
-                    } ${tempPairNextJammah.first.substringAfter(" ")} ${
+                    } ${it.first.substringAfter(" ")} ${
                         fromLocalTimeToString(
-                            tempPairNextJammah.second
+                            it.second
                         )
                     }"
                 }
 
-                else -> "${tempPairNextJammah.first} ${fromLocalTimeToString(tempPairNextJammah.second)}"
-
+                else -> "${it.first} ${fromLocalTimeToString(it.second)}"
             }
 
-        } else GOOD_NIGHT_MSG
+        } ?: GOOD_NIGHT_MSG
     }
 
-    private fun addPrayersToMapForTheNextPrayerAndReturnSortedList(prayerTime: String?): List<Pair<String, LocalTime?>> {
+    private fun addJamaahTimesToMapReturnsChronologicallySortedList(magribJamaahTime: String?): List<Pair<String, LocalTime?>> {
         return nextPrayersMap.also {
 
             it[FAJR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.fajar)
@@ -276,7 +277,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
             it[ASR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.asr)
 
-            prayerTime?.let { mjt ->
+            magribJamaahTime?.let { mjt ->
                 it[MAGHRIB_KEY] = fromStringToLocalTime(mjt)
             }
 
