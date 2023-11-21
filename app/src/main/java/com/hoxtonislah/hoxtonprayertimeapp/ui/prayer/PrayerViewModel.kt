@@ -48,7 +48,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
     val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = repository.fireStoreWeekModel
 
-    val isTodayFriday: Boolean = isTodayFriday(LocalDate.now())
+    val isTodayFriday: Boolean = isTodayFriday()
 
     val fajarJamaah12hour: LiveData<String?> = fireStoreWeekModel.map {
         it?.to12hour(it.fajar)
@@ -76,10 +76,10 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         } else it?.to12hour(it.isha)
     }
 
-    private val londonPrayerBeginningTimesFromDB = repository.todaysBeginningTimesFromDB
+    private val prayerBeginTimesFromLocal = repository.todaysBeginningTimesFromDB
 
     val prayerBeginningTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
-        londonPrayerBeginningTimesFromDB.map {
+        prayerBeginTimesFromLocal.map {
             it?.convertTo12hour()
         }
 
@@ -116,9 +116,9 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
     init {
         var count = 1
-        apiStatusLiveMerger.addSource(londonPrayerBeginningTimesFromDB) {
+        apiStatusLiveMerger.addSource(prayerBeginTimesFromLocal) {
             if (it != null) {
-                getJamaahTimesFromFireStore(it.magribJamaah)
+                getJamaahTimesFromCloud(it.magribJamaah)
                 apiStatusLiveMerger.value = ApiStatus.DONE
 
             } else {
@@ -147,7 +147,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
             }
 
             if(count > 5){
-                apiStatusLiveMerger.removeSource(londonPrayerBeginningTimesFromDB)
+                apiStatusLiveMerger.removeSource(prayerBeginTimesFromLocal)
             }
         }
 
@@ -169,7 +169,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
                 _londonApiStatus.value = ApiStatus.DONE
 
-                deleteYesterdayDataFromLocal()
+                deleteYesterdayPrayerFromLocal()
 
                 insertTodayPrayerIntoLocal(apiResult)
 
@@ -193,7 +193,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    private fun getJamaahTimesFromFireStore(mgb: String? = null) {
+    private fun getJamaahTimesFromCloud(mgb: String? = null) {
         repository.getJamaahTimesFromFireStore {
             workoutNextJamaah(mgb)
         }
@@ -205,7 +205,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    private fun deleteYesterdayDataFromLocal() {
+    private fun deleteYesterdayPrayerFromLocal() {
         viewModelScope.launch {
             repository.deleteYesterdayPrayer()
         }
@@ -263,7 +263,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
             it[FAJR_KEY] = fromStringToLocalTime(fireStoreWeekModel.value?.fajar)
 
-            if (isTodayFriday(LocalDate.now())) {
+            if (isTodayFriday()) {
                 it[FIRST_JUMUAH_KEY] =
                     fromStringToLocalTime(fireStoreWeekModel.value?.firstJummah)
                 if (fireStoreWeekModel.value?.secondJummah != null) {

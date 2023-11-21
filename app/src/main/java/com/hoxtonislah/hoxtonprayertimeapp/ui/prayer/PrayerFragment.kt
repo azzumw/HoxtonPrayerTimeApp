@@ -12,7 +12,6 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.R
 import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.time.LocalDate
 
 class PrayerFragment : Fragment() {
 
@@ -42,7 +41,6 @@ class PrayerFragment : Fragment() {
         prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
             if (it == ApiStatus.DONE) {
                 hideCards(false)
-
             } else {
                 hideCards()
             }
@@ -50,7 +48,7 @@ class PrayerFragment : Fragment() {
 
         prayerViewModel.fireStoreWeekModel.observe(viewLifecycleOwner) {
             it?.let {
-                if (isTodayFriday(LocalDate.now())) {
+                if (isTodayFriday()) {
                     if (it.secondJummah != null) {
                         replaceDhuhrViewWithJummahViewIfSecondJummahExists(true)
 

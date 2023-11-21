@@ -102,7 +102,7 @@ fun createDocumentReferenceIDForLastWeek() =
     "${getLastWeek()}_${LocalDate.now().year}"
 
 
-fun isTodayFriday(localDate: LocalDate) = localDate.dayOfWeek == DayOfWeek.FRIDAY
+fun isTodayFriday(localDate: LocalDate = LocalDate.now()) = localDate.dayOfWeek == DayOfWeek.FRIDAY
 
 fun isTodayWeekend(localDate: LocalDate = LocalDate.now()) = ((localDate.dayOfWeek == DayOfWeek.SATURDAY) || (localDate.dayOfWeek == DayOfWeek.SUNDAY))
 
