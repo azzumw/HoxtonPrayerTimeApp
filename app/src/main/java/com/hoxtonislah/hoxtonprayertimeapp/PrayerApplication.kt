@@ -2,7 +2,7 @@ package com.hoxtonislah.hoxtonprayertimeapp
 
 import android.app.Application
 import com.hoxtonislah.hoxtonprayertimeapp.database.PrayerBeginningTimesDatabase
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.FireStoreDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.datasource.CloudDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.LocalDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.RemoteDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.network.PrayersApi
@@ -29,7 +29,7 @@ class PrayerApplication : Application() {
 
             single { RemoteDataSource(PrayersApi) }
             single { LocalDataSource(database.prayerDao) }
-            single { FireStoreDataSource(FirebaseFirestore.getInstance()) }
+            single { CloudDataSource(FirebaseFirestore.getInstance()) }
             single { Repository(get(),get(), get()) }
             viewModel { PrayerViewModel(get()) }
         }

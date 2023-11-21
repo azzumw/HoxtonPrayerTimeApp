@@ -14,7 +14,7 @@ import timber.log.Timber
 import java.time.Clock
 import java.time.LocalDate
 
-class FireStoreDataSource(private val firestore: FirebaseFirestore) : PrayerDataSource {
+class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSource {
 
     private val collectionPrayers: CollectionReference
     private lateinit var listernerRegisteration: ListenerRegistration

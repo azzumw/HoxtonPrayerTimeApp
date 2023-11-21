@@ -1,7 +1,7 @@
 package com.hoxtonislah.hoxtonprayertimeapp.repository
 
 import androidx.lifecycle.LiveData
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.FireStoreDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.datasource.CloudDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.LocalDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.RemoteDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.models.FireStoreWeekModel
@@ -15,11 +15,11 @@ import java.time.LocalDate
 class Repository(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-    private val fireStoreDataSource: FireStoreDataSource,
+    private val cloudDataSource: CloudDataSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = fireStoreDataSource.fireStoreWeekModel
+    val fireStoreWeekModel: LiveData<FireStoreWeekModel?> = cloudDataSource.fireStoreWeekModel
 
     val todayPrayerBeginTimesFromLocal: LiveData<LondonPrayersBeginningTimes?> =
         localDataSource.todayPrayersFromLocalDataSource
@@ -50,12 +50,12 @@ class Repository(
     }
 
     fun getJamaahTimesFromFireStore(workoutNextJamaah: () -> Unit) =
-        fireStoreDataSource.getTodayJamaahTimes(workoutNextJamaah)
+        cloudDataSource.getTodayJamaahTimes(workoutNextJamaah)
 
 
     fun writeJamaahTimesToCloud() =
-        fireStoreDataSource.writeJamaahTimes()
+        cloudDataSource.writeJamaahTimes()
 
-    fun clear() = fireStoreDataSource.clear()
+    fun clear() = cloudDataSource.clear()
 
 }
