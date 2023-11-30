@@ -11,7 +11,10 @@ import androidx.databinding.DataBindingUtil
 import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.R
 import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
+import com.hoxtonislah.hoxtonprayertimeapp.utils.liveDate
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
+import java.time.LocalDate
 
 class PrayerFragment : Fragment() {
 
@@ -56,6 +59,30 @@ class PrayerFragment : Fragment() {
                 }
             }
         }
+
+        prayerViewModel.prayerBeginTimesFromLocal.observe(viewLifecycleOwner) {
+            Timber.e("date: ${it?.date} / $liveDate")
+            it?.let {
+                if (liveDate.toString() != it.date) {
+                    Timber.e("Deleting old data with date ${it.date}")
+                    prayerViewModel.clearDataFromLocal()
+                    prayerViewModel.updateTheDates()
+                }
+            }
+        }
+
+//        prayerViewModel.prayerBeginTimesFromLocal.observe(viewLifecycleOwner){
+//            if(it == null){
+//                prayerViewModel.getPrayerBeginTimesFromRemote(LocalDate.now())
+//            }
+//        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        liveDate = LocalDate.now()
+        Timber.e("OnResume: $liveDate")
+//        prayerViewModel.getBeginTimesFromLocal(LocalDate.now())
     }
 
     private fun swapDhuhrViewForTwoJummahView(secondJamaahExist: Boolean = false) {

@@ -39,7 +39,7 @@ class DateUtilsTest {
         val localDate = LocalDate.now(fixedClock)
 
         //WHEN - getTodayDate is invoked
-        val result = getTodayDate(localDate)
+        val result = getTodayDateInString(localDate)
 
         //THEN - assert that it returns the same date 2023-08-08
         val expectedDate = "2023-08-08"

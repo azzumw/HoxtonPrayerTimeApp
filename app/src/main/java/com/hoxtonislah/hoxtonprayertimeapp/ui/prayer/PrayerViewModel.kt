@@ -15,9 +15,9 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.fromLocalTimeToString
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromStringToLocalTime
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getCurrentGregorianDate
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getCurrentIslamicDate
-import com.hoxtonislah.hoxtonprayertimeapp.utils.getTodayDate
 import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
+import com.hoxtonislah.hoxtonprayertimeapp.utils.liveDate
 import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayWeekend
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -76,10 +76,14 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         } else it?.to12hour(it.isha)
     }
 
-    private val prayerBeginTimesFromLocal = repository.todayPrayerBeginTimesFromLocal
+    val prayerBeginTimesFromLocal = repository.todayPrayerBeginTimesFromLocal
+
+//    private val _prayerBeginTimesFromLocal = MutableLiveData<LondonPrayersBeginningTimes?>()
+//    val prayerBeginTimesFromLocal:LiveData<LondonPrayersBeginningTimes?> get() = _prayerBeginTimesFromLocal
 
     val prayerBeginTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
         prayerBeginTimesFromLocal.map {
+
             it?.convertTo12hour()
         }
 
@@ -114,42 +118,33 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
     init {
-        var count = 1
 
         apiStatusLiveMerger.addSource(prayerBeginTimesFromLocal) { local ->
             if (local != null) {
+                Timber.e("local not null")
                 getJamaahTimesFromCloud(local.magribJamaah)
                 apiStatusLiveMerger.value = ApiStatus.DONE
             } else {
-
-                count++
-
+                Timber.e("ViewModel: $liveDate")
+                Timber.e("ViewModel: local null")
                 getPrayerBeginTimesFromRemote()
-
-                apiStatusLiveMerger.addSource(remoteApiStatus) { status ->
-                    when (status) {
-                        ApiStatus.LOADING -> {
-                            apiStatusLiveMerger.value = ApiStatus.LOADING
-                        }
-
-                        ApiStatus.ERROR -> {
-                            apiStatusLiveMerger.value = ApiStatus.ERROR
-                        }
-
-                        else -> {
-                            apiStatusLiveMerger.value = ApiStatus.DONE
-                        }
-
-                    }
-
-                    if (count > 5) {
-                        apiStatusLiveMerger.removeSource(remoteApiStatus)
-                    }
-                }
             }
+        }
 
-            if (count > 5) {
-                apiStatusLiveMerger.removeSource(prayerBeginTimesFromLocal)
+        apiStatusLiveMerger.addSource(remoteApiStatus) { status ->
+            when (status) {
+
+                ApiStatus.LOADING -> {
+                    apiStatusLiveMerger.value = ApiStatus.LOADING
+                }
+
+                ApiStatus.ERROR -> {
+                    apiStatusLiveMerger.value = ApiStatus.ERROR
+                }
+
+                else -> {
+                    apiStatusLiveMerger.value = ApiStatus.DONE
+                }
             }
         }
 
@@ -158,42 +153,56 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-
-    private fun getPrayerBeginTimesFromRemote(todayLocalDate: LocalDate = LocalDate.now()) {
+      private fun getPrayerBeginTimesFromRemote() {
         _remoteApiStatus.value = ApiStatus.LOADING
         Timber.e("Im inside network method")
+        Timber.e("Im inside network: $liveDate")
+
 
         viewModelScope.launch {
 
             try {
 
-                val apiResult = repository.getBeginPrayerTimesFromRemote(todayLocalDate)
+                val apiResult = repository.getBeginPrayerTimesFromRemote(liveDate)
 
                 _remoteApiStatus.value = ApiStatus.DONE
 
-                deleteYesterdayPrayersFromLocal()
+                clearDataFromLocal()
 
                 insertTodayPrayersIntoLocal(apiResult)
+
+//                deleteYesterdayPrayersFromLocal(liveDate)
+
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
                 repository.updateMaghribJamaahTimeForTodayPrayerLocal(
                     maghribJamaahTime = mjt,
-                    todayLocalDate = getTodayDate(todayLocalDate)
+                    todayLocalDate = liveDate.toString()
                 )
+
+//                getBeginTimesFromLocal(liveDate)
             } catch (dateTimeException: DateTimeParseException) {
                 if (BuildConfig.DEBUG) {
                     Timber.e("Date parsing exception ${dateTimeException.message}")
+
                 }
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     Timber.e("Network exception ${e.message}")
                 }
                 _remoteApiStatus.value = ApiStatus.ERROR
+
                 Timber.e("Network exception ApiStatus set to ERROR")
             }
         }
     }
+
+//    fun getBeginTimesFromLocal(todayLocalDate: LocalDate){
+//        viewModelScope.launch {
+//            _prayerBeginTimesFromLocal.value = repository.getBeginPrayerTimesFromLocal(todayLocalDate)
+//        }
+//    }
 
     private fun getJamaahTimesFromCloud(maghribJamaahTime: String? = null) {
         repository.getJamaahTimesFromCloud {
@@ -207,10 +216,21 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    private fun deleteYesterdayPrayersFromLocal() {
+     fun deleteYesterdayPrayersFromLocal(localDate: LocalDate = LocalDate.now()) {
         viewModelScope.launch {
-            repository.deleteYesterdayBeginPrayerTimesFromLocal()
+            repository.deleteYesterdayBeginPrayerTimesFromLocal(localDate)
         }
+    }
+
+    fun clearDataFromLocal(){
+        viewModelScope.launch {
+            repository.clearLocalData()
+        }
+    }
+
+    fun updateTheDates(){
+        _islamicTodayDate.value = getCurrentIslamicDate()
+        _gregoryTodayDate.value = getCurrentGregorianDate()
     }
 
 
@@ -281,11 +301,12 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 it[MAGHRIB_KEY] = fromStringToLocalTime(mjt)
             }
 
-            it[ISHA_KEY] = if (isTodayWeekend() && jamaahTimeCloudModel.value?.weekendIsha != null) {
-                fromStringToLocalTime(jamaahTimeCloudModel.value?.weekendIsha)
-            } else {
-                fromStringToLocalTime(jamaahTimeCloudModel.value?.isha)
-            }
+            it[ISHA_KEY] =
+                if (isTodayWeekend() && jamaahTimeCloudModel.value?.weekendIsha != null) {
+                    fromStringToLocalTime(jamaahTimeCloudModel.value?.weekendIsha)
+                } else {
+                    fromStringToLocalTime(jamaahTimeCloudModel.value?.isha)
+                }
         }.toList().sortedBy {
             it.second
         }

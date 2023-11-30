@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.hoxtonislah.hoxtonprayertimeapp.database.PrayerDao
 import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
-import com.hoxtonislah.hoxtonprayertimeapp.utils.getTodayDate
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,9 +15,7 @@ class LocalDataSource(
 ) : PrayerDataSource {
 
     val todayPrayersFromLocalDataSource: LiveData<LondonPrayersBeginningTimes?> =
-        prayerDao.getTodayPrayers(
-            getTodayDate(LocalDate.now())
-        ).asLiveData()
+        prayerDao.getTodayPrayers().asLiveData()
 
     override suspend fun insertTodayPrayerToLocalDataSource(todayPrayerFromApi: LondonPrayersBeginningTimes) {
         withContext(ioDispatcher) {
@@ -26,9 +23,21 @@ class LocalDataSource(
         }
     }
 
+//    suspend fun getTodayPrayerFromLocalDataSource(todayLocalDate: LocalDate):LondonPrayersBeginningTimes?{
+//        return withContext(ioDispatcher){
+//            prayerDao.getTodayPrayers(todayLocalDate.toString())
+//        }
+//    }
+
     override suspend fun deleteYesterdayPrayerFromLocalDataSource(yesterdayDate: String) {
         withContext(ioDispatcher) {
             prayerDao.deleteYesterdayPrayers(yesterdayDate)
+        }
+    }
+
+    suspend fun clearDatabase(){
+        withContext(ioDispatcher){
+            prayerDao.clear()
         }
     }
 

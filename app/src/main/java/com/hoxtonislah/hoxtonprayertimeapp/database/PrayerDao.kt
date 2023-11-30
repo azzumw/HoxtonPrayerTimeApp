@@ -13,8 +13,8 @@ interface PrayerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPrayer(prayers: LondonPrayersBeginningTimes)
 
-    @Query("select * from london_prayers_beginning_times where date =:today")
-    fun getTodayPrayers(today:String): Flow<LondonPrayersBeginningTimes>
+    @Query("select * from london_prayers_beginning_times")
+    fun getTodayPrayers(): Flow<LondonPrayersBeginningTimes?>
 
     @Query("update london_prayers_beginning_times set magribJamaah = :magribJamaahTime where date = :todayDate ")
     suspend fun updateMaghribJamaah(magribJamaahTime:String?,todayDate:String)
