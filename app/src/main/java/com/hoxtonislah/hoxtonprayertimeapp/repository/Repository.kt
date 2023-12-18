@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import timber.log.Timber
 
 class Repository(
     private val remoteDataSource: RemoteDataSource,
@@ -38,8 +39,8 @@ class Repository(
         }
     }
 
-    suspend fun clearLocalData(){
-        withContext(ioDispatcher){
+    suspend fun clearLocalData() {
+        withContext(ioDispatcher) {
             localDataSource.clearDatabase()
         }
     }
@@ -50,7 +51,10 @@ class Repository(
         }
     }
 
-    suspend fun updateMaghribJamaahTimeForTodayPrayerLocal(maghribJamaahTime: String?, todayLocalDate: String) {
+    suspend fun updateMaghribJamaahTimeForTodayPrayerLocal(
+        maghribJamaahTime: String?,
+        todayLocalDate: String
+    ) {
         withContext(ioDispatcher) {
             localDataSource.updateMaghribJamaahTimeInLocalDataSource(
                 maghribJamaahTime = maghribJamaahTime,
@@ -59,8 +63,10 @@ class Repository(
         }
     }
 
-    fun getJamaahTimesFromCloud(workoutNextJamaah: () -> Unit) =
+    fun getJamaahTimesFromCloud(workoutNextJamaah: () -> Unit) {
+        Timber.e("Repository: getJamaahTimesFromCloud ")
         cloudDataSource.getTodayJamaahTimesFromCloud(workoutNextJamaah)
+    }
 
 
     fun writeJamaahTimesToCloud() =
@@ -69,3 +75,5 @@ class Repository(
     fun clear() = cloudDataSource.clear()
 
 }
+
+

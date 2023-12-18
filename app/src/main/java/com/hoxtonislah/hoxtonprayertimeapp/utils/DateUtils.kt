@@ -15,6 +15,7 @@ private const val GREGORIAN_DATE_FORMAT = "EEE dd MMM yyyy"
 private const val UMAL_QURAH_CALENDER = "@calendar=islamic-umalqura"
 
 var liveDate: LocalDate = LocalDate.now()
+var liveTime: LocalTime = LocalTime.now()
 
 
 fun getCurrentGregorianDate(localDate: LocalDate = liveDate): String =
@@ -56,7 +57,8 @@ private fun getIslamicMonth(month: Int): String {
  * If today day of the week is friday then returns today, else returns last weeks friday.
  * */
 fun getMostRecentFriday(clock: Clock): String {
-    val todayDate = LocalDate.now(clock)
+//    val todayDate = LocalDate.now(clock)
+    val todayDate = liveDate
     val fridayDate: LocalDate
 
     when (todayDate.dayOfWeek) {
@@ -105,9 +107,9 @@ fun createDocumentReferenceIDForLastWeek() =
     "${getLastWeek()}_${LocalDate.now().year}"
 
 
-fun isTodayFriday(localDate: LocalDate = LocalDate.now()) = localDate.dayOfWeek == DayOfWeek.FRIDAY
+fun isTodayFriday(localDate: LocalDate = liveDate) = localDate.dayOfWeek == DayOfWeek.FRIDAY
 
-fun isTodayWeekend(localDate: LocalDate = LocalDate.now()) = ((localDate.dayOfWeek == DayOfWeek.SATURDAY) || (localDate.dayOfWeek == DayOfWeek.SUNDAY))
+fun isTodayWeekend(localDate: LocalDate = liveDate) = ((localDate.dayOfWeek == DayOfWeek.SATURDAY) || (localDate.dayOfWeek == DayOfWeek.SUNDAY))
 
 fun fromStringToLocalTime(timeinString: String?, plusMinutes: Long = 0L) = timeinString?.let {
     LocalTime.parse(timeinString).plusMinutes(plusMinutes)

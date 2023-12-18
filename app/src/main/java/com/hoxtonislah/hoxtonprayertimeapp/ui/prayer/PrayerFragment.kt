@@ -1,6 +1,10 @@
 package com.hoxtonislah.hoxtonprayertimeapp.ui.prayer
 
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,13 +12,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.R
 import com.hoxtonislah.hoxtonprayertimeapp.databinding.FragmentPrayer2Binding
 import com.hoxtonislah.hoxtonprayertimeapp.utils.liveDate
+import com.hoxtonislah.hoxtonprayertimeapp.utils.liveTime
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.time.LocalDate
+import java.time.LocalTime
+
+private const val TAG = "PrayerFragment"
 
 class PrayerFragment : Fragment() {
 
@@ -22,6 +32,29 @@ class PrayerFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val prayerViewModel: PrayerViewModel by viewModel()
+
+    private val br = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+
+            when (val action = intent?.action) {
+
+                Intent.ACTION_TIME_CHANGED -> {
+                    Timber.e(action.toString())
+                    liveDate = LocalDate.now()
+                    liveTime = LocalTime.now()
+
+                    //unsure whether this is a reliable approach
+                    lifecycleScope.launch {
+                        Timber.tag(TAG).e("on Broadcast...Deleting data...")
+                        prayerViewModel.clearDataFromLocal()
+                    }
+                    prayerViewModel.updateTheDates()
+
+                }
+            }
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +74,19 @@ class PrayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        activity?.applicationContext?.registerReceiver(br, IntentFilter().apply {
+            addAction(Intent.ACTION_TIME_CHANGED)
+        })
+
         prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
             if (it == ApiStatus.DONE) hideCards(false) else hideCards()
         }
 
         prayerViewModel.jamaahTimeCloudModel.observe(viewLifecycleOwner) {
             it?.let {
+                Timber.e(it.dhuhr)
                 if (isTodayFriday()) {
+                    Timber.e("ITS FRIDAY")
                     if (it.secondJummah != null) {
                         swapDhuhrViewForTwoJummahView(true)
 
@@ -55,18 +94,9 @@ class PrayerFragment : Fragment() {
                         swapDhuhrViewForTwoJummahView()
                     }
                 } else {
+                    Timber.e("NO FRIDAY")
+                    swapDhuhrViewForTwoJummahView()
                     binding.dhuhrTextview.text = getString(R.string.dhohar_text)
-                }
-            }
-        }
-
-        prayerViewModel.prayerBeginTimesFromLocal.observe(viewLifecycleOwner) {
-            Timber.e("date: ${it?.date} / $liveDate")
-            it?.let {
-                if (liveDate.toString() != it.date) {
-                    Timber.e("Deleting old data with date ${it.date}")
-                    prayerViewModel.clearDataFromLocal()
-                    prayerViewModel.updateTheDates()
                 }
             }
         }
@@ -76,11 +106,21 @@ class PrayerFragment : Fragment() {
 //                prayerViewModel.getPrayerBeginTimesFromRemote(LocalDate.now())
 //            }
 //        }
+
+
+        prayerViewModel.prayerBeginTimesFromLocal.observe(viewLifecycleOwner){
+            it?.let {
+                if(liveDate.toString() != it.date){
+                    prayerViewModel.clearDataFromLocal()
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         liveDate = LocalDate.now()
+        liveTime = LocalTime.now()
         Timber.e("OnResume: $liveDate")
 //        prayerViewModel.getBeginTimesFromLocal(LocalDate.now())
     }
@@ -106,8 +146,9 @@ class PrayerFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        activity?.applicationContext?.unregisterReceiver(br)
         _binding = null
     }
 }

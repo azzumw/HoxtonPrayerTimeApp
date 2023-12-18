@@ -36,6 +36,7 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
      * @param - adds the jamaah time to a map, and works out the next upcoming Jamaah
      * */
     override fun getTodayJamaahTimesFromCloud(workoutNextJamaah: () -> Unit) {
+        Timber.e("CloudDS: getJamaahTimesFromCloud ")
         val queryMostRecentFriday =
             firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(
                 FRIDAY_DAY_KEY, getMostRecentFriday(
@@ -56,6 +57,7 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
 
           value?.let {
               if(it.documents.isNotEmpty()){
+                  Timber.e("_jammahCloudmodel being set")
                   _jamaahTimeCloudModel.value =
                       value.documents[0].toObject(JamaahTimeCloudModel::class.java)
 

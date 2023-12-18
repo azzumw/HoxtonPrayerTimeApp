@@ -19,6 +19,7 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayFriday
 import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
 import com.hoxtonislah.hoxtonprayertimeapp.utils.liveDate
 import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayWeekend
+import com.hoxtonislah.hoxtonprayertimeapp.utils.liveTime
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
@@ -48,7 +49,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
     val jamaahTimeCloudModel: LiveData<JamaahTimeCloudModel?> = repository.jamaahTimeCloudModel
 
-    val isTodayFriday: Boolean = isTodayFriday()
+    var isTodayFriday: Boolean = isTodayFriday(liveDate)
 
     val fajarJamaah12hour: LiveData<String?> = jamaahTimeCloudModel.map {
         it?.to12hour(it.fajar)
@@ -128,6 +129,11 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 Timber.e("ViewModel: $liveDate")
                 Timber.e("ViewModel: local null")
                 getPrayerBeginTimesFromRemote()
+                nextPrayersMap.clear()
+                isTodayFriday = isTodayFriday(liveDate)
+                if (BuildConfig.DEBUG) {
+                    repository.writeJamaahTimesToCloud()
+                }
             }
         }
 
@@ -147,10 +153,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
         }
-
-        if (BuildConfig.DEBUG) {
-            repository.writeJamaahTimesToCloud()
-        }
     }
 
       private fun getPrayerBeginTimesFromRemote() {
@@ -167,12 +169,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
                 _remoteApiStatus.value = ApiStatus.DONE
 
-                clearDataFromLocal()
-
-                insertTodayPrayersIntoLocal(apiResult)
-
-//                deleteYesterdayPrayersFromLocal(liveDate)
-
+                insertTodayBeginPrayerTimesIntoLocal(apiResult)
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
@@ -205,12 +202,13 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 //    }
 
     private fun getJamaahTimesFromCloud(maghribJamaahTime: String? = null) {
+        Timber.e("VM: getJamaahTimesFromCloud ")
         repository.getJamaahTimesFromCloud {
             workoutNextJamaah(maghribJamaahTime)
         }
     }
 
-    private fun insertTodayPrayersIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
+    private fun insertTodayBeginPrayerTimesIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
         viewModelScope.launch {
             repository.insertTodayBeginPrayerTimesIntoLocal(resultFromNetwork)
         }
@@ -244,7 +242,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
         val tempPairNextJammah =
             addJamaahTimesToMapReturnsChronologicallySortedList(maghribJamaahTime).firstOrNull {
-                LocalTime.now().isBefore(it.second)
+                liveTime.isBefore(it.second)
             }
 
         _nextJamaat.value = tempPairNextJammah?.let {
@@ -285,6 +283,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
             it[FAJR_KEY] = fromStringToLocalTime(jamaahTimeCloudModel.value?.fajar)
 
             if (isTodayFriday()) {
+                Timber.e("VM: isTodayFriday = true")
                 it[FIRST_JUMUAH_KEY] =
                     fromStringToLocalTime(jamaahTimeCloudModel.value?.firstJummah)
                 if (jamaahTimeCloudModel.value?.secondJummah != null) {
@@ -292,6 +291,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                         fromStringToLocalTime(jamaahTimeCloudModel.value?.secondJummah)
                 }
             } else {
+                Timber.e("VM: isTodayFriday = false")
                 it[DHUHR_KEY] = fromStringToLocalTime(jamaahTimeCloudModel.value?.dhuhr)
             }
 
