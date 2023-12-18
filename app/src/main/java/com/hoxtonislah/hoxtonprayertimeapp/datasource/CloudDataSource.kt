@@ -39,9 +39,7 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
         Timber.e("CloudDS: getJamaahTimesFromCloud ")
         val queryMostRecentFriday =
             firestore.collection(COLLECTIONS_PRAYERS).whereEqualTo(
-                FRIDAY_DAY_KEY, getMostRecentFriday(
-                    Clock.systemDefaultZone()
-                )
+                FRIDAY_DAY_KEY, getMostRecentFriday()
             )
 
         listernerRegisteration = queryMostRecentFriday.addSnapshotListener { value, error ->
@@ -71,7 +69,7 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
         val lastWeekNumber = createDocumentReferenceIDForLastWeek()
 
         val jamaahTimeCloudModel = JamaahTimeCloudModel(
-            getMostRecentFriday(Clock.systemDefaultZone()),
+            getMostRecentFriday(),
             fajar = "06:30",
             dhuhr = "13:00",
             asr = "14:45",

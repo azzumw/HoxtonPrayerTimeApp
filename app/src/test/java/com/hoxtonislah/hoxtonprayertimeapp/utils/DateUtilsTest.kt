@@ -132,7 +132,7 @@ class DateUtilsTest {
             Clock.fixed(Instant.parse("2023-08-08T00:00:00.00Z"), ZoneId.systemDefault())
 
         //WHEN - getLastOrTodayFridayDate is invoked
-        val result = getMostRecentFriday(fixedClock)
+        val result = getMostRecentFriday(LocalDate.now(fixedClock))
 
         //THEN - assert that the date returned is Fri 4th Aug
         val expectedLastFridayDate = "2023-08-04"
@@ -147,7 +147,7 @@ class DateUtilsTest {
             Clock.fixed(Instant.parse("2023-09-15T00:00:00.00Z"), ZoneId.systemDefault())
 
         // WHEN - getLastOrTodayFridayDate is invoked
-        val result = getMostRecentFriday(fixedClock)
+        val result = getMostRecentFriday(LocalDate.now(fixedClock))
 
         // THEN - assert that the date returned is 15th Sept 2023
         val expectedFridayDate = "2023-09-15"

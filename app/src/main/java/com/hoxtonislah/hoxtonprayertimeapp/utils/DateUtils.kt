@@ -56,9 +56,9 @@ private fun getIslamicMonth(month: Int): String {
  * This method returns the most recent friday based on today's day of the week.
  * If today day of the week is friday then returns today, else returns last weeks friday.
  * */
-fun getMostRecentFriday(clock: Clock): String {
+fun getMostRecentFriday(localDate: LocalDate = liveDate): String {
 //    val todayDate = LocalDate.now(clock)
-    val todayDate = liveDate
+    val todayDate = localDate
     val fridayDate: LocalDate
 
     when (todayDate.dayOfWeek) {
