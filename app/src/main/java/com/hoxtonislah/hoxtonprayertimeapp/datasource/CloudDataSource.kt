@@ -48,8 +48,8 @@ class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSour
             if (error != null) {
                 if (BuildConfig.DEBUG) {
                     Timber.d("Listen failed. $error")
+                    Timber.e("Error")
                 }
-                Timber.e("Errorro")
                 return@addSnapshotListener
             }
 
