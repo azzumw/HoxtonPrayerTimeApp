@@ -24,8 +24,6 @@ import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalTime
 
-private const val TAG = "PrayerFragment"
-
 class PrayerFragment : Fragment() {
 
     private var _binding: FragmentPrayer2Binding? = null
@@ -35,25 +33,18 @@ class PrayerFragment : Fragment() {
 
     private val br = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            liveDate = LocalDate.now()
+            liveTime = LocalTime.now()
 
-            when (val action = intent?.action) {
-
-                Intent.ACTION_TIME_CHANGED -> {
-                    Timber.e(action.toString())
-                    liveDate = LocalDate.now()
-                    liveTime = LocalTime.now()
-
-                    //unsure whether this is a reliable approach
+            when (intent?.action) {
+                Intent.ACTION_DATE_CHANGED -> {
                     lifecycleScope.launch {
-                        Timber.tag(TAG).e("on Broadcast...Deleting data...")
                         prayerViewModel.clearDataFromLocal()
                     }
                     prayerViewModel.updateTheDates()
-
                 }
             }
         }
-
     }
 
     override fun onCreateView(
@@ -76,6 +67,8 @@ class PrayerFragment : Fragment() {
 
         activity?.applicationContext?.registerReceiver(br, IntentFilter().apply {
             addAction(Intent.ACTION_TIME_CHANGED)
+            addAction(Intent.ACTION_TIME_TICK)
+            addAction(Intent.ACTION_DATE_CHANGED)
         })
 
         prayerViewModel.apiStatusLiveMerger.observe(viewLifecycleOwner) {
@@ -108,9 +101,10 @@ class PrayerFragment : Fragment() {
 //        }
 
 
-        prayerViewModel.prayerBeginTimesFromLocal.observe(viewLifecycleOwner){
+        //this takes care of updating data, when the app is not running.
+        prayerViewModel.prayerBeginTimesFromLocal.observe(viewLifecycleOwner) {
             it?.let {
-                if(liveDate.toString() != it.date){
+                if (liveDate.toString() != it.date) {
                     prayerViewModel.clearDataFromLocal()
                 }
             }
@@ -121,7 +115,6 @@ class PrayerFragment : Fragment() {
         super.onResume()
         liveDate = LocalDate.now()
         liveTime = LocalTime.now()
-        Timber.e("OnResume: $liveDate")
 //        prayerViewModel.getBeginTimesFromLocal(LocalDate.now())
     }
 
