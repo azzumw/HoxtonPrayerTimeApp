@@ -37,7 +37,7 @@ class PrayerFragment : Fragment() {
             liveTime = LocalTime.now()
 
             when (intent?.action) {
-                Intent.ACTION_DATE_CHANGED -> {
+                Intent.ACTION_DATE_CHANGED,Intent.ACTION_TIME_CHANGED -> {
                     lifecycleScope.launch {
                         prayerViewModel.clearDataFromLocal()
                     }
@@ -67,7 +67,7 @@ class PrayerFragment : Fragment() {
 
         activity?.applicationContext?.registerReceiver(br, IntentFilter().apply {
             addAction(Intent.ACTION_TIME_CHANGED)
-            addAction(Intent.ACTION_TIME_TICK)
+//            addAction(Intent.ACTION_TIME_TICK)
             addAction(Intent.ACTION_DATE_CHANGED)
         })
 
