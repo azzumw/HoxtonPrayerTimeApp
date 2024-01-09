@@ -22,7 +22,6 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayWeekend
 import com.hoxtonislah.hoxtonprayertimeapp.utils.liveTime
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeParseException
 
@@ -84,7 +83,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
     val prayerBeginTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
         prayerBeginTimesFromLocal.map {
-
             it?.convertTo12hour()
         }
 
@@ -123,12 +121,12 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         apiStatusLiveMerger.addSource(prayerBeginTimesFromLocal) { local ->
             if (local != null) {
                 Timber.e("local not null")
-                getJamaahTimesFromCloud(local.magribJamaah)
+                getTodayPrayerJamaahTimesFromCloudDataSource(local.magribJamaah)
                 apiStatusLiveMerger.value = ApiStatus.DONE
             } else {
                 Timber.e("ViewModel: $liveDate")
                 Timber.e("ViewModel: local null")
-                getPrayerBeginTimesFromRemote()
+                getPrayerBeginningTimesFromRemoteDataSource()
                 nextPrayersMap.clear()
                 isTodayFriday = isTodayFriday(liveDate)
                 if (BuildConfig.DEBUG) {
@@ -155,11 +153,10 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-      private fun getPrayerBeginTimesFromRemote() {
+    private fun getPrayerBeginningTimesFromRemoteDataSource() {
         _remoteApiStatus.value = ApiStatus.LOADING
         Timber.e("Im inside network method")
         Timber.e("Im inside network: $liveDate")
-
 
         viewModelScope.launch {
 
@@ -169,7 +166,7 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
 
                 _remoteApiStatus.value = ApiStatus.DONE
 
-                insertTodayBeginPrayerTimesIntoLocal(apiResult)
+                insertTodayPrayerBeginningTimesIntoLocalDataSource(apiResult)
 
                 val mjt = apiResult.getMaghribJamaahTime()
 
@@ -195,38 +192,26 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-//    fun getBeginTimesFromLocal(todayLocalDate: LocalDate){
-//        viewModelScope.launch {
-//            _prayerBeginTimesFromLocal.value = repository.getBeginPrayerTimesFromLocal(todayLocalDate)
-//        }
-//    }
-
-    private fun getJamaahTimesFromCloud(maghribJamaahTime: String? = null) {
+    private fun getTodayPrayerJamaahTimesFromCloudDataSource(maghribJamaahTime: String? = null) {
         Timber.e("VM: getJamaahTimesFromCloud ")
         repository.getJamaahTimesFromCloud {
             workoutNextJamaah(maghribJamaahTime)
         }
     }
 
-    private fun insertTodayBeginPrayerTimesIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
+    private fun insertTodayPrayerBeginningTimesIntoLocalDataSource(resultFromNetwork: LondonPrayersBeginningTimes) {
         viewModelScope.launch {
             repository.insertTodayBeginPrayerTimesIntoLocal(resultFromNetwork)
         }
     }
 
-     fun deleteYesterdayPrayersFromLocal(localDate: LocalDate = LocalDate.now()) {
-        viewModelScope.launch {
-            repository.deleteYesterdayBeginPrayerTimesFromLocal(localDate)
-        }
-    }
-
-    fun clearDataFromLocal(){
+    fun clearDataFromLocalDataSource() {
         viewModelScope.launch {
             repository.clearLocalData()
         }
     }
 
-    fun updateTheDates(){
+    fun updateTheDates() {
         _islamicTodayDate.value = getCurrentIslamicDate()
         _gregoryTodayDate.value = getCurrentGregorianDate()
     }

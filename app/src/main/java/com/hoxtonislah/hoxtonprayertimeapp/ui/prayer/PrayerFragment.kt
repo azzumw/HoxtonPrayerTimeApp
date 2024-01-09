@@ -39,7 +39,7 @@ class PrayerFragment : Fragment() {
             when (intent?.action) {
                 Intent.ACTION_DATE_CHANGED,Intent.ACTION_TIME_CHANGED -> {
                     lifecycleScope.launch {
-                        prayerViewModel.clearDataFromLocal()
+                        prayerViewModel.clearDataFromLocalDataSource()
                     }
                     prayerViewModel.updateTheDates()
                 }
@@ -104,7 +104,7 @@ class PrayerFragment : Fragment() {
         prayerViewModel.prayerBeginTimesFromLocal.observe(viewLifecycleOwner) {
             it?.let {
                 if (liveDate.toString() != it.date) {
-                    prayerViewModel.clearDataFromLocal()
+                    prayerViewModel.clearDataFromLocalDataSource()
                     prayerViewModel.updateTheDates()
                 }
             }
