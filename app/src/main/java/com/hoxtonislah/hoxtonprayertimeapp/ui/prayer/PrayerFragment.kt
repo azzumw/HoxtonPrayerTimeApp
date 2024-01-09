@@ -67,7 +67,6 @@ class PrayerFragment : Fragment() {
 
         activity?.applicationContext?.registerReceiver(br, IntentFilter().apply {
             addAction(Intent.ACTION_TIME_CHANGED)
-//            addAction(Intent.ACTION_TIME_TICK)
             addAction(Intent.ACTION_DATE_CHANGED)
         })
 
@@ -106,6 +105,7 @@ class PrayerFragment : Fragment() {
             it?.let {
                 if (liveDate.toString() != it.date) {
                     prayerViewModel.clearDataFromLocal()
+                    prayerViewModel.updateTheDates()
                 }
             }
         }
@@ -113,9 +113,12 @@ class PrayerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        updateLiveDates()
+    }
+
+    private fun updateLiveDates(){
         liveDate = LocalDate.now()
         liveTime = LocalTime.now()
-//        prayerViewModel.getBeginTimesFromLocal(LocalDate.now())
     }
 
     private fun swapDhuhrViewForTwoJummahView(secondJamaahExist: Boolean = false) {
