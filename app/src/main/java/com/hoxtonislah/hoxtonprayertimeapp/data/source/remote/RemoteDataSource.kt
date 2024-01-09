@@ -1,7 +1,6 @@
-package com.hoxtonislah.hoxtonprayertimeapp.datasource
+package com.hoxtonislah.hoxtonprayertimeapp.data.source.remote
 
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
-import com.hoxtonislah.hoxtonprayertimeapp.network.PrayersApi
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.PrayerDataSource
 import java.time.LocalDate
 
 class RemoteDataSource(private val prayersApiService: PrayersApi) : PrayerDataSource {

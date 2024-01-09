@@ -1,12 +1,12 @@
 package com.hoxtonislah.hoxtonprayertimeapp
 
 import android.app.Application
-import com.hoxtonislah.hoxtonprayertimeapp.database.PrayerBeginningTimesDatabase
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.CloudDataSource
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.LocalDataSource
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.RemoteDataSource
-import com.hoxtonislah.hoxtonprayertimeapp.network.PrayersApi
-import com.hoxtonislah.hoxtonprayertimeapp.repository.Repository
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.local.PrayerBeginningTimesDatabase
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.cloud.CloudDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.local.LocalDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.RemoteDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.PrayersApi
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.Repository
 import com.hoxtonislah.hoxtonprayertimeapp.ui.prayer.PrayerViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext

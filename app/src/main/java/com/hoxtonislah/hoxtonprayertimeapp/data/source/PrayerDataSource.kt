@@ -1,6 +1,6 @@
-package com.hoxtonislah.hoxtonprayertimeapp.datasource
+package com.hoxtonislah.hoxtonprayertimeapp.data.source
 
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.LondonPrayersBeginningTimes
 import java.time.LocalDate
 
 interface PrayerDataSource {

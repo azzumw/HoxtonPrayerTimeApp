@@ -1,4 +1,4 @@
-package com.hoxtonislah.hoxtonprayertimeapp.models
+package com.hoxtonislah.hoxtonprayertimeapp.data.source.remote
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

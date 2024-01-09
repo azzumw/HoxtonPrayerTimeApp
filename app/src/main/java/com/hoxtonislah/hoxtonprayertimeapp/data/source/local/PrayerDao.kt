@@ -1,10 +1,10 @@
-package com.hoxtonislah.hoxtonprayertimeapp.database
+package com.hoxtonislah.hoxtonprayertimeapp.data.source.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.LondonPrayersBeginningTimes
 import kotlinx.coroutines.flow.Flow
 
 @Dao

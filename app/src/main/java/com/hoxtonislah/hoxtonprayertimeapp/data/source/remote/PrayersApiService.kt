@@ -1,6 +1,5 @@
-package com.hoxtonislah.hoxtonprayertimeapp.network
+package com.hoxtonislah.hoxtonprayertimeapp.data.source.remote
 
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
 import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

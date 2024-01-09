@@ -1,4 +1,4 @@
-package com.hoxtonislah.hoxtonprayertimeapp.network
+package com.hoxtonislah.hoxtonprayertimeapp.data
 
 
 sealed class Result<out R> {

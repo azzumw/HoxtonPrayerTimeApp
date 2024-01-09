@@ -1,17 +1,16 @@
-package com.hoxtonislah.hoxtonprayertimeapp.datasource
+package com.hoxtonislah.hoxtonprayertimeapp.data.source.cloud
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.hoxtonislah.hoxtonprayertimeapp.models.JamaahTimeCloudModel
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.LondonPrayersBeginningTimes
 import com.hoxtonislah.hoxtonprayertimeapp.utils.createDocumentReferenceIDForLastWeek
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getMostRecentFriday
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.PrayerDataSource
 import timber.log.Timber
-import java.time.Clock
 import java.time.LocalDate
 
 class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSource {

@@ -1,11 +1,11 @@
-package com.hoxtonislah.hoxtonprayertimeapp.repository
+package com.hoxtonislah.hoxtonprayertimeapp.data.source
 
 import androidx.lifecycle.LiveData
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.CloudDataSource
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.LocalDataSource
-import com.hoxtonislah.hoxtonprayertimeapp.datasource.RemoteDataSource
-import com.hoxtonislah.hoxtonprayertimeapp.models.JamaahTimeCloudModel
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.cloud.CloudDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.local.LocalDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.RemoteDataSource
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.cloud.JamaahTimeCloudModel
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.LondonPrayersBeginningTimes
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getYesterdayDate
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

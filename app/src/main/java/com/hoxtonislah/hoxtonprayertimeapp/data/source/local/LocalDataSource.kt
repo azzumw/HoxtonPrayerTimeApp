@@ -1,9 +1,9 @@
-package com.hoxtonislah.hoxtonprayertimeapp.datasource
+package com.hoxtonislah.hoxtonprayertimeapp.data.source.local
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import com.hoxtonislah.hoxtonprayertimeapp.database.PrayerDao
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.PrayerDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

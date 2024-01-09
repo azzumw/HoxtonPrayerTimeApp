@@ -1,4 +1,4 @@
-package com.hoxtonislah.hoxtonprayertimeapp.models
+package com.hoxtonislah.hoxtonprayertimeapp.data.source.cloud
 
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromLocalTimeToString
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromStringToLocalTime

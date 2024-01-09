@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.hoxtonislah.hoxtonprayertimeapp.models.JamaahTimeCloudModel
-import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
-import com.hoxtonislah.hoxtonprayertimeapp.models.convertTo12hour
-import com.hoxtonislah.hoxtonprayertimeapp.repository.Repository
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.cloud.JamaahTimeCloudModel
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.LondonPrayersBeginningTimes
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.convertTo12hour
+import com.hoxtonislah.hoxtonprayertimeapp.data.source.Repository
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromLocalTimeToString
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromStringToLocalTime
 import com.hoxtonislah.hoxtonprayertimeapp.utils.getCurrentGregorianDate
