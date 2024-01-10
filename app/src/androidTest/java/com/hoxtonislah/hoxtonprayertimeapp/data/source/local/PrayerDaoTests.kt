@@ -2,22 +2,16 @@ package com.hoxtonislah.hoxtonprayertimeapp.data.source.local
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SmallTest
-import com.google.firebase.firestore.model.Values.isNullValue
 import com.hoxtonislah.hoxtonprayertimeapp.data.source.remote.LondonPrayersBeginningTimes
 import com.hoxtonislah.hoxtonprayertimeapp.util.DatabaseRule
 import com.hoxtonislah.hoxtonprayertimeapp.util.MainCoroutineRule
 import org.hamcrest.MatcherAssert
 import org.hamcrest.CoreMatchers.*
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import com.hoxtonislah.hoxtonprayertimeapp.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 
 @ExperimentalCoroutinesApi
