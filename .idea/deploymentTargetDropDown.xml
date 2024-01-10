@@ -2,13 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="ExampleInstrumentedTest">
+      <entry key="PrayerDaoTests">
         <State />
       </entry>
       <entry key="app">
         <State />
       </entry>
-      <entry key="useAppContext()">
+      <entry key="clear()">
+        <State />
+      </entry>
+      <entry key="getTodayPrayers_returns_null_when_there_is_no_data()">
+        <State />
+      </entry>
+      <entry key="insertPrayer_saves_the_prayer_in_the_database()">
+        <State />
+      </entry>
+      <entry key="updateMaghribJamaah()">
         <State />
       </entry>
     </value>
