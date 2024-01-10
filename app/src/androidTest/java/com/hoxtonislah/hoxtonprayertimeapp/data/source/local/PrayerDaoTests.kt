@@ -42,15 +42,14 @@ class PrayerDaoTests {
     @Test
     fun insertPrayer_saves_the_prayer_in_the_database() = runTest {
 
-        // GIVEN - database is empty
+        // GIVEN - an empty database
         var result = databaseRule.database.prayerDao.getTodayPrayers().asLiveData().getOrAwaitValue()
-        MatcherAssert.assertThat("prayer is not null",result, nullValue())
+        MatcherAssert.assertThat("Prayer is not null",result, nullValue())
 
-
-        // WHEN - this prayer is inserted in to the database
+        // WHEN - a prayer is inserted in to the database
         databaseRule.database.prayerDao.insertPrayer(prayer)
 
-        //THEN - verify the prayer is stored in the database
+        //THEN - verify that the prayer is stored in the database
         result = databaseRule.database.prayerDao.getTodayPrayers().asLiveData().getOrAwaitValue()
         MatcherAssert.assertThat(result, notNullValue())
         MatcherAssert.assertThat(result, equalTo(prayer))
@@ -69,18 +68,18 @@ class PrayerDaoTests {
     @Test
     fun updateMaghribJamaah() = runTest{
 
-        //GIVEN - is inserted in the database
+        //GIVEN - a prayer is inserted in to the database
         databaseRule.database.prayerDao.insertPrayer(prayer)
         var prayerIsStored = databaseRule.database.prayerDao.getTodayPrayers().asLiveData().getOrAwaitValue()
         MatcherAssert.assertThat(prayerIsStored, notNullValue())
 
-        // however, maghrib jamaat is null value
+        // and, maghrib jamaah is null value initially
         MatcherAssert.assertThat(prayerIsStored?.magribJamaah, nullValue())
 
         // WHEN - maghrib Jamaah is updated
         databaseRule.database.prayerDao.updateMaghribJamaah("16:17",prayer.date)
 
-        // THEN - verify the maghrib Jamaah is updated for the same date
+        // THEN - verify that the maghrib Jamaah is updated for the same date
         prayerIsStored = databaseRule.database.prayerDao.getTodayPrayers().asLiveData().getOrAwaitValue()
         MatcherAssert.assertThat(prayerIsStored?.magribJamaah, `is`("16:17"))
 
@@ -88,7 +87,8 @@ class PrayerDaoTests {
 
     @Test
     fun clear_deletes_the_data_from_database() = runTest {
-        //GIVEN - is inserted in the database
+
+        //GIVEN - a prayer is inserted in the database
         databaseRule.database.prayerDao.insertPrayer(prayer)
         var result = databaseRule.database.prayerDao.getTodayPrayers().asLiveData().getOrAwaitValue()
         MatcherAssert.assertThat(result, notNullValue())
