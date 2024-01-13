@@ -66,7 +66,7 @@ class PrayerDaoTests {
     }
 
     @Test
-    fun updateMaghribJamaah() = runTest{
+    fun updateMaghribJamaah_updates_maghrib_jamaah_time() = runTest{
 
         //GIVEN - a prayer is inserted in to the database
         databaseRule.database.prayerDao.insertPrayer(prayer)
