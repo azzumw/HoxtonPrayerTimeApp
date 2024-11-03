@@ -22,7 +22,6 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.isTodayWeekend
 import com.hoxtonislah.hoxtonprayertimeapp.utils.liveTime
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeParseException
 
@@ -78,9 +77,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     }
 
     val prayerBeginTimesFromLocal = repository.todayPrayerBeginTimesFromLocal
-
-//    private val _prayerBeginTimesFromLocal = MutableLiveData<LondonPrayersBeginningTimes?>()
-//    val prayerBeginTimesFromLocal:LiveData<LondonPrayersBeginningTimes?> get() = _prayerBeginTimesFromLocal
 
     val prayerBeginTimesIn12HourFormat: LiveData<LondonPrayersBeginningTimes?> =
         prayerBeginTimesFromLocal.map {
@@ -178,7 +174,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
                     todayLocalDate = liveDate.toString()
                 )
 
-//                getBeginTimesFromLocal(liveDate)
             } catch (dateTimeException: DateTimeParseException) {
                 if (BuildConfig.DEBUG) {
                     Timber.e("Date parsing exception ${dateTimeException.message}")
@@ -195,12 +190,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-//    fun getBeginTimesFromLocal(todayLocalDate: LocalDate){
-//        viewModelScope.launch {
-//            _prayerBeginTimesFromLocal.value = repository.getBeginPrayerTimesFromLocal(todayLocalDate)
-//        }
-//    }
-
     private fun getJamaahTimesFromCloud(maghribJamaahTime: String? = null) {
         Timber.e("VM: getJamaahTimesFromCloud ")
         repository.getJamaahTimesFromCloud {
@@ -211,12 +200,6 @@ class PrayerViewModel(private val repository: Repository) : ViewModel() {
     private fun insertTodayBeginPrayerTimesIntoLocal(resultFromNetwork: LondonPrayersBeginningTimes) {
         viewModelScope.launch {
             repository.insertTodayBeginPrayerTimesIntoLocal(resultFromNetwork)
-        }
-    }
-
-     fun deleteYesterdayPrayersFromLocal(localDate: LocalDate = LocalDate.now()) {
-        viewModelScope.launch {
-            repository.deleteYesterdayBeginPrayerTimesFromLocal(localDate)
         }
     }
 

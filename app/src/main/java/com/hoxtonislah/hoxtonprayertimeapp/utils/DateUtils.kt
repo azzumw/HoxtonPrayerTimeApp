@@ -3,7 +3,6 @@ package com.hoxtonislah.hoxtonprayertimeapp.utils
 import android.icu.util.Calendar
 import android.icu.util.IslamicCalendar
 import android.icu.util.ULocale
-import java.time.Clock
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
@@ -109,7 +108,9 @@ fun createDocumentReferenceIDForLastWeek() =
 
 fun isTodayFriday(localDate: LocalDate = liveDate) = localDate.dayOfWeek == DayOfWeek.FRIDAY
 
-fun isTodayWeekend(localDate: LocalDate = liveDate) = ((localDate.dayOfWeek == DayOfWeek.SATURDAY) || (localDate.dayOfWeek == DayOfWeek.SUNDAY))
+fun isTodayWeekend(localDate: LocalDate = liveDate):Boolean {
+    return ((localDate.dayOfWeek == DayOfWeek.SATURDAY) || (localDate.dayOfWeek == DayOfWeek.SUNDAY))
+}
 
 fun fromStringToLocalTime(timeinString: String?, plusMinutes: Long = 0L) = timeinString?.let {
     LocalTime.parse(timeinString).plusMinutes(plusMinutes)
