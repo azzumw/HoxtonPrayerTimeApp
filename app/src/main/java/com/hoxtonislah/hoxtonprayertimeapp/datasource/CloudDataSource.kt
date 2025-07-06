@@ -11,7 +11,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
 import timber.log.Timber
-import java.time.Clock
 import java.time.LocalDate
 
 class CloudDataSource(private val firestore: FirebaseFirestore) : PrayerDataSource {

@@ -23,12 +23,6 @@ class LocalDataSource(
         }
     }
 
-//    suspend fun getTodayPrayerFromLocalDataSource(todayLocalDate: LocalDate):LondonPrayersBeginningTimes?{
-//        return withContext(ioDispatcher){
-//            prayerDao.getTodayPrayers(todayLocalDate.toString())
-//        }
-//    }
-
     override suspend fun deleteYesterdayPrayerFromLocalDataSource(yesterdayDate: String) {
         withContext(ioDispatcher) {
             prayerDao.deleteYesterdayPrayers(yesterdayDate)
@@ -64,5 +58,4 @@ class LocalDataSource(
     override suspend fun getPrayerBeginTimesFromRemoteApi(localDate: LocalDate): LondonPrayersBeginningTimes {
         TODO("Not Required")
     }
-
 }
