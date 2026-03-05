@@ -29,10 +29,6 @@ class Repository(
         return remoteDataSource.getPrayerBeginTimesFromRemoteApi(localDate)
     }
 
-//    suspend fun getBeginPrayerTimesFromLocal(localDate: LocalDate):LondonPrayersBeginningTimes?{
-//        return localDataSource.getTodayPrayerFromLocalDataSource(localDate)
-//    }
-
     suspend fun deleteYesterdayBeginPrayerTimesFromLocal(yesterdayDate: LocalDate) {
         withContext(ioDispatcher) {
             localDataSource.deleteYesterdayPrayerFromLocalDataSource(getYesterdayDate(yesterdayDate))
@@ -68,12 +64,10 @@ class Repository(
         cloudDataSource.getTodayJamaahTimesFromCloud(workoutNextJamaah)
     }
 
-
     fun writeJamaahTimesToCloud() =
         cloudDataSource.writeJamaahTimesToCloud()
 
     fun clear() = cloudDataSource.clear()
-
 }
 
 

@@ -19,3 +19,12 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep Firestore models
+-keepclassmembers class com.hoxtonislah.hoxtonprayertimeapp.models.** {
+    @com.google.firebase.firestore.PropertyName *;
+    public <methods>;
+    public <fields>;
+}
+
+-keep class com.hoxtonislah.hoxtonprayertimeapp.models.** { *; }

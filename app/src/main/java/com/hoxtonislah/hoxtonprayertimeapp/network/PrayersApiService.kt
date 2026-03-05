@@ -1,7 +1,6 @@
 package com.hoxtonislah.hoxtonprayertimeapp.network
 
 import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
-import com.hoxtonislah.hoxtonprayertimeapp.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -25,7 +24,7 @@ interface PrayersApiService {
     @GET("times")
     suspend fun getTodaysPrayerBeginningTimes(
         @Query("format") format: String = QUERY_FORMAT_JSON,
-        @Query("key") key: String = BuildConfig.londonPrayerApiKey,
+        @Query("key") key: String = com.hoxtonislah.hoxtonprayertimeapp.BuildConfig.londonPrayerApiKey,
         @Query("24hours")timeFormat : Boolean =  true,
         @Query("date") date: String
     ): LondonPrayersBeginningTimes

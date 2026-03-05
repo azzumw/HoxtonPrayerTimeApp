@@ -1,5 +1,6 @@
 package com.hoxtonislah.hoxtonprayertimeapp.models
 
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.hoxtonislah.hoxtonprayertimeapp.utils.fromLocalTimeToString
@@ -7,6 +8,7 @@ import com.hoxtonislah.hoxtonprayertimeapp.utils.fromStringToLocalTime
 
 private const val TWO_MINS = 2L
 
+@Keep
 @Entity(tableName = "london_prayers_beginning_times")
 data class LondonPrayersBeginningTimes(
     @PrimaryKey
@@ -50,5 +52,3 @@ fun LondonPrayersBeginningTimes.convertTo12hour(): LondonPrayersBeginningTimes {
 
     return obj
 }
-
-
