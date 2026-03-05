@@ -29,12 +29,6 @@ class Repository(
         return remoteDataSource.getPrayerBeginTimesFromRemoteApi(localDate)
     }
 
-    suspend fun deleteYesterdayBeginPrayerTimesFromLocal(yesterdayDate: LocalDate) {
-        withContext(ioDispatcher) {
-            localDataSource.deleteYesterdayPrayerFromLocalDataSource(getYesterdayDate(yesterdayDate))
-        }
-    }
-
     suspend fun clearLocalData() {
         withContext(ioDispatcher) {
             localDataSource.clearDatabase()
