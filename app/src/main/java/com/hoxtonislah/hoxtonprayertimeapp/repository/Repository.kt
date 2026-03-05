@@ -6,7 +6,6 @@ import com.hoxtonislah.hoxtonprayertimeapp.datasource.LocalDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.datasource.RemoteDataSource
 import com.hoxtonislah.hoxtonprayertimeapp.models.JamaahTimeCloudModel
 import com.hoxtonislah.hoxtonprayertimeapp.models.LondonPrayersBeginningTimes
-import com.hoxtonislah.hoxtonprayertimeapp.utils.getYesterdayDate
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
